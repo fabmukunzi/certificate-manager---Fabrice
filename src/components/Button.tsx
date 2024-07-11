@@ -1,9 +1,17 @@
-import React, { FC } from 'react'
+import React, { ButtonHTMLAttributes, FC } from 'react';
+
 type ButtonProps = {
-  label: string
-  className?: string
-}
-const Button: FC<ButtonProps> = ({ label, className }) => {
-  return <button className={`btn ${className}`}>{label}</button>
-}
-export default Button
+  label: string;
+};
+const Button: FC<ButtonHTMLAttributes<HTMLButtonElement> & ButtonProps> = ({
+  label,
+  className,
+  ...props
+}) => {
+  return (
+    <button className={`button ${className}`.trim()} {...props}>
+      {label}
+    </button>
+  );
+};
+export default Button;

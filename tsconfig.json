@@ -7,7 +7,18 @@
     "lib": ["dom", "esnext"],
     "strict": true,
     "sourceMap": true,
-    "target": "esnext"
+    "target": "esnext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "incremental": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
