@@ -3,7 +3,7 @@ import Button from '@/components/Button';
 const App = () => {
   return (
     <div>
-      <Button label="DCCS X COA" className="rounded" />
+      <Button aria-label="DCCS X COA" label="DCCS X COA" className="rounded" />
     </div>
   );
 };
