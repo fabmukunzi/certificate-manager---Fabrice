@@ -1,22 +1,32 @@
-import { CloseIcon, MenuIcon } from '@/utils/constants/icons';
-import React, { FC } from 'react';
+import { CloseIcon, MenuIcon } from '@/assests/icons';
+import { FC } from 'react';
+import Button from './Button';
 
 type Props = {
   setIsSideBarOpen: (isOpen: boolean) => void;
   isSideBarOpen: boolean;
 };
 const Header: FC<Props> = ({ setIsSideBarOpen, isSideBarOpen }) => {
+  const toggleMenu = () => {
+    setIsSideBarOpen(!isSideBarOpen);
+  };
   return (
-    <div className="header">
-      <img
-        onClick={() => setIsSideBarOpen(!isSideBarOpen)}
-        width={30}
-        height={30}
+    <header className="header">
+      <Button
+        aria-label="Menu Icon"
+        aria-expanded={isSideBarOpen}
+        onClick={toggleMenu}
         className="header-menu-icon"
-        src={isSideBarOpen ? CloseIcon : MenuIcon}
+        icon={
+          <img
+            alt={isSideBarOpen ? 'Close Icon' : 'Menu Icon'}
+            src={isSideBarOpen ? CloseIcon : MenuIcon}
+          />
+        }
       />
+
       <h1>DCCS Tuzla</h1>
-    </div>
+    </header>
   );
 };
 

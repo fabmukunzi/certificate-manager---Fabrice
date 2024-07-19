@@ -1,16 +1,18 @@
-import React, { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, FC } from 'react';
 
 type ButtonProps = {
-  label: string;
+  label?: string | React.ReactNode;
+  icon?: string | React.ReactNode;
 };
 const Button: FC<ButtonHTMLAttributes<HTMLButtonElement> & ButtonProps> = ({
   label,
   className,
+  icon,
   ...props
 }) => {
   return (
     <button className={`button ${className}`.trim()} {...props}>
-      {label}
+      {icon} {label}
     </button>
   );
 };

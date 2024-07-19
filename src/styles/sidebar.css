@@ -11,8 +11,6 @@
   display: flex;
   padding-top: 50px;
   z-index: 99;
-  /* justify-content: center; */
-  /* align-items: center; */
 }
 .side-bar-item {
   margin-bottom: 20px;

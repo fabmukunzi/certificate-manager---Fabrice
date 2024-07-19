@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 const Example: FC = () => {
   return (
-    <div className="flex">
-      <div className="start-page">Example1</div>
-    </div>
+    <section className="example-container">
+      <div className="example-content" aria-label="Example1 content">
+        Example1
+      </div>
+    </section>
   );
 };
 

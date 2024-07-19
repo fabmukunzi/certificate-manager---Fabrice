@@ -1,5 +1,5 @@
 import { SIDEBAR_PROPS } from '../types/sidebar';
-import { HomeIcon, MenuIcon } from './icons';
+import { HomeIcon, MenuIcon } from '../../assests/icons';
 
 export const SIDEBAR_ITEMS: SIDEBAR_PROPS[] = [
   {

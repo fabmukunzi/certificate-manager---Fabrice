@@ -2,11 +2,12 @@
   --primary-color: #3f9ac9;
   --secondary-color: #e7e9ea;
   --dark-grey-color: #666869;
+  --white-color: #fff;
 }
 body,
 html {
   color: var(--primary-color);
-  background-color: white;
+  background-color: var(--white-color);
   font-family:
     system-ui,
     -apple-system,
@@ -19,7 +20,6 @@ html {
     'Open Sans',
     'Helvetica Neue',
     sans-serif;
-  background-color: white;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -30,7 +30,7 @@ html {
   padding: 15px;
   font-weight: bold;
   font-size: 20px;
-  color: white;
+  color: var(--white-color);
   border: none;
 }
 .rounded {
@@ -45,16 +45,13 @@ html {
 }
 .outlet {
   position: relative;
-  /* top: 4.9rem; */
 }
 .header {
   margin-top: -30px;
   margin-bottom: -20px;
-  background: white;
-  color: white;
+  background: var(--white-color);
+  color: var(--white-color);
   position: relative;
-  /* position: fixed;
-  z-index: 99; */
   min-width: 100vw;
   height: fit-content;
   top: 0;
@@ -70,24 +67,25 @@ html {
   font-weight: 400;
   min-width: max-content;
 }
-.start-page {
+.start-page-content,
+.example-content {
   font-size: 40px;
   margin: 30px 30px;
   color: var(--dark-grey-color);
 }
-.not-found {
+.not-found-page {
   min-width: 30vw;
   text-align: center;
   font-size: 30px;
   margin-left: 50%;
   margin-right: auto;
 }
-.not-found a{
+.not-found-page a {
   background: var(--primary-color);
-  color: white;
+  color: var(--white-color);
   padding: 10px;
 }
-.p-404 {
+.not-found-heading {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   line-height: 0;
 }
@@ -95,6 +93,22 @@ html {
   display: none;
   position: absolute;
   margin-left: 30px;
+}
+.header-menu-icon img {
+  width: 30px;
+  height: 30px;
+}
+button.header-menu-icon {
+  padding: 10px 10px 3px 10px;
+}
+button.try-again {
+  background: var(--primary-color);
+}
+.try-again {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .hidden {
   display: none;
@@ -115,8 +129,12 @@ html {
   }
   .header-menu-icon {
     filter: invert(100);
-    padding: 5px;
+    /* padding: 5px; */
     background: white;
     border-radius: 5px;
+  }
+  .not-found-page {
+    font-size: 20px;
+    min-width: 50vw;
   }
 }
