@@ -42,6 +42,11 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
   ],
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+},
   devServer: {
     historyApiFallback: true,
     static: {

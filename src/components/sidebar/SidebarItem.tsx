@@ -1,16 +1,8 @@
-import { ArrowDownIcon } from '@/assests/icons';
-import { SIDEBAR_PROPS } from '@/utils/types/sidebar';
+import { ArrowDownIcon, ArrowUpIcon } from '@/assests/icons';
+import { SIDEBAR_PROPS, SidebarItemProps } from '@/utils/types/sidebar';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type SidebarItemProps = {
-  item: SIDEBAR_PROPS;
-  activeRoute: string;
-  isSubMenuCollapsed: boolean;
-  setActiveRoute: (open: string) => void;
-  setIsSubMenuCollapsed: (open: boolean) => void;
-  setIsSideBarOpen: (open: boolean) => void;
-};
 const SidebarItem: FC<SidebarItemProps> = ({
   activeRoute,
   setActiveRoute,
@@ -21,12 +13,8 @@ const SidebarItem: FC<SidebarItemProps> = ({
 }) => {
   const navigate = useNavigate();
   const handleItemClick = (item: SIDEBAR_PROPS) => {
-    if (item?.subItems) {
-      setIsSubMenuCollapsed(!isSubMenuCollapsed);
-    } else {
-      setIsSideBarOpen(false);
-      navigate(item.url || '#');
-    }
+    setIsSideBarOpen(false);
+    navigate(item.url ?? item.subItems?.[0]?.url ?? '#');
     setActiveRoute(item.name);
   };
   return (
@@ -56,10 +44,12 @@ const SidebarItem: FC<SidebarItemProps> = ({
       <img src={item.icon as string} alt={item.name} />
       <p>{item.name}</p>
       {(item?.subItems?.length || 0) > 0 && (
-        <div
-          className={`sub-menu-item-dropdown ${isSubMenuCollapsed ? 'collapsed' : 'expanded'}`}
-        >
-          <img src={ArrowDownIcon} alt={item.name} />
+        <div className="sub-menu-item-dropdown">
+          <img
+            onClick={() => setIsSubMenuCollapsed(!isSubMenuCollapsed)}
+            src={isSubMenuCollapsed ? ArrowDownIcon : ArrowUpIcon}
+            alt={item.name}
+          />
         </div>
       )}
     </div>

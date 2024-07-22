@@ -1,5 +1,5 @@
 import { SIDEBAR_PROPS } from '@/utils/types/sidebar';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 type SubMenuProps = {
@@ -17,6 +17,9 @@ const SubMenu: FC<SubMenuProps> = ({
   const route = useLocation();
   const navigate = useNavigate();
   const [activeSubRoute, setActiveSubRoute] = useState<string>(route?.pathname);
+  useEffect(() => {
+    setActiveSubRoute(route?.pathname);
+  }, [route?.pathname]);
   return (
     <div>
       <ul className="sidebar-sub-menu">

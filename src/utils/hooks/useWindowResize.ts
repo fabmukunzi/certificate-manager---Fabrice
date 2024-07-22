@@ -31,7 +31,6 @@ const useWindowResizeAndDevice = (): DeviceInfo => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener(RESIZE_EVENT, handleResize);
-      return window.removeEventListener(RESIZE_EVENT, handleResize);
     }
   }, [handleResize]);
 

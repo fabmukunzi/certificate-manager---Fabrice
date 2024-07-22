@@ -1,15 +1,13 @@
-import '@/styles/sidebar.css';
+import './sidebar.css';
 import { SIDEBAR_ITEMS } from '@/utils/constants/sidebar';
 import { FC, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SubMenu from './SubMenu';
 import SidebarItem from './SidebarItem';
+import { useSidebar } from '@/context/SidebarContext';
 
-type Props = {
-  isSideBarOpen: boolean;
-  setIsSideBarOpen: (isOpen: boolean) => void;
-};
-const SideBar: FC<Props> = ({ setIsSideBarOpen }) => {
+const SideBar: FC = () => {
+  const { setIsSideBarOpen } = useSidebar();
   const route = useLocation();
   const [activeRoute, setActiveRoute] = useState<string>(
     route?.pathname?.split('/')[1] || SIDEBAR_ITEMS[0]?.name,

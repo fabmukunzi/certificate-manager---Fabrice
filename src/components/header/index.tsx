@@ -1,12 +1,10 @@
 import { CloseIcon, MenuIcon } from '@/assests/icons';
 import { FC } from 'react';
-import Button from './Button';
+import Button from '../button';
+import { useSidebar } from '@/context/SidebarContext';
 
-type Props = {
-  setIsSideBarOpen: (isOpen: boolean) => void;
-  isSideBarOpen: boolean;
-};
-const Header: FC<Props> = ({ setIsSideBarOpen, isSideBarOpen }) => {
+const Header: FC = () => {
+  const { isSideBarOpen, setIsSideBarOpen } = useSidebar();
   const toggleMenu = () => {
     setIsSideBarOpen(!isSideBarOpen);
   };
@@ -24,8 +22,9 @@ const Header: FC<Props> = ({ setIsSideBarOpen, isSideBarOpen }) => {
           />
         }
       />
-
-      <h1>DCCS Tuzla</h1>
+      <div className="header-title">
+        <h1>DCCS Tuzla</h1>
+      </div>
     </header>
   );
 };

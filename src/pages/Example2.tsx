@@ -4,7 +4,7 @@ const Example2: FC = () => {
   return (
     <section className="example-container">
       <div className="example-content" aria-label="Example3 content">
-        Example2
+        Example3
       </div>
     </section>
   );

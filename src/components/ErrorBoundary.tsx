@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect } from 'react';
-import Button from './Button';
+import Button from './button';
 import useErrorBoundary from '@/utils/hooks/useErrorBoundary';
 
 type Props = {
