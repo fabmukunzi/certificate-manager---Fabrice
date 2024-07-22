@@ -1,12 +1,13 @@
 import { SIDEBAR_PROPS } from '../types/sidebar';
 import { HomeIcon, MenuIcon } from '../../assests/icons';
+import routes from '../routes';
 
 export const SIDEBAR_ITEMS: SIDEBAR_PROPS[] = [
   {
     id: 1,
-    name: 'Start',
+    name: routes.startPage.label,
     icon: HomeIcon,
-    url: '/',
+    url: routes.startPage.url,
   },
   {
     id: 2,
@@ -15,18 +16,18 @@ export const SIDEBAR_ITEMS: SIDEBAR_PROPS[] = [
     subItems: [
       {
         id: 3,
-        name: 'Example 1',
-        url: '/example',
+        name: routes.example1.label,
+        url: routes.example1.url,
       },
       {
         id: 4,
-        name: 'Example 2',
-        url: '/example1',
+        name: routes.example2.label,
+        url: routes.example2.url,
       },
       {
         id: 5,
-        name: 'Example 3',
-        url: '/example2',
+        name: routes.example3.label,
+        url: routes.example3.url,
       },
     ],
   },
