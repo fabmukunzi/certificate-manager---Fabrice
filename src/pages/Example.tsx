@@ -1,10 +1,12 @@
+import Certificates from '@/components/example';
 import { FC } from 'react';
 
 const Example: FC = () => {
   return (
     <section className="example-container">
       <div className="example-content" aria-label="Example1 content">
-        Example1
+        <p>Example 1</p>
+        <Certificates />
       </div>
     </section>
   );
