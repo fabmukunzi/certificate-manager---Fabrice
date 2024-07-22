@@ -22,6 +22,9 @@ const CertificatesTable: React.FC = () => {
 
   return (
     <section aria-label="Certificates Table">
+      <Link to={routes.newCertificate.url}>
+        <Button label="New Certificate" className="new-certificate-button" />
+      </Link>
       <TableComponent columns={columns} data={certificates} />
     </section>
   );

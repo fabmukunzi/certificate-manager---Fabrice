@@ -1,5 +1,5 @@
 .sidebar-menu {
-  width: 25%;
+  min-width: 25%;
   background: var(--secondary-color);
   min-height: 100vh;
   display: flex;
