@@ -21,6 +21,23 @@ function TableComponent<T extends { id?: number }>({
   className,
   renderActions,
 }: TableProps<T>): JSX.Element {
+  // const popupRef = useRef<HTMLDivElement | null>(null);
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       popupRef.current &&
+  //       !popupRef.current.contains(event.target as Node)
+  //     ) {
+  //       setIsOpen(null);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
+
   if (data.length === 0) {
     return (
       <div className="no-data">
