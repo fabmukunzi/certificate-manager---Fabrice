@@ -1,11 +1,20 @@
-import Button from '@/components/shared/Button';
-import { addCertificate } from '@/database/controllers/add-certificate';
+import Button from '@/components/shared/button';
+import { addCertificate } from '@/database/certificate.controller';
 import { useState } from 'react';
+import './certificate.css';
+import { useNavigate } from 'react-router-dom';
+import routes from '@/utils/routes';
+import { CloseIcon, SearchIcon } from '@/assests/icons';
+import { disablePastDates } from '@/utils/functions/disableDates';
 
 const CertificateForm = () => {
-  const [valiFromInputType, setValidFromInputType] = useState('text');
+  const [validFromInputType, setValidFromInputType] = useState('text');
   const [validToInputType, setValidToInputType] = useState('text');
+  const [validFromDate, setValidFromDate] = useState<Date | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const todayDate = disablePastDates(new Date());
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile && selectedFile.type === 'application/pdf') {
@@ -15,6 +24,7 @@ const CertificateForm = () => {
       alert('Please upload a valid PDF file.');
     }
   };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -27,20 +37,22 @@ const CertificateForm = () => {
     };
     try {
       await addCertificate(formValues);
-      event.currentTarget.reset();
+      navigate(routes.example1.url);
       setPdfUrl(null);
     } catch (error) {
       console.error('Error adding certificate:', error);
       alert('Failed to add certificate.');
     }
   };
+
   const certificateTypes = [
     { value: 'Permission of Printing', label: 'Permission of Printing' },
     { value: 'OHSAS 18001', label: 'OHSAS 18001' },
   ];
+
   return (
     <div style={{ marginTop: '50px' }}>
-      <form className="certificate-form" onSubmit={handleSubmit}>
+      <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <div className="certificate-input">
             <label htmlFor="supplier">Supplier</label>
@@ -51,12 +63,16 @@ const CertificateForm = () => {
               name="supplier"
               id="supplier"
             />
+            <div className="search-input-icons">
+              <img src={SearchIcon} alt="search icon" />
+              <img src={CloseIcon} alt="close icon" />
+            </div>
           </div>
           <div className="certificate-input">
             <label htmlFor="certificate-type">Certificate type</label>
             <select required name="certificate-type" id="certificate-type">
               <option value="">Select your option</option>
-              {certificateTypes?.map((certificateType, index) => (
+              {certificateTypes.map((certificateType, index) => (
                 <option key={index} value={certificateType.value}>
                   {certificateType.label}
                 </option>
@@ -64,11 +80,12 @@ const CertificateForm = () => {
             </select>
           </div>
           <div className="certificate-input">
-            <label htmlFor="validFrom">valid from</label>
+            <label htmlFor="validFrom">Valid from</label>
             <input
               required
-              min={new Date().toString()}
-              type={valiFromInputType}
+              type={validFromInputType}
+              min={todayDate}
+              onChange={(e) => setValidFromDate(new Date(e.target.value))}
               onFocus={() => setValidFromInputType('date')}
               onBlur={() => setValidFromInputType('text')}
               placeholder="Click to select date"
@@ -77,12 +94,14 @@ const CertificateForm = () => {
             />
           </div>
           <div className="certificate-input">
-            <label htmlFor="validTo">valid to</label>
+            <label htmlFor="validTo">Valid to</label>
             <input
               required
               type={validToInputType}
+              min={validFromDate ? disablePastDates(validFromDate) : todayDate}
               onFocus={() => setValidToInputType('date')}
               onBlur={() => setValidToInputType('text')}
+              disabled={!validFromDate}
               placeholder="Click to select date"
               name="validTo"
               id="validTo"
@@ -108,7 +127,6 @@ const CertificateForm = () => {
             width={80}
             style={{ zIndex: '99' }}
             src={pdfUrl || ''}
-            frameBorder="0"
           ></iframe>
           <div className="action-buttons">
             <Button type="submit" label="Save" />

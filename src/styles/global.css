@@ -1,12 +1,12 @@
 :root {
   --primary-color: #3f9ac9;
-  --secondary-color: #e7e9ea;
+  --secondary-color: #dedede;
   --dark-grey-color: #666869;
   --grey-hover-color: #b6cfdc24;
   --white-color: #fff;
   --black-color: #000;
-  --light-grey-color: #dddddd;
-  --green-color: #9fee01;
+  --light-grey-color: #c7c7c7;
+  --green-color: #adbc0b;
 }
 body,
 html {
@@ -44,23 +44,19 @@ html {
   display: flex;
   gap: 10px;
 }
-main.flex {
-  gap: 0px;
-}
 .flex-col {
   flex-direction: column;
 }
 .outlet {
   width: 70%;
   position: relative;
-  width: 100%;
 }
 .header {
   background: var(--white-color);
   color: var(--white-color);
   position: relative;
   min-width: 100vw;
-  height: 70px;
+  height: 80px;
   display: flex;
   align-items: center;
   top: 0;
@@ -83,10 +79,8 @@ main.flex {
   color: var(--dark-grey-color);
 }
 .not-found-page {
-  min-width: 30vw;
   text-align: center;
   font-size: 30px;
-  margin-left: 50%;
   margin-right: auto;
 }
 .not-found-page a {
@@ -127,14 +121,16 @@ button.try-again {
   padding: 10px;
   background: var(--green-color);
   margin-bottom: 10px;
-  border: solid 2px var(--dark-grey-color);
   cursor: pointer;
 }
 input,
 select {
   padding: 8px 7px 8px 7px;
-  border: solid gray 2px;
+  border: solid var(--light-grey-color) 1px;
   outline: none;
+}
+input:disabled {
+  cursor: not-allowed;
 }
 select {
   appearance: none;
@@ -146,6 +142,9 @@ select {
   background-position-y: center;
   font-size: 16px;
   color: #333;
+}
+.certificate-form-container {
+  width: 95%;
 }
 @media screen and (max-width: 480px) {
   .header {

@@ -1,4 +1,4 @@
-export type ICertificate = {
+export type ICertificateFormData = {
   supplier: FormDataEntryValue | null;
   certificateType: FormDataEntryValue | null;
   validFrom: FormDataEntryValue | null;
@@ -11,4 +11,12 @@ export type ICertificateColumns = {
   certificateType: FormDataEntryValue | null;
   validFrom: FormDataEntryValue | null;
   validTo: FormDataEntryValue | null;
+};
+export type ICertificate = {
+  id: number;
+  supplier: string;
+  certificateType: string;
+  validFrom: string;
+  validTo: string;
+  pdfUrl: string;
 };

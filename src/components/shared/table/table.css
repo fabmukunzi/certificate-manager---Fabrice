@@ -3,7 +3,7 @@ th {
   font-size: 17px;
 }
 .table-container {
-  width: 100%;
+  width: 95%;
   border: 2px solid var(--light-grey-color);
   padding: 15px;
   font-size: 15px;
@@ -41,9 +41,10 @@ td {
 }
 @media screen and (max-width: 480px) {
   .table-container {
-    width: 90%;
+    padding: 10px;
+    width: 70%;
+    overflow: scroll;
     margin-left: auto;
     margin-right: auto;
-    overflow: scroll;
   }
 }

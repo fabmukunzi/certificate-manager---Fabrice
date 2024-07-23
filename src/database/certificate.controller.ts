@@ -1,15 +1,15 @@
-import { ICertificate } from '@/utils/types/certificate';
+import { INDEX_DB_VERSION } from '@/utils/constants';
+import { ICertificate, ICertificateFormData } from '@/utils/types/certificate';
 
 let db: IDBDatabase;
-const version = 1;
 
 export enum Stores {
   certificatesData = 'certificates',
 }
 
-export const initDB = (): Promise<boolean> => {
+export const connectDB = (): Promise<boolean> => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('certificatesDB', version);
+    const request = indexedDB.open('certificates-manager', INDEX_DB_VERSION);
 
     request.onupgradeneeded = (event): void => {
       const database = (event.target as IDBOpenDBRequest).result;
@@ -34,11 +34,11 @@ export const initDB = (): Promise<boolean> => {
 };
 
 export const addCertificate = (
-  data: ICertificate,
-): Promise<ICertificate | string | null> => {
+  data: ICertificateFormData,
+): Promise<ICertificateFormData | string | null> => {
   return new Promise((resolve, reject) => {
     if (!db) {
-      reject(new Error('Database is not initialized'));
+      reject(new Error('Database is not connected'));
       return;
     }
 
@@ -60,7 +60,7 @@ export const addCertificate = (
 export const getAllCertificates = (): Promise<ICertificate[]> => {
   return new Promise((resolve, reject) => {
     if (!db) {
-      reject(new Error('Database is not initialized'));
+      reject(new Error('Database is not connected'));
       return;
     }
 
