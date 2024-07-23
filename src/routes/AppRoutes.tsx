@@ -8,6 +8,7 @@ import NotFound from '@/pages/NotFound';
 import Example3 from '@/pages/Example3';
 import routes from '@/utils/routes';
 import Newcertificate from '@/pages/New-certificate';
+import EditCertificate from '@/pages/Edit-certificate';
 
 const AppRoutes: FC = () => {
   return (
@@ -18,6 +19,10 @@ const AppRoutes: FC = () => {
         <Route path={routes.example2.url} element={<Example2 />} />
         <Route path={routes.example3.url} element={<Example3 />} />
         <Route path={routes.newCertificate.url} element={<Newcertificate />} />
+        <Route
+          path={`${routes.example1.url}/:certificateId`}
+          element={<EditCertificate />}
+        />
         <Route path="*" element={<NotFound />} /> {/* Not found page */}
       </Route>
     </Routes>

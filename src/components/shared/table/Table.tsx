@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './table.css';
+import { SettingsIcon } from '@/assests/icons';
+import Button from '../button';
+import routes from '@/utils/routes';
+import { useNavigate } from 'react-router-dom';
 
 export interface Column<T> {
   header: string;
@@ -18,6 +22,24 @@ function TableComponent<T extends { id: number }>({
   data,
   caption,
 }: TableProps<T>): JSX.Element {
+  const [isOpen, setIsOpen] = useState<number | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   if (data.length === 0) {
     return <p>No data available</p>;
   }
@@ -28,6 +50,7 @@ function TableComponent<T extends { id: number }>({
         {caption && <caption>{caption}</caption>}
         <thead>
           <tr>
+            <th></th>
             {columns.map((column) => (
               <th key={String(column.accessor)} scope="col">
                 {column.header}
@@ -38,6 +61,27 @@ function TableComponent<T extends { id: number }>({
         <tbody>
           {data.map((row) => (
             <tr key={row.id}>
+              <td>
+                <img
+                  className="setting-icon"
+                  width={20}
+                  height={20}
+                  src={SettingsIcon}
+                  alt="Setting icon"
+                  onClick={() => setIsOpen(isOpen === row.id ? null : row.id)}
+                />
+                {isOpen === row.id && (
+                  <div ref={popupRef} className="setting-action-buttons">
+                    <Button
+                      onClick={() =>
+                        navigate(`${routes.example1.url}/${row.id}`)
+                      }
+                      label="Edit"
+                    />
+                    <Button label="Delete" />
+                  </div>
+                )}
+              </td>
               {columns.map((column) => (
                 <td key={`${row.id}-${String(column.accessor)}`}>
                   {column.render
