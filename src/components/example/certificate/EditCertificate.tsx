@@ -42,11 +42,16 @@ const EditCertificate = () => {
     validFromDate ? validFromDate : new Date(),
   );
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    if (selectedFile && selectedFile.type === 'application/pdf') {
-      const fileURL = URL.createObjectURL(selectedFile);
-      setPdfUrl(fileURL);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setPdfUrl(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
     } else {
       alert('Please upload a valid PDF file.');
     }

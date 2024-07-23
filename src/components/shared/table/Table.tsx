@@ -4,6 +4,7 @@ import { SettingsIcon } from '@/assests/icons';
 import Button from '../button';
 import routes from '@/utils/routes';
 import { useNavigate } from 'react-router-dom';
+import { deleteCertificate } from '@/database/certificate.controller'; // Ensure correct import path
 
 export interface Column<T> {
   header: string;
@@ -35,10 +36,21 @@ function TableComponent<T extends { id: number }>({
         setIsOpen(null);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleDelete = async (id: number) => {
+    if (confirm('Are you sure you want to delete this certificate?')) {
+      try {
+        await deleteCertificate(id);
+        location.reload();
+      } catch (error) {
+        console.error('Failed to delete certificate:', error);
+        alert('Failed to delete certificate.');
+      }
+    }
+  };
 
   if (data.length === 0) {
     return <p>No data available</p>;
@@ -78,7 +90,10 @@ function TableComponent<T extends { id: number }>({
                       }
                       label="Edit"
                     />
-                    <Button label="Delete" />
+                    <Button
+                      onClick={() => handleDelete(row.id)}
+                      label="Delete"
+                    />
                   </div>
                 )}
               </td>
