@@ -24,7 +24,27 @@ function TableComponent<T extends { id?: number }>({
   className,
   renderActions,
 }: TableProps<T>): JSX.Element {
+<<<<<<< HEAD
   const { translate } = useTranslate();
+=======
+  // const popupRef = useRef<HTMLDivElement | null>(null);
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       popupRef.current &&
+  //       !popupRef.current.contains(event.target as Node)
+  //     ) {
+  //       setIsOpen(null);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
+
+>>>>>>> baa1b21 (Task4 KAN-61: edit certificate)
   if (data.length === 0) {
     return (
       <div className="no-data">
