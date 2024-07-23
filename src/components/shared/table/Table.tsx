@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './table.css';
 // import { SettingsIcon } from '@/assests/icons';
 // import Button from '../button';
