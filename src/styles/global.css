@@ -155,6 +155,9 @@ select {
   margin-left: 10px;
   background: var(--error-color);
 }
+.certificate-form-container {
+  width: 95%;
+}
 @media screen and (max-width: 480px) {
   .header {
     display: flex;
