@@ -1,5 +1,9 @@
 import React from 'react';
 import './table.css';
+// import { SettingsIcon } from '@/assests/icons';
+// import Button from '../button';
+// import routes from '@/utils/routes';
+// import { useNavigate } from 'react-router-dom';
 
 export interface Column<T> {
   header: string;
@@ -20,6 +24,23 @@ function TableComponent<T extends { id?: number }>({
   caption,
   renderActions,
 }: TableProps<T>): JSX.Element {
+  // const popupRef = useRef<HTMLDivElement | null>(null);
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       popupRef.current &&
+  //       !popupRef.current.contains(event.target as Node)
+  //     ) {
+  //       setIsOpen(null);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
+
   if (data.length === 0) {
     return <p>No data available</p>;
   }

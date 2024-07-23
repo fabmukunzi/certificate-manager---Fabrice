@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TableComponent from '../shared/table/Table';
 import { ICertificate } from '@/utils/types/certificate';
 import {

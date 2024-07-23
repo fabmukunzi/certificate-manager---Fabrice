@@ -36,7 +36,8 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   );
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!formValues?.pdfUrl) return alert('Please upload a PDF file');
+    if (!formValues?.pdfUrl && !initialValues.pdfUrl)
+      return alert('Please upload a PDF file');
     try {
       if (initialValues.id) {
         await updateCertificate(Number(formValues.id), formValues);
