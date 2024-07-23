@@ -160,3 +160,35 @@ export const deleteCertificate = (id: number | undefined): Promise<void> => {
     };
   });
 };
+export const deleteCertificate = (id: number | undefined): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not connected'));
+      return;
+    }
+
+    if (id === undefined) {
+      reject(new Error('ID is required for delete'));
+      return;
+    }
+
+    const tx = db.transaction(Stores.certificatesData, 'readwrite');
+    const store = tx.objectStore(Stores.certificatesData);
+    const deleteRequest = store.delete(id);
+
+    tx.onerror = () => {
+      reject(new Error('Transaction failed'));
+    };
+
+    deleteRequest.onsuccess = (): void => {
+      resolve();
+      console.log('Certificate deleted successfully');
+    };
+
+    deleteRequest.onerror = (): void => {
+      reject(
+        new Error(`Delete request error: ${deleteRequest.error?.message}`),
+      );
+    };
+  });
+};
