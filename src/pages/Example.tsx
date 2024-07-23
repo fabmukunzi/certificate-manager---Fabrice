@@ -1,4 +1,4 @@
-import Certificates from '@/components/example';
+import CertificatesTable from '@/components/example';
 import { FC } from 'react';
 
 const Example: FC = () => {
@@ -6,7 +6,7 @@ const Example: FC = () => {
     <section className="example-container">
       <div className="example-content" aria-label="Example1 content">
         <p>Example 1</p>
-        <Certificates />
+        <CertificatesTable />
       </div>
     </section>
   );

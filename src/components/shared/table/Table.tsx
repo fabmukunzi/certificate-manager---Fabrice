@@ -1,45 +1,56 @@
 import React from 'react';
 import './table.css';
 
-interface Column {
+export interface Column<T> {
   header: string;
-  accessor: string;
+  accessor: keyof T;
+  render?: (value: T[keyof T]) => React.ReactNode;
 }
 
-interface TableProps {
-  columns: Column[];
-  data: { [key: string]: string }[];
+interface TableProps<T> {
+  columns: Column<T>[];
+  data: T[];
+  caption?: string;
 }
 
-const TableComponent: React.FC<TableProps> = ({ columns, data }) => {
+function TableComponent<T extends { id: number }>({
+  columns,
+  data,
+  caption,
+}: TableProps<T>): JSX.Element {
+  if (data.length === 0) {
+    return <p>No data available</p>;
+  }
+
   return (
-    <section className="table-container">
-      {data.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              {columns.map((column, index) => (
-                <th key={index}>{column.header}</th>
+    <div className="table-container">
+      <table>
+        {caption && <caption>{caption}</caption>}
+        <thead>
+          <tr>
+            {columns.map((column) => (
+              <th key={String(column.accessor)} scope="col">
+                {column.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row) => (
+            <tr key={row.id}>
+              {columns.map((column) => (
+                <td key={`${row.id}-${String(column.accessor)}`}>
+                  {column.render
+                    ? column.render(row[column.accessor])
+                    : String(row[column.accessor])}
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                <td></td>
-                {columns.map((column, colIndex) => (
-                  <td key={colIndex}>{row[column.accessor]}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No data yet</p>
-      )}
-    </section>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
-};
+}
 
 export default TableComponent;
