@@ -1,10 +1,16 @@
-import React from 'react';
-import Button from '@/components/Button';
-const App = () => {
+import { FC, StrictMode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
+import ErrorBoundary from './components/ErrorBoundary';
+const App: FC = () => {
   return (
-    <div>
-      <Button aria-label="DCCS X COA" label="DCCS X COA" className="rounded" />
-    </div>
+    <StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </StrictMode>
   );
 };
 

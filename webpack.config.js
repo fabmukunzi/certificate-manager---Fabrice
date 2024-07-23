@@ -26,6 +26,13 @@ module.exports = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
+      },
     ],
   },
   devtool: CONFIG.PRODUCTION ? undefined : 'source-map',
@@ -35,4 +42,17 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
   ],
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+},
+  devServer: {
+    historyApiFallback: true,
+    static: {
+      directory: path.resolve(__dirname, 'public'),
+    },
+    compress: true,
+    port: 3000,
+  },
 };
