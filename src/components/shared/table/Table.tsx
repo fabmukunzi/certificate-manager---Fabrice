@@ -41,6 +41,18 @@ function TableComponent<T extends { id?: number }>({
   //   return () => document.removeEventListener('mousedown', handleClickOutside);
   // }, []);
 
+  const handleDelete = async (id: number) => {
+    if (confirm('Are you sure you want to delete this certificate?')) {
+      try {
+        await deleteCertificate(id);
+        location.reload();
+      } catch (error) {
+        console.error('Failed to delete certificate:', error);
+        alert('Failed to delete certificate.');
+      }
+    }
+  };
+
   if (data.length === 0) {
     return <p>No data available</p>;
   }
