@@ -3,7 +3,8 @@
   flex-direction: column;
   font-style: italic;
   color: var(--dark-grey-color);
-  font-weight: 400;
+  font-weight: 500;
+  position: relative;
   margin-bottom: 30px;
 }
 input.certificate-input {
@@ -13,9 +14,6 @@ input.certificate-input {
   display: flex;
   height: 100%;
   justify-content: space-around;
-}
-.certificate-form-container {
-  width: 95%;
 }
 .certificate-info {
   width: 45%;
@@ -34,7 +32,7 @@ iframe {
   min-width: 100%;
   min-height: 100%;
   margin-top: 10px;
-  border: solid var(--dark-grey-color) 2px;
+  border: solid var(--light-grey-color) 1px;
 }
 .action-buttons {
   display: flex;
@@ -46,5 +44,19 @@ iframe {
   cursor: pointer;
 }
 .action-buttons button:first-child {
-  background: #72a707;
+  background: var(--green-color);
+}
+.search-input-icons {
+  position: absolute;
+  right: -3px;
+  bottom: -4.5px;
+  width: 80px;
+}
+
+.search-input-icons img {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  padding: 8px 10px 6px 8px;
+  border-left: solid var(--light-grey-color) 1px;
 }

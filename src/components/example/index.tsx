@@ -1,7 +1,10 @@
-import React from 'react';
-import { certificates } from '@/utils/data/certificates';
+import React, { useEffect, useState } from 'react';
 import TableComponent from '../shared/table/Table';
-import { ICertificateColumns } from '@/utils/types/certificate';
+import { ICertificate, ICertificateColumns } from '@/utils/types/certificate';
+import { getAllCertificates } from '@/database/certificate.controller';
+import { Link } from 'react-router-dom';
+import Button from '../shared/button';
+import routes from '@/utils/routes';
 
 interface Column {
   header: string;
@@ -9,6 +12,7 @@ interface Column {
 }
 
 const CertificatesTable: React.FC = () => {
+  const [certificates, setCertificates] = useState<ICertificate[]>([]);
   const columns: Column[] = [
     { header: 'Supplier', accessor: 'supplier' },
     { header: 'Certificate Type', accessor: 'certificateType' },
@@ -16,16 +20,30 @@ const CertificatesTable: React.FC = () => {
     { header: 'Valid To', accessor: 'validTo' },
   ];
 
-  if (!certificates || certificates.length === 0) {
-    return <p>No certificates available.</p>;
-  }
-
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      const response = await getAllCertificates();
+      setCertificates(response);
+    };
+    fetchCertificates();
+  }, []);
+  const transformedData = certificates.map((certificate) => ({
+    id: certificate.id,
+    supplier: certificate.supplier,
+    certificateType: certificate.certificateType,
+    validFrom: certificate.validFrom,
+    validTo: certificate.validTo,
+  }));
   return (
     <section aria-label="Certificates Table">
       <Link to={routes.newCertificate.url}>
         <Button label="New Certificate" className="new-certificate-button" />
       </Link>
-      <TableComponent columns={columns} data={certificates} />
+      {!certificates || certificates.length === 0 ? (
+        <p>No certificates available.</p>
+      ) : (
+        <TableComponent columns={columns} data={transformedData || []} />
+      )}
     </section>
   );
 };
