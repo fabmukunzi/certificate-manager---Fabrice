@@ -1,6 +1,6 @@
 :root {
   --primary-color: #3f9ac9;
-  --secondary-color: #e7e9ea;
+  --secondary-color: #dedede;
   --dark-grey-color: #666869;
   --grey-hover-color: #b6cfdc24;
   --white-color: #fff;
@@ -10,6 +10,7 @@
   --error-color: #721c24;
   --pink-color: #f5c6cb;
   --light-pink-color: #f8d7da;
+  --green-color: #adbc0b;
 }
 body,
 html {
@@ -59,7 +60,7 @@ html {
   color: var(--white-color);
   position: relative;
   min-width: 100vw;
-  height: 70px;
+  height: 80px;
   display: flex;
   align-items: center;
   top: 0;
@@ -82,10 +83,8 @@ html {
   color: var(--dark-grey-color);
 }
 .not-found-page {
-  min-width: 30vw;
   text-align: center;
   font-size: 30px;
-  margin-left: 50%;
   margin-right: auto;
 }
 .not-found-page a {
@@ -141,6 +140,9 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+.certificate-form-container {
+  width: 95%;
 }
 .certificate-form-container {
   width: 95%;
