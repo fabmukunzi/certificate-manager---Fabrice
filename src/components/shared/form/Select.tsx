@@ -20,7 +20,7 @@ const Select: FC<SelectHTMLAttributes<HTMLSelectElement> & SelectBoxProps> = ({
   label,
   name,
   options,
-  defaultValue,
+  value,
   onChangeValue,
   ...props
 }) => {
@@ -35,7 +35,7 @@ const Select: FC<SelectHTMLAttributes<HTMLSelectElement> & SelectBoxProps> = ({
         {...props}
         name={name}
         id={name}
-        defaultValue={defaultValue}
+        value={value}
         onChange={handleChange}
       >
         <option value="">Select your option</option>

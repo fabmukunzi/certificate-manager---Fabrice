@@ -82,9 +82,50 @@ export const getAllCertificates = (): Promise<ICertificate[]> => {
     };
   });
 };
+export const getCertificateById = (id: number): Promise<ICertificate> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not connected'));
+      return;
+    }
 
-export const closeDB = (): void => {
-  if (db) {
-    db.close();
-  }
+    const tx = db.transaction(Stores.certificatesData, 'readonly');
+    const store = tx.objectStore(Stores.certificatesData);
+
+    const getRequest = store.get(id);
+
+    getRequest.onsuccess = (): void => {
+      resolve(getRequest.result as ICertificate);
+    };
+
+    getRequest.onerror = (): void => {
+      reject(new Error(`Get request error: ${getRequest.error?.message}`));
+    };
+  });
+};
+
+export const updateCertificate = (
+  id: number | undefined,
+  data: ICertificate,
+): Promise<ICertificate | string | null> => {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database is not connected'));
+      return;
+    }
+
+    const tx = db.transaction(Stores.certificatesData, 'readwrite');
+    const store = tx.objectStore(Stores.certificatesData);
+    const updateRequest = store.put({ ...data, id });
+
+    updateRequest.onsuccess = (): void => {
+      resolve(data);
+    };
+
+    updateRequest.onerror = (): void => {
+      reject(
+        new Error(`Update request error: ${updateRequest.error?.message}`),
+      );
+    };
+  });
 };

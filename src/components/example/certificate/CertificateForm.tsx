@@ -1,43 +1,51 @@
 import Button from '@/components/shared/button';
-import { addCertificate } from '@/database/certificate.controller';
-import { FormEvent, useState } from 'react';
+import {
+  addCertificate,
+  updateCertificate,
+} from '@/database/certificate.controller';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import './certificate.css';
 import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { ISupplierData } from '@/utils/types/certificate';
+import { ICertificate } from '@/utils/types/certificate';
 import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
 
-const CertificateForm = () => {
+const CertificateForm: FC<{ initialValues: ICertificate }> = ({
+  initialValues,
+}) => {
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
-  const [formValues, setFormValues] = useState<ISupplierData>({
-    supplier: '',
-    certificateType: '',
-    validFrom: '',
-    validTo: '',
-    pdfUrl: null,
-  });
+  const [formValues, setFormValues] = useState<ICertificate>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
   };
+  useEffect(() => {
+    setFormValues(initialValues);
+  }, [initialValues]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!formValues?.pdfUrl) return alert('Please upload a PDF file');
+    if (!formValues?.pdfUrl && !initialValues.pdfUrl)
+      return alert('Please upload a PDF file');
     try {
-      await addCertificate(formValues);
-      alert('Certificate added successfully');
+      if (initialValues.id) {
+        await updateCertificate(Number(formValues.id), formValues);
+        alert('Certificate updated successfully');
+      } else {
+        await addCertificate(formValues);
+        alert('Certificate added successfully');
+      }
       navigate(routes.example1.url);
     } catch (error) {
-      alert('Failed to add certificate.');
+      alert(`Failed to ${initialValues.id ? 'update' : 'add'} certificate.`);
     }
   };
 
@@ -50,6 +58,7 @@ const CertificateForm = () => {
             min={3}
             label="Supplier"
             name="supplier"
+            defaultValue={initialValues.supplier}
             onChangeValue={handleInputChange}
           />
           <Select
@@ -57,6 +66,7 @@ const CertificateForm = () => {
             onChangeValue={handleInputChange}
             label="Certificate type"
             name="certificateType"
+            value={formValues.certificateType}
             options={certificateTypes}
           />
           <DateInput
@@ -65,6 +75,7 @@ const CertificateForm = () => {
             name="validFrom"
             placeholder="Click to select date"
             min={todayDate}
+            defaultValue={initialValues.validFrom || formValues.validFrom}
             onChangeValue={handleInputChange}
           />
           <DateInput
@@ -72,7 +83,8 @@ const CertificateForm = () => {
             label="Valid to"
             name="validTo"
             placeholder="Click to select date"
-            disabled={!formValues.validFrom}
+            disabled={!formValues.validFrom && !initialValues.validFrom}
+            defaultValue={initialValues.validFrom || formValues.validTo}
             min={formatDateToYYYYMMDD(new Date(formValues.validFrom) as Date)}
             onChangeValue={handleInputChange}
           />
@@ -83,22 +95,14 @@ const CertificateForm = () => {
             label="Upload"
             accept="application/pdf"
             onChangeValue={handleInputChange}
-            previewUrl={formValues.pdfUrl as string}
+            previewUrl={initialValues.pdfUrl || (formValues.pdfUrl as string)}
           />
           <div className="action-buttons">
             <Button type="submit" label="Save" />
             <Button
               label="Reset"
               type="reset"
-              onClick={() =>
-                setFormValues({
-                  supplier: '',
-                  certificateType: '',
-                  validFrom: '',
-                  validTo: '',
-                  pdfUrl: null,
-                })
-              }
+              onClick={() => setFormValues(initialValues)}
             />
           </div>
         </div>
