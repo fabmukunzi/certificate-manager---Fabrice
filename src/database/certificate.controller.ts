@@ -1,10 +1,11 @@
 import { INDEX_DB_VERSION } from '@/utils/constants';
 import { ICertificate, ISupplierData } from '@/utils/types/certificate';
-
+import { initialSuppliers } from '@/utils/data/supplier';
 let db: IDBDatabase | undefined;
 
 export enum Stores {
   certificatesData = 'certificates',
+  suppliersData = 'suppliers',
 }
 
 export const connectDB = (): Promise<boolean> => {
@@ -20,8 +21,24 @@ export const connectDB = (): Promise<boolean> => {
           autoIncrement: true,
         });
       }
+      if (!database.objectStoreNames.contains(Stores.suppliersData)) {
+        const suppliersStore = database.createObjectStore(
+          Stores.suppliersData,
+          {
+            keyPath: 'id',
+            autoIncrement: true,
+          },
+        );
+        suppliersStore.transaction.oncomplete = () => {
+          const suppliersObjectStore = database
+            .transaction(Stores.suppliersData, 'readwrite')
+            .objectStore(Stores.suppliersData);
+          initialSuppliers.forEach((supplier) =>
+            suppliersObjectStore.add(supplier),
+          );
+        };
+      }
     };
-
     request.onsuccess = (): void => {
       db = request.result;
       resolve(true);
@@ -125,37 +142,6 @@ export const updateCertificate = (
     updateRequest.onerror = (): void => {
       reject(
         new Error(`Update request error: ${updateRequest.error?.message}`),
-      );
-    };
-  });
-};
-export const deleteCertificate = (id: number | undefined): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    if (!db) {
-      reject(new Error('Database is not connected'));
-      return;
-    }
-
-    if (id === undefined) {
-      reject(new Error('ID is required for delete'));
-      return;
-    }
-
-    const tx = db.transaction(Stores.certificatesData, 'readwrite');
-    const store = tx.objectStore(Stores.certificatesData);
-    const deleteRequest = store.delete(id);
-
-    tx.onerror = () => {
-      reject(new Error('Transaction failed'));
-    };
-
-    deleteRequest.onsuccess = (): void => {
-      resolve();
-    };
-
-    deleteRequest.onerror = (): void => {
-      reject(
-        new Error(`Delete request error: ${deleteRequest.error?.message}`),
       );
     };
   });

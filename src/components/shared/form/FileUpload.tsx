@@ -62,7 +62,7 @@ const FileUpload: FC<FileUploadProps> = ({
         />
       </div>
       <iframe
-        height={300}
+        height={350}
         width={80}
         style={{ zIndex: '99' }}
         src={previewUrl}
