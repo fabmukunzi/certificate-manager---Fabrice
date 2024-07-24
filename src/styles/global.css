@@ -32,9 +32,15 @@ html {
   padding: 0;
   overflow: hidden;
 }
+<<<<<<< HEAD
 /* ::-webkit-scrollbar {
   width: 0px;
 } */
+=======
+::-webkit-scrollbar {
+  width: 0px;
+}
+>>>>>>> 3fb7466 (Task6 KAN-66: implement supplier search)
 .button {
   width: fit-content;
   background-color: var(--primary-color);
