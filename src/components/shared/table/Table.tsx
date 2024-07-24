@@ -20,35 +20,6 @@ function TableComponent<T extends { id?: number }>({
   className,
   renderActions,
 }: TableProps<T>): JSX.Element {
-  // const popupRef = useRef<HTMLDivElement | null>(null);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       popupRef.current &&
-  //       !popupRef.current.contains(event.target as Node)
-  //     ) {
-  //       setIsOpen(null);
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, []);
-
-  const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this certificate?')) {
-      try {
-        await deleteCertificate(id);
-        location.reload();
-      } catch (error) {
-        console.error('Failed to delete certificate:', error);
-        alert('Failed to delete certificate.');
-      }
-    }
-  };
-
   if (data.length === 0) {
     return <p>No data available</p>;
   }

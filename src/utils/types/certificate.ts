@@ -20,11 +20,3 @@ export type ICertificate = {
   validTo: string;
   pdfUrl: string | null;
 };
-export type ICertificate = {
-  id: number;
-  supplier: string;
-  certificateType: string;
-  validFrom: string;
-  validTo: string;
-  pdfUrl: string;
-};
