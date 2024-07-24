@@ -1,4 +1,4 @@
-.certificate-input {
+.form-input {
   display: flex;
   flex-direction: column;
   font-style: italic;
@@ -7,7 +7,7 @@
   position: relative;
   margin-bottom: 30px;
 }
-input.certificate-input {
+input.form-input {
   width: 100%;
 }
 .certificate-form {
@@ -18,7 +18,7 @@ input.certificate-input {
 .certificate-info {
   width: 45%;
 }
-.certificate-file {
+.certificate-file-container {
   width: 46%;
 }
 
@@ -49,14 +49,14 @@ iframe {
 .search-input-icons {
   position: absolute;
   right: -3px;
-  bottom: -4.5px;
+  bottom: -3px;
   width: 80px;
 }
 
 .search-input-icons img {
   cursor: pointer;
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   padding: 8px 10px 6px 8px;
   border-left: solid var(--light-grey-color) 1px;
 }

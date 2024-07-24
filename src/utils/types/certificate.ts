@@ -5,12 +5,12 @@ export type ICertificateFormData = {
   validTo: FormDataEntryValue | null;
   pdfUrl: string | null;
 };
-export type ICertificateColumns = {
-  id: number;
-  supplier: FormDataEntryValue | null;
-  certificateType: FormDataEntryValue | null;
-  validFrom: FormDataEntryValue | null;
-  validTo: FormDataEntryValue | null;
+export type ISupplierData = {
+  supplier: string;
+  certificateType: string;
+  validFrom: string;
+  validTo: string;
+  pdfUrl: string | null;
 };
 export type ICertificate = {
   id: number;
@@ -18,5 +18,5 @@ export type ICertificate = {
   certificateType: string;
   validFrom: string;
   validTo: string;
-  pdfUrl: string;
+  pdfUrl: string | null;
 };

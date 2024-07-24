@@ -7,6 +7,9 @@
   --black-color: #000;
   --light-grey-color: #dddddd;
   --green-color: #adbc0b;
+  --error-color: #721c24;
+  --pink-color: #f5c6cb;
+  --light-pink-color: #f8d7da;
 }
 body,
 html {
@@ -127,7 +130,7 @@ button.try-again {
 }
 input,
 select {
-  padding: 8px 7px 8px 7px;
+  padding: 10px 7px 10px 7px;
   border: solid var(--light-grey-color) 1px;
   outline: none;
 }
@@ -138,12 +141,6 @@ select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position-x: 100%;
-  background-position-y: center;
-  font-size: 16px;
-  color: #333;
 }
 .certificate-form-container {
   width: 95%;

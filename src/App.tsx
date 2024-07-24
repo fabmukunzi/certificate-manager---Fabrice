@@ -1,24 +1,17 @@
-import { FC, StrictMode, useEffect, useState } from 'react';
+import { FC, StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 import ErrorBoundary from './components/ErrorBoundary';
-import { connectDB } from './database/certificate.controller';
+import useDatabase from './utils/hooks/useDatabase';
+import Loader from './components/shared/loader';
+import ErrorComponent from './components/shared/error';
 const App: FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const initializeDB = async () => {
-      try {
-        await connectDB();
-        setIsLoading(true);
-      } catch (error) {
-        console.error('Error initializing the database:', error);
-      }
-    };
-    initializeDB();
-  }, []);
-  if (!isLoading) {
-    return <p>Loading...</p>;
+  const { isLoading, error } = useDatabase();
+  if (isLoading) {
+    return <Loader message="Connecting to database" />;
+  }
+  if (error) {
+    return <ErrorComponent message={error || 'Something went wrong'} />;
   }
   return (
     <StrictMode>

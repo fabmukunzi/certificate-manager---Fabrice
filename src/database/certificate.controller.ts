@@ -1,7 +1,7 @@
 import { INDEX_DB_VERSION } from '@/utils/constants';
-import { ICertificate, ICertificateFormData } from '@/utils/types/certificate';
+import { ICertificate, ISupplierData } from '@/utils/types/certificate';
 
-let db: IDBDatabase;
+let db: IDBDatabase | undefined;
 
 export enum Stores {
   certificatesData = 'certificates',
@@ -26,7 +26,6 @@ export const connectDB = (): Promise<boolean> => {
       db = request.result;
       resolve(true);
     };
-
     request.onerror = (): void => {
       reject(new Error(`Database error: ${request.error?.message}`));
     };
@@ -34,8 +33,8 @@ export const connectDB = (): Promise<boolean> => {
 };
 
 export const addCertificate = (
-  data: ICertificateFormData,
-): Promise<ICertificateFormData | string | null> => {
+  data: ISupplierData,
+): Promise<ISupplierData | string | null> => {
   return new Promise((resolve, reject) => {
     if (!db) {
       reject(new Error('Database is not connected'));
@@ -48,11 +47,12 @@ export const addCertificate = (
 
     addRequest.onsuccess = (): void => {
       resolve(data);
-      alert('Certificate added successfully');
     };
 
     addRequest.onerror = (): void => {
-      reject(new Error(`Add request error: ${addRequest.error?.message}`));
+      reject(
+        new Error(`Failed to add certificate: ${addRequest.error?.message}`),
+      );
     };
   });
 };
@@ -75,8 +75,16 @@ export const getAllCertificates = (): Promise<ICertificate[]> => {
 
     getAllRequest.onerror = (): void => {
       reject(
-        new Error(`Get all request error: ${getAllRequest.error?.message}`),
+        new Error(
+          `Failed to retrieve certificates: ${getAllRequest.error?.message}`,
+        ),
       );
     };
   });
+};
+
+export const closeDB = (): void => {
+  if (db) {
+    db.close();
+  }
 };

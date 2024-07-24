@@ -1,4 +1,3 @@
-// import Button from '@/components/shared/Button';
 import CertificateForm from '@/components/example/certificate/CertificateForm';
 const Newcertificate = () => {
   return (
