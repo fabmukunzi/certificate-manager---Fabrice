@@ -17,7 +17,6 @@ import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
 import SearchCertificate from '../../lookup/SupplierSearch';
-
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
 }) => {
