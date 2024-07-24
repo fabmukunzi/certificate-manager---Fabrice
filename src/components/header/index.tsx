@@ -1,7 +1,7 @@
 import { CloseIcon, MenuIcon } from '@/assests/icons';
 import { FC } from 'react';
-import Button from '../button';
 import { useSidebar } from '@/context/SidebarContext';
+import Button from '../shared/button';
 
 const Header: FC = () => {
   const { isSideBarOpen, setIsSideBarOpen } = useSidebar();

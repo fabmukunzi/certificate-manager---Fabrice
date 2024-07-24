@@ -5,6 +5,8 @@
   --grey-hover-color: #b6cfdc24;
   --white-color: #fff;
   --black-color: #000;
+  --light-grey-color: #dddddd;
+  --green-color: #9fee01;
 }
 body,
 html {
@@ -46,6 +48,7 @@ html {
   flex-direction: column;
 }
 .outlet {
+  width: 70%;
   position: relative;
 }
 .header {
@@ -135,6 +138,9 @@ button.try-again {
     background: var(--black-color);
     border-radius: 5px;
     display: block;
+  }
+  .outlet {
+    width: 100%;
   }
   .not-found-page {
     font-size: 20px;
