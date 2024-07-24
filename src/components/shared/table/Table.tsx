@@ -1,10 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
 import './table.css';
-// import { SettingsIcon } from '@/assests/icons';
-// import Button from '../button';
-// import routes from '@/utils/routes';
-// import { useNavigate } from 'react-router-dom';
-
 export interface Column<T> {
   header: string;
   accessor: keyof T;
@@ -15,6 +9,7 @@ interface TableProps<T> {
   columns: Column<T>[];
   data: T[];
   caption?: string;
+  className?: string;
   renderActions?: (id?: number) => React.ReactNode;
 }
 
@@ -22,43 +17,15 @@ function TableComponent<T extends { id?: number }>({
   columns,
   data,
   caption,
+  className,
   renderActions,
 }: TableProps<T>): JSX.Element {
-  // const popupRef = useRef<HTMLDivElement | null>(null);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       popupRef.current &&
-  //       !popupRef.current.contains(event.target as Node)
-  //     ) {
-  //       setIsOpen(null);
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, []);
-
-  const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this certificate?')) {
-      try {
-        await deleteCertificate(id);
-        location.reload();
-      } catch (error) {
-        console.error('Failed to delete certificate:', error);
-        alert('Failed to delete certificate.');
-      }
-    }
-  };
-
   if (data.length === 0) {
     return <p>No data available</p>;
   }
 
   return (
-    <div className="table-container">
+    <div className={`table-container ${className}`}>
       <table>
         {caption && <caption>{caption}</caption>}
         <thead>

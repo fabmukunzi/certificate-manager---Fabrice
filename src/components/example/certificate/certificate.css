@@ -52,11 +52,16 @@ iframe {
   bottom: -3px;
   width: 80px;
 }
-
+.certificate-form-container p {
+  font-size: 30px;
+  font-weight: 600;
+  margin-left: 20px;
+  color: var(--dark-grey-color);
+}
 .search-input-icons img {
   cursor: pointer;
   width: 21px;
-  height: 21px;
+  height: 22px;
   padding: 8px 10px 6px 8px;
   border-left: solid var(--light-grey-color) 1px;
 }

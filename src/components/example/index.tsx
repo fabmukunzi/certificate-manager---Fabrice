@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableComponent from '../shared/table/Table';
 import { ICertificate } from '@/utils/types/certificate';
 import {
@@ -12,7 +12,7 @@ import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
 
-interface Column {
+export interface Column {
   header: string;
   accessor: keyof ICertificate;
 }

@@ -6,6 +6,7 @@ import {
 } from '@/database/certificate.controller';
 import { FC, FormEvent, useEffect, useState } from 'react';
 import './certificate.css';
+import '../../shared/dialog/dialog.css';
 import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
@@ -15,12 +16,22 @@ import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
-
+import SearchCertificate from '../../lookup/SupplierSearch';
+export interface ISupplier {
+  id: number;
+  name: string;
+  city: string;
+}
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
 }) => {
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [supplierName, setSupplierName] = useState<string | undefined>(
+    undefined,
+  );
+
   const [formValues, setFormValues] = useState<ICertificate>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
@@ -34,6 +45,13 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
+  useEffect(() => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      supplier: supplierName || '',
+    }));
+  }, [supplierName]);
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!formValues?.pdfUrl && !initialValues.pdfUrl)
@@ -63,8 +81,18 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
     }
   };
 
+  const handleClose = () => {
+    setIsDialogOpen(false);
+  };
   return (
-    <div style={{ marginTop: '30px' }}>
+    <section style={{ marginTop: '50px' }}>
+      <SearchCertificate
+        supplierName={supplierName || ''}
+        setSupplierName={setSupplierName}
+        handleClose={handleClose}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
@@ -72,7 +100,12 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             min={3}
             label="Supplier"
             name="supplier"
-            defaultValue={formValues?.supplier}
+            value={formValues.supplier}
+            onSearch={() => {
+              setSupplierName(formValues?.supplier);
+              setIsDialogOpen(true);
+            }}
+            onClose={() => setSupplierName('')}
             onChangeValue={handleInputChange}
           />
           <Select
@@ -133,7 +166,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           </div>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 

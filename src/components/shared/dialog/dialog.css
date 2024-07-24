@@ -1,0 +1,88 @@
+dialog {
+  padding: 5px;
+  border: solid var(--light-grey-color) 1px;
+  width: 40%;
+}
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  padding: 5px;
+  padding-left: 15px;
+  font-weight: 600;
+  border: solid var(--light-grey-color) 1px;
+}
+.dialog-header button {
+  width: 100px;
+  background: none;
+  padding-top: 2px;
+  padding-bottom: 0;
+  height: fit-content;
+  outline: none;
+  border: solid var(--light-grey-color) 1px;
+}
+.search-criteria {
+  background: var(--primary-color);
+  color: var(--white-color);
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dialog-header p {
+  font-size: 20px;
+}
+.search-criteria p {
+  font-size: 18px;
+  color: var(--white-color);
+}
+.search-container {
+  margin: 10px;
+  border: var(--light-grey-color) 1px solid;
+}
+.search-inputs-container {
+  margin: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+.search-inputs-container input {
+  width: 150px;
+  padding: 7px;
+}
+.search-inputs-container label {
+  font-weight: 400;
+  font-size: 15px;
+  font-style: italic;
+}
+.search-action-buttons {
+  margin: 15px;
+}
+.search-action-buttons button {
+  padding: 0;
+  width: 150px;
+  font-weight: 400;
+  font-size: 15px;
+  height: 35px;
+  background: none;
+  color: var(--dark-grey-color);
+  border: var(--light-grey-color) 1px solid;
+}
+.search-action-buttons button:first-child {
+  margin-right: 10px;
+  background: var(--dark-blur-color);
+  border: none;
+  color: var(--white-color);
+}
+.search-action-buttons button:first-child:disabled {
+  background: rgb(228, 186, 102);
+}
+.search-table {
+  height: 8rem !important;
+}
+
+::backdrop {
+  border: var(--light-dark-color) 12x solid;
+}
