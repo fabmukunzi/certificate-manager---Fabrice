@@ -6,7 +6,10 @@
   --white-color: #fff;
   --black-color: #000;
   --light-grey-color: #dddddd;
-  --green-color: #9fee01;
+  --green-color: #adbc0b;
+  --error-color: #721c24;
+  --pink-color: #f5c6cb;
+  --light-pink-color: #f8d7da;
 }
 body,
 html {
@@ -118,6 +121,29 @@ button.try-again {
 }
 .hidden {
   display: none;
+}
+.new-certificate-button {
+  padding: 10px;
+  background: var(--green-color);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+input,
+select {
+  padding: 10px 7px 10px 7px;
+  border: solid var(--light-grey-color) 1px;
+  outline: none;
+}
+input:disabled {
+  cursor: not-allowed;
+}
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.certificate-form-container {
+  width: 95%;
 }
 @media screen and (max-width: 480px) {
   .header {

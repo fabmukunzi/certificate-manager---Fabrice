@@ -1,0 +1,62 @@
+.form-input {
+  display: flex;
+  flex-direction: column;
+  font-style: italic;
+  color: var(--dark-grey-color);
+  font-weight: 500;
+  position: relative;
+  margin-bottom: 30px;
+}
+input.form-input {
+  width: 100%;
+}
+.certificate-form {
+  display: flex;
+  height: 100%;
+  justify-content: space-around;
+}
+.certificate-info {
+  width: 45%;
+}
+.certificate-file-container {
+  width: 46%;
+}
+
+.certificate-form .button {
+  padding: 7px 40px 7px 40px;
+  font-size: 15px;
+  min-width: 50px;
+  font-weight: 400;
+}
+iframe {
+  min-width: 100%;
+  min-height: 100%;
+  margin-top: 10px;
+  border: solid var(--light-grey-color) 1px;
+}
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: end;
+  margin-top: 20px;
+}
+.action-buttons button {
+  cursor: pointer;
+}
+.action-buttons button:first-child {
+  background: var(--green-color);
+}
+.search-input-icons {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 80px;
+}
+
+.search-input-icons img {
+  cursor: pointer;
+  width: 21px;
+  height: 21px;
+  padding: 8px 10px 6px 8px;
+  border-left: solid var(--light-grey-color) 1px;
+}

@@ -47,8 +47,8 @@ a {
   background-color: var(--primary-color);
 }
 .sub-menu-item-dropdown img {
-  height: 20px;
-  width: 20px;
+  height: 40px;
+  width: 40px;
 }
 .sidebar-sub-menu {
   margin-left: 40px !important;
