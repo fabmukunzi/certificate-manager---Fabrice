@@ -7,7 +7,7 @@
   --black-color: #000;
   --light-grey-color: #dddddd;
   --green-color: #adbc0b;
-  --error-color: #721c24;
+  --error-color: #ec0e24;
   --pink-color: #f5c6cb;
   --light-pink-color: #f8d7da;
   --green-color: #adbc0b;
@@ -145,8 +145,15 @@ select {
 .certificate-form-container {
   width: 95%;
 }
-.certificate-form-container {
-  width: 95%;
+.certificate-form-container p {
+  font-size: 30px;
+  font-weight: 600;
+  margin-left: 20px;
+  color: var(--dark-grey-color);
+}
+.delete-button {
+  margin-left: 10px;
+  background: var(--error-color);
 }
 @media screen and (max-width: 480px) {
   .header {

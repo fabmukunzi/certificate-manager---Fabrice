@@ -10,6 +10,7 @@ th {
   font-weight: 400;
   max-height: 15rem;
   overflow-y: scroll;
+  padding-bottom: 40px;
 }
 
 table {
@@ -49,7 +50,7 @@ td {
   position: absolute;
   background: var(--white-color);
   box-shadow: -2px 2px 4px 0px var(--black-color);
-  z-index: 100;
+  z-index: 99;
   left: 0px;
   padding: 3px;
 }

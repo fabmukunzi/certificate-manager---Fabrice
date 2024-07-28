@@ -1,6 +1,7 @@
 import Button from '@/components/shared/button';
 import {
   addCertificate,
+  deleteCertificate,
   updateCertificate,
 } from '@/database/certificate.controller';
 import { FC, FormEvent, useEffect, useState } from 'react';
@@ -30,11 +31,12 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-
+  const areInitialValuesEmpty = Object.values(initialValues || {}).every(
+    (value) => value === '' || value === null,
+  );
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!formValues?.pdfUrl && !initialValues.pdfUrl)
-      return alert('Please upload a PDF file');
+    if (!formValues?.pdfUrl) return alert('Please upload a PDF file');
     try {
       if (initialValues.id) {
         await updateCertificate(Number(formValues.id), formValues);
@@ -43,9 +45,20 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
         await addCertificate(formValues);
         alert('Certificate added successfully');
       }
-      navigate(routes.example1.url);
+      navigate(routes.certificates.url);
     } catch (error) {
       alert(`Failed to ${initialValues.id ? 'update' : 'add'} certificate.`);
+    }
+  };
+  const handleDelete = async (id?: number) => {
+    if (confirm('Are you sure you want to delete this certificate?')) {
+      try {
+        await deleteCertificate(id);
+        navigate(routes.certificates.url);
+      } catch (error) {
+        console.error('Failed to delete certificate:', error);
+        alert('Failed to delete certificate.');
+      }
     }
   };
 
@@ -58,7 +71,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             min={3}
             label="Supplier"
             name="supplier"
-            defaultValue={initialValues.supplier}
+            defaultValue={formValues?.supplier}
             onChangeValue={handleInputChange}
           />
           <Select
@@ -66,7 +79,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             onChangeValue={handleInputChange}
             label="Certificate type"
             name="certificateType"
-            value={formValues.certificateType}
+            value={formValues?.certificateType}
             options={certificateTypes}
           />
           <DateInput
@@ -75,7 +88,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             name="validFrom"
             placeholder="Click to select date"
             min={todayDate}
-            defaultValue={initialValues.validFrom || formValues.validFrom}
+            defaultValue={formValues?.validFrom}
             onChangeValue={handleInputChange}
           />
           <DateInput
@@ -83,9 +96,9 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             label="Valid to"
             name="validTo"
             placeholder="Click to select date"
-            disabled={!formValues.validFrom && !initialValues.validFrom}
-            defaultValue={initialValues.validFrom || formValues.validTo}
-            min={formatDateToYYYYMMDD(new Date(formValues.validFrom) as Date)}
+            disabled={!formValues?.validFrom}
+            defaultValue={formValues?.validTo}
+            min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
             onChangeValue={handleInputChange}
           />
         </div>
@@ -95,15 +108,27 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             label="Upload"
             accept="application/pdf"
             onChangeValue={handleInputChange}
-            previewUrl={initialValues.pdfUrl || (formValues.pdfUrl as string)}
+            previewUrl={formValues?.pdfUrl as string}
           />
           <div className="action-buttons">
-            <Button type="submit" label="Save" />
             <Button
-              label="Reset"
-              type="reset"
-              onClick={() => setFormValues(initialValues)}
+              type="submit"
+              label={areInitialValuesEmpty ? 'Save' : 'Update'}
             />
+            {areInitialValuesEmpty ? (
+              <Button
+                label="Reset"
+                type="reset"
+                onClick={() => setFormValues(initialValues)}
+              />
+            ) : (
+              <Button
+                label="Delete"
+                type="button"
+                className="delete-button"
+                onClick={() => handleDelete(formValues?.id)}
+              />
+            )}
           </div>
         </div>
       </form>
