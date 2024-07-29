@@ -50,9 +50,11 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
+
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
+
   useEffect(() => {
     setFormValues((prevValues) => {
       const newValues = {
