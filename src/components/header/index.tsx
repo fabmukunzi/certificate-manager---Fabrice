@@ -1,10 +1,17 @@
 import { CloseIcon, MenuIcon } from '@/assests/icons';
 import { FC } from 'react';
-import { useSidebar } from '@/context/SidebarContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import Button from '../shared/button';
+import Select from '../shared/form/Select';
+import { Language, useTranslate } from '@/contexts/AppContext';
 
 const Header: FC = () => {
+  const languages = [
+    { label: 'English', value: 'en' },
+    { label: 'German', value: 'de' },
+  ];
   const { isSideBarOpen, setIsSideBarOpen } = useSidebar();
+  const { language, setLanguage, translate } = useTranslate();
   const toggleMenu = () => {
     setIsSideBarOpen(!isSideBarOpen);
   };
@@ -24,6 +31,16 @@ const Header: FC = () => {
       />
       <div className="header-title">
         <h1>DCCS Tuzla</h1>
+      </div>
+      <div className="header-side-menu">
+        <p>{translate('Language')}:</p>
+        <Select
+          label=""
+          defaultValue={language}
+          name="language"
+          options={languages}
+          onChangeValue={(_, value) => setLanguage(value as Language)}
+        />
       </div>
     </header>
   );

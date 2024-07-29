@@ -6,6 +6,7 @@ import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
 import { IAction, State, SupplierColumn } from '@/utils/types/supplier';
 import { initialSuppliers } from '@/utils/data/supplier';
+import { useTranslate } from '@/contexts/AppContext';
 
 interface SearchProps {
   isDialogOpen: boolean;
@@ -57,7 +58,7 @@ const reducer = (state: State, action: IAction): State => {
   }
 };
 
-const SupplierSearch: FC<SearchProps> = ({
+const SearchCertificate: FC<SearchProps> = ({
   isDialogOpen,
   handleDialogClose,
   supplierName,
@@ -65,7 +66,7 @@ const SupplierSearch: FC<SearchProps> = ({
   setIsDialogOpen,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const { translate } = useTranslate();
   const columns = useMemo<SupplierColumn[]>(
     () => [
       { header: 'Supplier Name', accessor: 'name' },
@@ -132,7 +133,7 @@ const SupplierSearch: FC<SearchProps> = ({
   return (
     <Dialog isOpen={isDialogOpen} onClose={handleDialogClose}>
       <div className="dialog-header">
-        <p>Search for suppliers</p>
+        <p>{translate('Search for suppliers')}</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} alt="Close" />}
           onClick={handleDialogClose}
@@ -145,21 +146,21 @@ const SupplierSearch: FC<SearchProps> = ({
         </div>
         <div className="search-inputs-container">
           <TextInput
-            label="Supplier Name"
+            label={translate('Supplier Name')}
             name="name"
             value={state.formValues.name}
             onChangeValue={handleInputChange}
             aria-label="Supplier Name"
           />
           <TextInput
-            label="Supplier Index"
+            label={translate('Supplier Index')}
             name="id"
             value={state.formValues.id}
             onChangeValue={handleInputChange}
             aria-label="Supplier Index"
           />
           <TextInput
-            label="City"
+            label={translate('City')}
             name="city"
             value={state.formValues.city}
             onChangeValue={handleInputChange}
@@ -192,11 +193,11 @@ const SupplierSearch: FC<SearchProps> = ({
             }}
             disabled={!state.selectedSupplier}
             type="submit"
-            label="Select"
+            label={translate('Select')}
           />
           <Button
             type="reset"
-            label="Cancel"
+            label={translate('Cancel')}
             onClick={() => {
               setSupplierName('');
               dispatch({
@@ -212,4 +213,4 @@ const SupplierSearch: FC<SearchProps> = ({
   );
 };
 
-export default SupplierSearch;
+export default SearchCertificate;
