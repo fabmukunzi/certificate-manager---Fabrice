@@ -1,3 +1,4 @@
+import { useTranslate } from '@/contexts/AppContext';
 import { SIDEBAR_PROPS } from '@/utils/types/sidebar';
 import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -16,6 +17,7 @@ const SubMenu: FC<SubMenuProps> = ({
 }) => {
   const route = useLocation();
   const navigate = useNavigate();
+  const { translate } = useTranslate();
   const [activeSubRoute, setActiveSubRoute] = useState<string>(route?.pathname);
   useEffect(() => {
     setActiveSubRoute(route?.pathname);
@@ -34,7 +36,7 @@ const SubMenu: FC<SubMenuProps> = ({
             key={subItem.id}
             className={`${activeRoute === item.name && activeSubRoute === subItem.url ? 'filter-blue' : 'filter-dark-blue'} flex sub-menu-item`}
           >
-            {subItem.name}
+            {translate(subItem.name)}
           </li>
         ))}
       </ul>

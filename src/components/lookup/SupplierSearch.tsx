@@ -1,11 +1,13 @@
+import { FC, useState } from 'react';
+import '@/components/example/certificate/certificate.css';
 import { CloseIcon, FilledArrowDown } from '@/assests/icons';
 import Button from '@/components/shared/button';
 import Dialog from '@/components/shared/dialog';
 import TableComponent from '@/components/shared/table/Table';
-import { FC, useEffect, useState } from 'react';
-import { ISupplier } from '../example/certificate/CertificateForm';
-import { initialSuppliers } from '@/utils/data/supplier';
 import TextInput from '@/components/shared/form/TextInput';
+import { initialSuppliers } from '@/utils/data/supplier';
+import { useTranslate } from '@/contexts/AppContext';
+import { ISupplier } from '@/components/example/certificate/CertificateForm';
 
 interface SearchProps {
   isDialogOpen: boolean;
@@ -20,13 +22,14 @@ interface Column {
   accessor: keyof ISupplier;
 }
 
-const SupplierSearch: FC<SearchProps> = ({
+const SearchCertificate: FC<SearchProps> = ({
   isDialogOpen,
   handleClose,
   supplierName,
   setSupplierName,
   setIsDialogOpen,
 }) => {
+  const { translate } = useTranslate();
   const [filteredSuppliers, setFilteredSuppliers] =
     useState<ISupplier[]>(initialSuppliers);
   const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>(
@@ -39,9 +42,9 @@ const SupplierSearch: FC<SearchProps> = ({
   });
 
   const columns: Column[] = [
-    { header: 'Supplier Name', accessor: 'name' },
-    { header: 'Supplier Index', accessor: 'id' },
-    { header: 'City', accessor: 'city' },
+    { header: translate('Supplier Name'), accessor: 'name' },
+    { header: translate('Supplier Index'), accessor: 'id' },
+    { header: translate('City'), accessor: 'city' },
   ];
 
   const handleInputChange = (name: string, value: string) => {
@@ -56,17 +59,14 @@ const SupplierSearch: FC<SearchProps> = ({
       return (
         supplier.name
           .toLowerCase()
-          .includes((formValues?.name || supplierName || '').toLowerCase()) &&
+          .includes((formValues.name || '').toLowerCase()) &&
         supplier.id.toString().includes(formValues.id.toString()) &&
         supplier.city.toLowerCase().includes(formValues.city.toLowerCase())
       );
     });
     setFilteredSuppliers(filtered);
   };
-  useEffect(() => {
-    handleSearch();
-  }, [supplierName]);
-  console.log(filteredSuppliers);
+
   const renderActions = (id?: number) => (
     <div className="radio-container">
       <input
@@ -87,7 +87,7 @@ const SupplierSearch: FC<SearchProps> = ({
   return (
     <Dialog isOpen={isDialogOpen} onClose={handleClose}>
       <div className="dialog-header">
-        <p>Search for suppliers</p>
+        <p>{translate('Search for suppliers')}</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} />}
           onClick={handleClose}
@@ -96,42 +96,46 @@ const SupplierSearch: FC<SearchProps> = ({
       <div className="search-container">
         <div className="search-criteria">
           <img src={FilledArrowDown} />
-          <p>Search criteria</p>
+          <p>{translate('Search criteria')}</p>
         </div>
         <div className="search-inputs-container">
           <TextInput
-            label="Supplier Name"
+            label={translate('Supplier Name')}
             name="name"
-            defaultValue={supplierName}
+            value={formValues.name}
             onChangeValue={handleInputChange}
           />
           <TextInput
-            label="Supplier Index"
+            label={translate('Supplier Index')}
             name="id"
             onChangeValue={handleInputChange}
           />
           <TextInput
-            label="City"
+            label={translate('City')}
             name="city"
             onChangeValue={handleInputChange}
           />
         </div>
         <div className="search-action-buttons">
-          <Button onClick={handleSearch} type="button" label="Search" />
+          <Button
+            onClick={handleSearch}
+            type="button"
+            label={translate('Search')}
+          />
           <Button
             onClick={() => {
               setSupplierName('');
               setFilteredSuppliers(initialSuppliers);
             }}
             type="reset"
-            label="Reset"
+            label={translate('Reset')}
           />
         </div>
       </div>
       <div className="search-container">
         <div className="search-criteria">
           <img src={FilledArrowDown} />
-          <p>Suppliers List</p>
+          <p>{translate('Suppliers List')}</p>
         </div>
         <div className="search-inputs-container">
           <TableComponent
@@ -149,11 +153,11 @@ const SupplierSearch: FC<SearchProps> = ({
             }}
             disabled={!selectedSupplier}
             type="submit"
-            label="Select"
+            label={translate('Select')}
           />
           <Button
             type="reset"
-            label="Cancel"
+            label={translate('Cancel')}
             onClick={() => {
               setSupplierName('');
               setFilteredSuppliers(initialSuppliers);
@@ -166,4 +170,4 @@ const SupplierSearch: FC<SearchProps> = ({
   );
 };
 
-export default SupplierSearch;
+export default SearchCertificate;
