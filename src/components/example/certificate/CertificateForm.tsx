@@ -24,6 +24,7 @@ export interface ISupplier {
   name: string;
   city: string;
 }
+
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
 }) => {
@@ -49,6 +50,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
+
   useEffect(() => {
     setFormValues((prevValues) => ({
       ...prevValues,
