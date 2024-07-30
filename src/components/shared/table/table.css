@@ -8,8 +8,9 @@ th {
   padding: 15px;
   font-size: 15px;
   font-weight: 400;
-  max-height: 20rem;
+  max-height: 15rem;
   overflow-y: scroll;
+  padding-bottom: 40px;
 }
 
 table {
@@ -40,7 +41,33 @@ tr {
 
 td {
   padding: 10px;
+  position: relative;
 }
+.setting-icon {
+  cursor: pointer;
+}
+.setting-action-buttons {
+  position: absolute;
+  background: var(--white-color);
+  box-shadow: -2px 2px 4px 0px var(--black-color);
+  z-index: 99;
+  left: 0px;
+  padding: 3px;
+}
+
+.setting-action-buttons button {
+  padding: 0px;
+  font-size: 15px;
+  text-align: left;
+  font-weight: 400;
+  width: 100%;
+  background: none;
+  color: var(--black-color);
+}
+.setting-action-buttons button:hover {
+  background: var(--light-grey-color);
+}
+
 @media screen and (max-width: 480px) {
   .table-container {
     padding: 10px;
@@ -48,6 +75,5 @@ td {
     overflow: scroll;
     margin-left: auto;
     margin-right: auto;
-    overflow: scroll;
   }
 }

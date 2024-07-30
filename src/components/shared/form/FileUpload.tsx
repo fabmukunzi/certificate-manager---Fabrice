@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import './styles.css';
+import Button from '../button';
 
 interface FileUploadProps {
   label: string;
@@ -37,7 +38,9 @@ const FileUpload: FC<FileUploadProps> = ({
       alert('Please upload a valid file.');
     }
   };
-
+  const handleRemoveFile = () => {
+    onChangeValue(name, '');
+  };
   return (
     <div className="file-upload">
       <div>
@@ -50,6 +53,12 @@ const FileUpload: FC<FileUploadProps> = ({
           id="file-upload"
           accept={accept}
           onChange={handleFileChange}
+        />
+        <Button
+          onClick={handleRemoveFile}
+          label="Remove"
+          type="button"
+          className="delete-button"
         />
       </div>
       <iframe

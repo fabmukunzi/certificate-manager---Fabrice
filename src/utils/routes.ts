@@ -4,24 +4,14 @@ const routes = {
     url: '/',
     name: 'start-page',
   },
-  example1: {
-    label: 'Example 1',
-    url: '/example1',
-    name: 'example1',
-  },
-  example2: {
-    label: 'Example 2',
-    url: '/example2',
-    name: 'example2',
-  },
-  example3: {
-    label: 'Example 3',
-    url: '/example3',
-    name: 'example3',
+  certificates: {
+    label: 'All Certificates',
+    url: '/certificates',
+    name: 'certificates',
   },
   newCertificate: {
-    label: 'New Certificate',
-    url: '/example1/new-certificate',
+    label: 'New certificate',
+    url: '/new-certificate',
     name: 'new-certificate',
   },
 };

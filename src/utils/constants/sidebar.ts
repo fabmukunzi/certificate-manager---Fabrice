@@ -11,23 +11,18 @@ export const SIDEBAR_ITEMS: SIDEBAR_PROPS[] = [
   },
   {
     id: 2,
-    name: 'Machine Learning',
+    name: 'Certificates',
     icon: MenuIcon,
     subItems: [
       {
         id: 3,
-        name: routes.example1.label,
-        url: routes.example1.url,
+        name: routes.certificates.label,
+        url: routes.certificates.url,
       },
       {
         id: 4,
-        name: routes.example2.label,
-        url: routes.example2.url,
-      },
-      {
-        id: 5,
-        name: routes.example3.label,
-        url: routes.example3.url,
+        name: routes.newCertificate.label,
+        url: routes.newCertificate.url,
       },
     ],
   },

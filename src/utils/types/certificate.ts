@@ -13,7 +13,7 @@ export type ISupplierData = {
   pdfUrl: string | null;
 };
 export type ICertificate = {
-  id: number;
+  id?: number;
   supplier: string;
   certificateType: string;
   validFrom: string;

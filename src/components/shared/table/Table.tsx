@@ -11,12 +11,14 @@ interface TableProps<T> {
   columns: Column<T>[];
   data: T[];
   caption?: string;
+  renderActions?: (id?: number) => React.ReactNode;
 }
 
-function TableComponent<T extends { id: number }>({
+function TableComponent<T extends { id?: number }>({
   columns,
   data,
   caption,
+  renderActions,
 }: TableProps<T>): JSX.Element {
   if (data.length === 0) {
     return <p>No data available</p>;
@@ -28,6 +30,7 @@ function TableComponent<T extends { id: number }>({
         {caption && <caption>{caption}</caption>}
         <thead>
           <tr>
+            <th></th>
             {columns.map((column) => (
               <th key={String(column.accessor)} scope="col">
                 {column.header}
@@ -38,6 +41,7 @@ function TableComponent<T extends { id: number }>({
         <tbody>
           {data.map((row) => (
             <tr key={row.id}>
+              <td>{renderActions ? renderActions(row.id) : null}</td>
               {columns.map((column) => (
                 <td key={`${row.id}-${String(column.accessor)}`}>
                   {column.render

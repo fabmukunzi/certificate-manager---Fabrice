@@ -4,6 +4,7 @@ import ArrowDownIcon from '../../public/assests/svgs/arrow-down.svg';
 import ArrowUpIcon from '../../public/assests/svgs/arrow-up.svg';
 import CloseIcon from '../../public/assests/svgs/close.svg';
 import SearchIcon from '../../public/assests/svgs/search.svg';
+import SettingsIcon from '../../public/assests/svgs/settings.svg';
 
 export {
   HomeIcon,
@@ -12,4 +13,5 @@ export {
   ArrowUpIcon,
   CloseIcon,
   SearchIcon,
+  SettingsIcon,
 };

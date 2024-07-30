@@ -1,8 +1,16 @@
 import CertificateForm from '@/components/example/certificate/CertificateForm';
 const Newcertificate = () => {
+  const initialValues = {
+    supplier: '',
+    certificateType: '',
+    validFrom: '',
+    validTo: '',
+    pdfUrl: null,
+  };
   return (
     <div className="certificate-form-container">
-      <CertificateForm />
+      <p>Create new certificate</p>
+      <CertificateForm initialValues={initialValues} />
     </div>
   );
 };
