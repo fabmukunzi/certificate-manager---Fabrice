@@ -65,3 +65,16 @@ iframe {
   padding: 8px 10px 6px 8px;
   border-left: solid var(--light-grey-color) 1px;
 }
+@media screen and (max-width: 760px) {
+  .certificate-info {
+    width: 90%;
+  }
+  .certificate-file-container {
+    width: 90%;
+  }
+  .certificate-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+}

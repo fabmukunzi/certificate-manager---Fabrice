@@ -45,6 +45,7 @@ dialog {
 .search-inputs-container {
   margin: 15px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 5px;
 }
@@ -85,4 +86,17 @@ dialog {
 
 ::backdrop {
   border: var(--light-dark-color) 12x solid;
+  background: var(--black-color);
+  opacity: 0.5;
+}
+@media screen and (max-width: 760px) {
+  dialog {
+    width: 95%;
+  }
+  .search-action-buttons {
+    margin: 0px;
+  }
+  .search-action-buttons button {
+    width: 120px;
+  }
 }

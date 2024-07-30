@@ -1,4 +1,5 @@
-import { FC, useEffect, useRef, useCallback } from 'react';
+import useClickOutside from '@/utils/hooks/useClickOutside';
+import { FC, useEffect } from 'react';
 
 interface DialogProps {
   isOpen: boolean;
@@ -7,31 +8,21 @@ interface DialogProps {
 }
 
 const Dialog: FC<DialogProps> = ({ isOpen, children, onClose }) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const handleOutsideClick = useCallback(
-    (event: MouseEvent) => {
-      if (dialogRef.current && dialogRef.current === event.target) {
-        onClose();
-      }
-    },
-    [onClose],
-  );
+  const dialogRef = useClickOutside<HTMLDialogElement>(onClose);
   useEffect(() => {
     const dialogElement = dialogRef.current;
     if (isOpen) {
       dialogElement?.showModal();
-      dialogElement?.addEventListener('click', handleOutsideClick);
     } else {
       dialogElement?.close();
-      dialogElement?.removeEventListener('click', handleOutsideClick);
     }
-    return () => {
-      dialogElement?.removeEventListener('click', handleOutsideClick);
-    };
-  }, [isOpen, handleOutsideClick]);
+  }, [isOpen, dialogRef]);
 
-  return <dialog ref={dialogRef}>{children}</dialog>;
+  return (
+    <dialog aria-labelledby="search supplier" aria-modal="true" ref={dialogRef}>
+      {children}
+    </dialog>
+  );
 };
 
 export default Dialog;

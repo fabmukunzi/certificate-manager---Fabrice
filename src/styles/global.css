@@ -157,6 +157,9 @@ select {
   width: 95%;
 }
 @media screen and (max-width: 480px) {
+  /* html {
+    overflow-y: scroll;
+  } */
   .header {
     display: flex;
     align-items: center;

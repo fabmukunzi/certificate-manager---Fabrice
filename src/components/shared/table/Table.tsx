@@ -1,3 +1,4 @@
+import { EmptyIcon } from '@/assests/icons';
 import './table.css';
 export interface Column<T> {
   header: string;
@@ -21,7 +22,12 @@ function TableComponent<T extends { id?: number }>({
   renderActions,
 }: TableProps<T>): JSX.Element {
   if (data.length === 0) {
-    return <p>No data available</p>;
+    return (
+      <div className="no-data">
+        <img src={EmptyIcon} />
+        <p>No data available</p>
+      </div>
+    );
   }
 
   return (

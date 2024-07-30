@@ -17,11 +17,7 @@ import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
 import SearchCertificate from '../../lookup/SupplierSearch';
-export interface ISupplier {
-  id: number;
-  name: string;
-  city: string;
-}
+
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
 }) => {
@@ -75,7 +71,6 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
         await deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
-        console.error('Failed to delete certificate:', error);
         alert('Failed to delete certificate.');
       }
     }
@@ -89,7 +84,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       <SearchCertificate
         supplierName={supplierName || ''}
         setSupplierName={setSupplierName}
-        handleClose={handleClose}
+        handleDialogClose={handleClose}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
       />
@@ -100,9 +95,9 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             min={3}
             label="Supplier"
             name="supplier"
+            readOnly
             value={formValues.supplier}
             onSearch={() => {
-              setSupplierName(formValues?.supplier);
               setIsDialogOpen(true);
             }}
             onClose={() => setSupplierName('')}
