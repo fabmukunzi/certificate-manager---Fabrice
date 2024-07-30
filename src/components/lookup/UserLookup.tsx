@@ -5,46 +5,49 @@ import Button from '@/components/shared/button';
 import Dialog from '@/components/shared/dialog';
 import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
-import { initialSuppliers } from '@/utils/data/supplier';
 import { useTranslate } from '@/contexts/AppContext';
-import { ISupplier } from '@/utils/types/certificate';
+import { initialUsers } from '@/utils/data/supplier';
+import { IUser } from '@/utils/types/certificate';
 
 interface SearchProps {
   isDialogOpen: boolean;
+  assignedUsers: IUser[];
   handleClose: () => void;
-  supplierName: string;
-  setSupplierName: (name: string | undefined) => void;
+  setAssignedUsers: (users: IUser[]) => void;
   setIsDialogOpen: (open: boolean) => void;
 }
 
 interface Column {
   header: string;
-  accessor: keyof ISupplier;
+  accessor: keyof IUser;
 }
 
-const SearchSupplier: FC<SearchProps> = ({
+const UserLookup: FC<SearchProps> = ({
   isDialogOpen,
+  assignedUsers,
   handleClose,
-  supplierName,
-  setSupplierName,
+  setAssignedUsers,
   setIsDialogOpen,
 }) => {
   const { translate } = useTranslate();
-  const [filteredSuppliers, setFilteredSuppliers] =
-    useState<ISupplier[]>(initialSuppliers);
-  const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>(
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>(initialUsers);
+  const [selectedUser, setSelectedUser] = useState<IUser | undefined>(
     undefined,
   );
   const [formValues, setFormValues] = useState({
-    name: supplierName,
+    name: '',
+    firstname: '',
     id: '',
-    city: '',
+    department: '',
+    plant: '',
   });
 
   const columns: Column[] = [
-    { header: translate('Supplier Name'), accessor: 'name' },
-    { header: translate('Supplier Index'), accessor: 'id' },
-    { header: translate('City'), accessor: 'city' },
+    { header: translate('Name'), accessor: 'name' },
+    { header: translate('First Name'), accessor: 'firstname' },
+    { header: translate('User ID'), accessor: 'id' },
+    { header: translate('Department'), accessor: 'department' },
+    { header: translate('Plant'), accessor: 'plant' },
   ];
 
   const handleInputChange = (name: string, value: string) => {
@@ -55,31 +58,34 @@ const SearchSupplier: FC<SearchProps> = ({
   };
 
   const handleSearch = () => {
-    const filtered = initialSuppliers.filter((supplier) => {
+    const filtered = initialUsers.filter((user) => {
       return (
-        supplier.name
+        user.name.toLowerCase().includes(formValues.name.toLowerCase()) &&
+        user.firstname
           .toLowerCase()
-          .includes((formValues.name || '').toLowerCase()) &&
-        supplier.id.toString().includes(formValues.id.toString()) &&
-        supplier.city.toLowerCase().includes(formValues.city.toLowerCase())
+          .includes(formValues.firstname.toLowerCase()) &&
+        user.id.toString().includes(formValues.id.toString()) &&
+        user.department
+          .toLowerCase()
+          .includes(formValues.department.toLowerCase()) &&
+        user.plant.toLowerCase().includes(formValues.plant.toLowerCase())
       );
     });
-    setFilteredSuppliers(filtered);
+    setFilteredUsers(filtered);
   };
 
   const renderActions = (id?: number) => (
     <div className="radio-container">
       <input
         value={id}
-        name="selected-supplier"
+        name="selected-user"
         onChange={() => {
-          const selected = initialSuppliers.find(
-            (supplier) => supplier.id === id,
-          );
-          setSelectedSupplier(selected?.name);
+          const selected = initialUsers.find((user) => user.id === id);
+          setSelectedUser(selected);
         }}
         type="radio"
         className="radio-button"
+        checked={selectedUser?.id === id}
       />
     </div>
   );
@@ -87,7 +93,7 @@ const SearchSupplier: FC<SearchProps> = ({
   return (
     <Dialog isOpen={isDialogOpen} onClose={handleClose}>
       <div className="dialog-header">
-        <p>{translate('Search for suppliers')}</p>
+        <p>{translate('Search for Persons')}</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} />}
           onClick={handleClose}
@@ -100,19 +106,33 @@ const SearchSupplier: FC<SearchProps> = ({
         </div>
         <div className="search-inputs-container">
           <TextInput
-            label={translate('Supplier Name')}
+            label={translate('Name')}
             name="name"
             value={formValues.name}
             onChangeValue={handleInputChange}
           />
           <TextInput
-            label={translate('Supplier Index')}
-            name="id"
+            label={translate('First Name')}
+            name="firstname"
+            value={formValues.firstname}
             onChangeValue={handleInputChange}
           />
           <TextInput
-            label={translate('City')}
-            name="city"
+            label={translate('User ID')}
+            name="id"
+            value={formValues.id}
+            onChangeValue={handleInputChange}
+          />
+          <TextInput
+            label={translate('Department')}
+            name="department"
+            value={formValues.department}
+            onChangeValue={handleInputChange}
+          />
+          <TextInput
+            label={translate('Plant')}
+            name="plant"
+            value={formValues.plant}
             onChangeValue={handleInputChange}
           />
         </div>
@@ -124,8 +144,15 @@ const SearchSupplier: FC<SearchProps> = ({
           />
           <Button
             onClick={() => {
-              setSupplierName('');
-              setFilteredSuppliers(initialSuppliers);
+              setFilteredUsers(initialUsers);
+              setFormValues({
+                name: '',
+                firstname: '',
+                id: '',
+                department: '',
+                plant: '',
+              });
+              setSelectedUser(undefined);
             }}
             type="reset"
             label={translate('Reset')}
@@ -135,12 +162,12 @@ const SearchSupplier: FC<SearchProps> = ({
       <div className="search-container">
         <div className="search-criteria">
           <img src={FilledArrowDown} />
-          <p>{translate('Suppliers List')}</p>
+          <p>{translate('Person List')}</p>
         </div>
         <div className="search-inputs-container">
           <TableComponent
             renderActions={renderActions}
-            data={filteredSuppliers}
+            data={filteredUsers}
             columns={columns}
             className="search-table"
           />
@@ -148,10 +175,13 @@ const SearchSupplier: FC<SearchProps> = ({
         <div className="search-action-buttons">
           <Button
             onClick={() => {
-              setSupplierName(selectedSupplier);
+              if (selectedUser) {
+                setAssignedUsers([...assignedUsers, selectedUser]);
+              }
               setIsDialogOpen(false);
+              setSelectedUser(undefined);
             }}
-            disabled={!selectedSupplier}
+            disabled={!selectedUser}
             type="submit"
             label={translate('Select')}
           />
@@ -159,9 +189,8 @@ const SearchSupplier: FC<SearchProps> = ({
             type="reset"
             label={translate('Cancel')}
             onClick={() => {
-              setSupplierName('');
-              setFilteredSuppliers(initialSuppliers);
-              setSelectedSupplier(undefined);
+              setFilteredUsers(initialUsers);
+              setSelectedUser(undefined);
             }}
           />
         </div>
@@ -170,4 +199,4 @@ const SearchSupplier: FC<SearchProps> = ({
   );
 };
 
-export default SearchSupplier;
+export default UserLookup;

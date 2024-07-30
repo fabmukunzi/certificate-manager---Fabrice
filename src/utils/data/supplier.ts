@@ -7,3 +7,46 @@ export const initialSuppliers = [
   { name: 'Patience Butera', id: 6, city: 'Lehigh' },
   { name: 'Paccy Masengesho', id: 7, city: 'Lehigh' },
 ];
+
+export const initialUsers = [
+  {
+    name: 'Doe',
+    firstname: 'John',
+    id: 1,
+    department: 'Engineering',
+    email: 'mugisha@gmail.com',
+    plant: 'Plant A',
+  },
+  {
+    name: 'Smith',
+    firstname: 'Jane',
+    id: 2,
+    department: 'Sales',
+    email: 'mugisha@gmail.com',
+    plant: 'Plant B',
+  },
+  {
+    name: 'Brown',
+    firstname: 'Alice',
+    id: 3,
+    department: 'Human Resources',
+    email: 'mugisha@gmail.com',
+    plant: 'Plant C',
+  },
+  {
+    name: 'Taylor',
+    firstname: 'Bob',
+    id: 4,
+    department: 'Marketing',
+    email: 'mugisha@gmail.com',
+    plant: 'Plant D',
+  },
+  {
+    name: 'Wilson',
+    firstname: 'Charlie',
+    id: 5,
+    department: 'Finance',
+    email: 'mugisha@gmail.com',
+    plant: 'Plant E',
+  },
+];

@@ -83,7 +83,9 @@ td {
   transform: scale(1.2);
   padding: 5px;
 }
-
+.no-data {
+  text-align: center;
+}
 @media screen and (max-width: 480px) {
   .table-container {
     padding: 10px;
