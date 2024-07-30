@@ -11,18 +11,21 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { ICertificate } from '@/utils/types/certificate';
+import { ICertificate, IUser } from '@/utils/types/certificate';
 import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
-import SearchCertificate from '../../lookup/SupplierSearch';
+import SearchSupplier from '../../lookup/SupplierSearch';
 import { useTranslate } from '@/contexts/AppContext';
+import { CloseIcon, SearchIcon } from '@/assests/icons';
+import UserLookup from '@/components/lookup/UserLookup';
+import TableComponent from '@/components/shared/table/Table';
 
-export interface ISupplier {
-  id: number;
+interface UserTable {
   name: string;
-  city: string;
+  email: string;
+  department: string;
 }
 
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
@@ -31,10 +34,10 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUserLookup, setIsUserLookup] = useState(false);
   const [supplierName, setSupplierName] = useState<string | undefined>(
     undefined,
   );
-
   const [formValues, setFormValues] = useState<ICertificate>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
@@ -46,17 +49,25 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-
+  const [assignedUsers, setAssignedUsers] = useState<IUser[]>(
+    formValues?.assignedUsers || [],
+  );
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
-
+  console.log(formValues?.assignedUsers);
   useEffect(() => {
     setFormValues((prevValues) => ({
       ...prevValues,
       supplier: supplierName || '',
     }));
   }, [supplierName]);
+  useEffect(() => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      assignedUsers: assignedUsers,
+    }));
+  }, [assignedUsers]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -97,16 +108,51 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const handleClose = () => {
     setIsDialogOpen(false);
   };
+  const closeUserLookup = () => {
+    setIsUserLookup(false);
+  };
   const { translate } = useTranslate();
-
+  interface Column {
+    header: string;
+    accessor: keyof UserTable;
+  }
+  const columns: Column[] = [
+    { header: translate('Name'), accessor: 'name' },
+    { header: translate('Department'), accessor: 'department' },
+    { header: translate('Email'), accessor: 'email' },
+  ];
+  const handleRemoveUser = (id?: number) => {
+    if (id !== undefined) {
+      setAssignedUsers((prevUsers: IUser[]) =>
+        prevUsers.filter((user) => user.id !== id),
+      );
+    }
+  };
+  const renderActions = (id?: number) => (
+    <img
+      className="remove-user"
+      width={15}
+      height={15}
+      src={CloseIcon}
+      onClick={() => handleRemoveUser(id)}
+    />
+  );
+  // console.log(formValues?.assignedUsers);
   return (
-    <section style={{ marginTop: '50px' }}>
-      <SearchCertificate
+    <section>
+      <SearchSupplier
         supplierName={supplierName || ''}
         setSupplierName={setSupplierName}
         handleDialogClose={handleClose}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
+      />
+      <UserLookup
+        assignedUsers={assignedUsers}
+        handleClose={closeUserLookup}
+        isDialogOpen={isUserLookup}
+        setIsDialogOpen={setIsUserLookup}
+        setAssignedUsers={setAssignedUsers}
       />
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
@@ -150,6 +196,26 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             defaultValue={formValues?.validTo}
             min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
             onChangeValue={handleInputChange}
+          />
+          <div className="form-input">
+            <label htmlFor="">{translate('Assigned users')}</label>
+            <Button
+              type="button"
+              className="add-participant-button"
+              onClick={() => setIsUserLookup(true)}
+              icon={<img width={20} height={20} src={SearchIcon} />}
+              label={translate('Add Participant')}
+            />
+          </div>
+          <TableComponent
+            data={
+              assignedUsers.length > 0
+                ? assignedUsers
+                : formValues?.assignedUsers || []
+            }
+            columns={columns}
+            renderActions={(id) => renderActions(id)}
+            className="search-table"
           />
         </div>
         <div className="certificate-file-container">

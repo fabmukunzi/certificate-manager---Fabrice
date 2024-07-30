@@ -1,7 +1,7 @@
 dialog {
   padding: 5px;
   border: solid var(--light-grey-color) 1px;
-  width: 40%;
+  width: 45%;
 }
 .dialog-header {
   display: flex;
@@ -46,11 +46,10 @@ dialog {
   margin: 15px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 5px;
 }
 .search-inputs-container input {
-  width: 150px;
+  width: 170px;
   padding: 7px;
 }
 .search-inputs-container label {

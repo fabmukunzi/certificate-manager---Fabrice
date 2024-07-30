@@ -37,9 +37,19 @@
   "Supplier Index": "Lieferantenindex",
   "City": "Stadt",
   "Search for suppliers": "Lieferanten suchen",
+  "Suppliers List": "Lieferantenliste",
+  "Name": "Name",
+  "First Name": "Vorname",
+  "User ID": "Benutzer-ID",
+  "Department": "Abteilung",
+  "Plant": "Werk",
+  "No data available": "Keine Daten verfügbar",
+  "Search for Persons": "Personen suchen",
   "Search criteria": "Suchkriterien",
   "Search": "Suchen",
-  "Suppliers List": "Lieferantenliste",
+  "Person List": "Personenliste",
   "Select": "Auswählen",
-  "Cancel": "Abbrechen"
+  "Cancel": "Abbrechen",
+  "Assigned users": "Zugewiesene Benutzer",
+  "Add Participant": "Teilnehmer hinzufügen"
 }

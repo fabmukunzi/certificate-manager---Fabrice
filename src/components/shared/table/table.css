@@ -82,6 +82,9 @@ td {
   transform: scale(1.2);
   padding: 5px;
 }
+p{
+  color: var(--black-color);
+}
 .no-data {
   display: flex;
   flex-direction: column;
@@ -91,6 +94,7 @@ td {
 }
 .no-data p {
   font-size: 15px !important;
+  text-align: center;
 }
 @media screen and (max-width: 480px) {
   .table-container {
