@@ -21,6 +21,7 @@ import { useTranslate } from '@/contexts/AppContext';
 import { CloseIcon, SearchIcon } from '@/assests/icons';
 import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
+import AddComment from './AddComment';
 
 interface UserTable {
   name: string;
@@ -35,6 +36,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [supplierName, setSupplierName] = useState<string | undefined>(
     undefined,
   );
@@ -55,7 +57,6 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
-  console.log(formValues?.assignedUsers);
   useEffect(() => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -137,7 +138,6 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       onClick={() => handleRemoveUser(id)}
     />
   );
-  // console.log(formValues?.assignedUsers);
   return (
     <section>
       <SearchSupplier
@@ -216,6 +216,11 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             columns={columns}
             renderActions={(id) => renderActions(id)}
             className="search-table"
+          />
+          <AddComment
+            setIsCommentOpen={setIsCommentOpen}
+            isCommentOpen={isCommentOpen}
+            comments={formValues?.comments}
           />
         </div>
         <div className="certificate-file-container">
