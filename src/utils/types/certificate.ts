@@ -20,3 +20,7 @@ export type ICertificate = {
   validTo: string;
   pdfUrl: string | null;
 };
+export interface Column {
+  header: string;
+  accessor: keyof ICertificate;
+}

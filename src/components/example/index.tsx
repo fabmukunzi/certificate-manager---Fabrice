@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent from '../shared/table/Table';
-import { ICertificate } from '@/utils/types/certificate';
+import { Column, ICertificate } from '@/utils/types/certificate';
 import {
   deleteCertificate,
   getAllCertificates,
@@ -11,11 +11,6 @@ import routes from '@/utils/routes';
 import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
-
-interface Column {
-  header: string;
-  accessor: keyof ICertificate;
-}
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
@@ -54,7 +49,6 @@ const CertificatesTable: React.FC = () => {
         await deleteCertificate(id);
         await fetchCertificates();
       } catch (error) {
-        console.error('Failed to delete certificate:', error);
         alert('Failed to delete certificate.');
       }
     }

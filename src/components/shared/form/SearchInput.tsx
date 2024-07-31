@@ -5,12 +5,14 @@ import { CloseIcon, SearchIcon } from '@/assests/icons';
 interface SearchInputProps {
   label: string;
   name: string;
+  onSearch?: () => void;
+  onClose?: () => void;
   onChangeValue: (name: string, value: string | Date) => void;
 }
 
 const SearchInput: FC<
   InputHTMLAttributes<HTMLInputElement> & SearchInputProps
-> = ({ label, onChangeValue, name, ...props }) => {
+> = ({ label, onSearch, onClose, onChangeValue, name, ...props }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChangeValue(name, e.target.value);
   };
@@ -26,8 +28,8 @@ const SearchInput: FC<
         name={name}
       />
       <div className="search-input-icons">
-        <img src={SearchIcon} alt="search icon" />
-        <img src={CloseIcon} alt="close icon" />
+        <img onClick={onSearch} src={SearchIcon} alt="search icon" />
+        <img onClick={onClose} src={CloseIcon} alt="close icon" />
       </div>
     </div>
   );

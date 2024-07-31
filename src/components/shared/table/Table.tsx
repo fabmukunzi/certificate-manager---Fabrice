@@ -1,6 +1,5 @@
-import React from 'react';
+import { EmptyIcon } from '@/assests/icons';
 import './table.css';
-
 export interface Column<T> {
   header: string;
   accessor: keyof T;
@@ -11,6 +10,7 @@ interface TableProps<T> {
   columns: Column<T>[];
   data: T[];
   caption?: string;
+  className?: string;
   renderActions?: (id?: number) => React.ReactNode;
 }
 
@@ -18,14 +18,20 @@ function TableComponent<T extends { id?: number }>({
   columns,
   data,
   caption,
+  className,
   renderActions,
 }: TableProps<T>): JSX.Element {
   if (data.length === 0) {
-    return <p>No data available</p>;
+    return (
+      <div className="no-data">
+        <img src={EmptyIcon} />
+        <p>No data available</p>
+      </div>
+    );
   }
 
   return (
-    <div className="table-container">
+    <div className={`table-container ${className}`}>
       <table>
         {caption && <caption>{caption}</caption>}
         <thead>
