@@ -11,17 +11,20 @@ import routes from '@/utils/routes';
 import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
+import { useTranslate } from '@/contexts/AppContext';
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
+  const { translate } = useTranslate(); // Use the translate function from the context
   const [certificates, setCertificates] = useState<ICertificate[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
   const columns: Column[] = [
-    { header: 'Supplier', accessor: 'supplier' },
-    { header: 'Certificate Type', accessor: 'certificateType' },
-    { header: 'Valid From', accessor: 'validFrom' },
-    { header: 'Valid To', accessor: 'validTo' },
+    { header: translate('Supplier'), accessor: 'supplier' },
+    { header: translate('Certificate Type'), accessor: 'certificateType' },
+    { header: translate('Valid From'), accessor: 'validFrom' },
+    { header: translate('Valid To'), accessor: 'validTo' },
   ];
 
   const fetchCertificates = async () => {
@@ -31,7 +34,9 @@ const CertificatesTable: React.FC = () => {
       const response = await getAllCertificates();
       setCertificates(response);
     } catch (err) {
-      setError('Failed to fetch certificates. Please try again later.');
+      setError(
+        translate('Failed to fetch certificates. Please try again later.'),
+      );
     } finally {
       setLoading(false);
     }
@@ -40,11 +45,15 @@ const CertificatesTable: React.FC = () => {
   useEffect(() => {
     fetchCertificates();
   }, []);
+
   const handleEdit = (id?: number) => {
     navigate(`${routes.certificates.url}/${id}`);
   };
+
   const handleDelete = async (id?: number) => {
-    if (confirm('Are you sure you want to delete this certificate?')) {
+    if (
+      confirm(translate('Are you sure you want to delete this certificate?'))
+    ) {
       try {
         await deleteCertificate(id);
         await fetchCertificates();
@@ -53,17 +62,21 @@ const CertificatesTable: React.FC = () => {
       }
     }
   };
+
   return (
-    <section aria-label="Certificates Table">
+    <section aria-label={translate('Certificates Table')}>
       <Link to={routes.newCertificate.url}>
-        <Button label="New Certificate" className="new-certificate-button" />
+        <Button
+          label={translate('New Certificate')}
+          className="new-certificate-button"
+        />
       </Link>
       {loading ? (
-        <Loader message="Loading Certificates" />
+        <Loader message={translate('Loading Certificates')} />
       ) : error ? (
         <ErrorComponent message={error} />
       ) : !certificates || certificates.length === 0 ? (
-        <p>No certificates available.</p>
+        <p>{translate('No certificates available.')}</p>
       ) : (
         <TableComponent
           renderActions={(id) => (

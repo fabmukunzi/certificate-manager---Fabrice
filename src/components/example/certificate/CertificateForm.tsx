@@ -17,6 +17,13 @@ import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
 import SearchCertificate from '../../lookup/SupplierSearch';
+import { useTranslate } from '@/contexts/AppContext';
+
+export interface ISupplier {
+  id: number;
+  name: string;
+  city: string;
+}
 
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
@@ -35,12 +42,15 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       [name]: value,
     }));
   };
+
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
+
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
+
   useEffect(() => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -51,27 +61,35 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!formValues?.pdfUrl && !initialValues.pdfUrl)
-      return alert('Please upload a PDF file');
+      return alert(translate('Please upload a PDF file'));
     try {
       if (initialValues.id) {
         await updateCertificate(Number(formValues.id), formValues);
-        alert('Certificate updated successfully');
+        alert(translate('Certificate updated successfully'));
       } else {
         await addCertificate(formValues);
-        alert('Certificate added successfully');
+        alert(translate('Certificate added successfully'));
       }
       navigate(routes.certificates.url);
     } catch (error) {
-      alert(`Failed to ${initialValues.id ? 'update' : 'add'} certificate.`);
+      alert(
+        translate(
+          `Failed to ${initialValues.id ? 'update' : 'add'} certificate.`,
+        ),
+      );
     }
   };
+
   const handleDelete = async (id?: number) => {
-    if (confirm('Are you sure you want to delete this certificate?')) {
+    if (
+      confirm(translate('Are you sure you want to delete this certificate?'))
+    ) {
       try {
         await deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
-        alert('Failed to delete certificate.');
+        console.error(translate('Failed to delete certificate:'), error);
+        alert(translate('Failed to delete certificate.'));
       }
     }
   };
@@ -79,6 +97,8 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const handleClose = () => {
     setIsDialogOpen(false);
   };
+  const { translate } = useTranslate();
+
   return (
     <section style={{ marginTop: '50px' }}>
       <SearchCertificate
@@ -93,7 +113,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           <SearchInput
             required
             min={3}
-            label="Supplier"
+            label={translate('Supplier')}
             name="supplier"
             readOnly
             value={formValues.supplier}
@@ -106,25 +126,26 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           <Select
             required
             onChangeValue={handleInputChange}
-            label="Certificate type"
+            label={translate('Certificate type')}
+            placeholder="Select your option"
             name="certificateType"
             value={formValues?.certificateType}
             options={certificateTypes}
           />
           <DateInput
             required
-            label="Valid from"
+            label={translate('Valid from')}
             name="validFrom"
-            placeholder="Click to select date"
+            placeholder={translate('Click to select date')}
             min={todayDate}
             defaultValue={formValues?.validFrom}
             onChangeValue={handleInputChange}
           />
           <DateInput
             required
-            label="Valid to"
+            label={translate('Valid to')}
             name="validTo"
-            placeholder="Click to select date"
+            placeholder={translate('Click to select date')}
             disabled={!formValues?.validFrom}
             defaultValue={formValues?.validTo}
             min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
@@ -134,7 +155,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
         <div className="certificate-file-container">
           <FileUpload
             name="pdfUrl"
-            label="Upload"
+            label={translate('Upload')}
             accept="application/pdf"
             onChangeValue={handleInputChange}
             previewUrl={formValues?.pdfUrl as string}
@@ -142,17 +163,19 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           <div className="action-buttons">
             <Button
               type="submit"
-              label={areInitialValuesEmpty ? 'Save' : 'Update'}
+              label={
+                areInitialValuesEmpty ? translate('Save') : translate('Update')
+              }
             />
             {areInitialValuesEmpty ? (
               <Button
-                label="Reset"
+                label={translate('Reset')}
                 type="reset"
                 onClick={() => setFormValues(initialValues)}
               />
             ) : (
               <Button
-                label="Delete"
+                label={translate('Delete')}
                 type="button"
                 className="delete-button"
                 onClick={() => handleDelete(formValues?.id)}

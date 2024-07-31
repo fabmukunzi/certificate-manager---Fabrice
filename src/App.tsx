@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import useDatabase from './utils/hooks/useDatabase';
 import Loader from './components/shared/loader';
 import ErrorComponent from './components/shared/error';
+import { AppProvider } from './contexts/AppContext';
 const App: FC = () => {
   const { isLoading, error } = useDatabase();
   if (isLoading) {
@@ -17,7 +18,9 @@ const App: FC = () => {
     <StrictMode>
       <ErrorBoundary>
         <BrowserRouter>
-          <AppRoutes />
+          <AppProvider>
+            <AppRoutes />
+          </AppProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </StrictMode>

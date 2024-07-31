@@ -2,7 +2,7 @@ import { FC } from 'react';
 import SideBar from '@/components/sidebar';
 import useWindowResizeAndDevice from '@/utils/hooks/useWindowResize';
 import { Outlet } from 'react-router-dom';
-import { SidebarProvider, useSidebar } from '@/context/SidebarContext';
+import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import Header from '@/components/header';
 
 const AppLayoutComponent: FC = () => {
