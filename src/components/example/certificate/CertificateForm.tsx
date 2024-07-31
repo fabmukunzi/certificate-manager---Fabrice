@@ -50,13 +50,9 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-  const [assignedUsers, setAssignedUsers] = useState<IUser[]>(
-    formValues?.assignedUsers || [],
-  );
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
-  console.log(formValues?.assignedUsers);
   useEffect(() => {
     setFormValues((prevValues) => {
       const newValues = {
@@ -74,12 +70,6 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       return prevValues;
     });
   }, [supplierName]);
-  useEffect(() => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      assignedUsers: assignedUsers,
-    }));
-  }, [assignedUsers]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
