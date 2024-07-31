@@ -98,3 +98,33 @@ iframe {
 .remove-user {
   cursor: pointer;
 }
+.add-comment-button {
+  display: flex;
+  justify-content: end;
+}
+.comments {
+  color: var(--dark-grey-color);
+}
+.comment-inputs {
+  min-width: 100%;
+}
+.comment-inputs,
+textarea {
+  padding: 10px;
+  border: solid 1px var(--light-grey-color);
+}
+.comment-inputs textarea {
+  font-size: 15px;
+  padding: 15px;
+  outline: none;
+  width: 93%;
+}
+.comment-inputs button {
+  background: var(--red-color);
+}
+.comment-inputs p {
+  line-height: 0px;
+  font-style: italic;
+  color: var(--dark-grey-color);
+  font-weight: 500;
+}
