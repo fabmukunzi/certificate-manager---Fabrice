@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, ReactNode, FC } from 'react';
 import de from '@/utils/data/locales/de.json';
 import en from '@/utils/data/locales/en.json';
+// import { IUser } from '@/utils/types/certificate';
 
 export type Language = 'en' | 'de';
 
@@ -30,6 +31,7 @@ interface AppProviderProps {
 
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+  // const [currentUser, setCurrentUser] = useState<IUser>();
   const translations: Record<Language, Translations> = { en, de };
   const translate = (key: string): string => {
     const translation = translations[language][key];

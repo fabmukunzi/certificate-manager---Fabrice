@@ -6,6 +6,7 @@ import useDatabase from './utils/hooks/useDatabase';
 import Loader from './components/shared/loader';
 import ErrorComponent from './components/shared/error';
 import { AppProvider } from './contexts/AppContext';
+import { UserProvider } from './contexts/UserContext';
 const App: FC = () => {
   const { isLoading, error } = useDatabase();
   if (isLoading) {
@@ -19,7 +20,9 @@ const App: FC = () => {
       <ErrorBoundary>
         <BrowserRouter>
           <AppProvider>
-            <AppRoutes />
+            <UserProvider>
+              <AppRoutes />
+            </UserProvider>
           </AppProvider>
         </BrowserRouter>
       </ErrorBoundary>
