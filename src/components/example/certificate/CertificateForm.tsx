@@ -6,21 +6,38 @@ import {
 } from '@/database/certificate.controller';
 import { FC, FormEvent, useEffect, useState } from 'react';
 import './certificate.css';
+import '../../shared/dialog/dialog.css';
 import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { ICertificate } from '@/utils/types/certificate';
+import { ICertificate, IUser } from '@/utils/types/certificate';
 import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
+import SearchSupplier from '../../lookup/SupplierSearch';
+import { useTranslate } from '@/contexts/AppContext';
+import { CloseIcon, SearchIcon } from '@/assests/icons';
+import UserLookup from '@/components/lookup/UserLookup';
+import TableComponent from '@/components/shared/table/Table';
+
+interface UserTable {
+  name: string;
+  email: string;
+  department: string;
+}
 
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
 }) => {
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUserLookup, setIsUserLookup] = useState(false);
+  const [supplierName, setSupplierName] = useState<string | undefined>(
+    undefined,
+  );
   const [formValues, setFormValues] = useState<ICertificate>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
@@ -28,84 +45,183 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       [name]: value,
     }));
   };
+
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
+  const [assignedUsers, setAssignedUsers] = useState<IUser[]>(
+    formValues?.assignedUsers || [],
+  );
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
+  console.log(formValues?.assignedUsers);
+  useEffect(() => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      supplier: supplierName || '',
+    }));
+  }, [supplierName]);
+  useEffect(() => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      assignedUsers: assignedUsers,
+    }));
+  }, [assignedUsers]);
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!formValues?.pdfUrl) return alert('Please upload a PDF file');
+    if (!formValues?.pdfUrl && !initialValues.pdfUrl)
+      return alert(translate('Please upload a PDF file'));
     try {
       if (initialValues.id) {
         await updateCertificate(Number(formValues.id), formValues);
-        alert('Certificate updated successfully');
+        alert(translate('Certificate updated successfully'));
       } else {
         await addCertificate(formValues);
-        alert('Certificate added successfully');
+        alert(translate('Certificate added successfully'));
       }
       navigate(routes.certificates.url);
     } catch (error) {
-      alert(`Failed to ${initialValues.id ? 'update' : 'add'} certificate.`);
+      alert(
+        translate(
+          `Failed to ${initialValues.id ? 'update' : 'add'} certificate.`,
+        ),
+      );
     }
   };
+
   const handleDelete = async (id?: number) => {
-    if (confirm('Are you sure you want to delete this certificate?')) {
+    if (
+      confirm(translate('Are you sure you want to delete this certificate?'))
+    ) {
       try {
         await deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
-        console.error('Failed to delete certificate:', error);
-        alert('Failed to delete certificate.');
+        console.error(translate('Failed to delete certificate:'), error);
+        alert(translate('Failed to delete certificate.'));
       }
     }
   };
 
+  const handleClose = () => {
+    setIsDialogOpen(false);
+  };
+  const closeUserLookup = () => {
+    setIsUserLookup(false);
+  };
+  const { translate } = useTranslate();
+  interface Column {
+    header: string;
+    accessor: keyof UserTable;
+  }
+  const columns: Column[] = [
+    { header: translate('Name'), accessor: 'name' },
+    { header: translate('Department'), accessor: 'department' },
+    { header: translate('Email'), accessor: 'email' },
+  ];
+  const handleRemoveUser = (id?: number) => {
+    if (id !== undefined) {
+      setAssignedUsers((prevUsers: IUser[]) =>
+        prevUsers.filter((user) => user.id !== id),
+      );
+    }
+  };
+  const renderActions = (id?: number) => (
+    <img
+      className="remove-user"
+      width={15}
+      height={15}
+      src={CloseIcon}
+      onClick={() => handleRemoveUser(id)}
+    />
+  );
+  // console.log(formValues?.assignedUsers);
   return (
-    <div style={{ marginTop: '30px' }}>
+    <section>
+      <SearchSupplier
+        supplierName={supplierName || ''}
+        setSupplierName={setSupplierName}
+        handleClose={handleClose}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
+      <UserLookup
+        assignedUsers={assignedUsers}
+        handleClose={closeUserLookup}
+        isDialogOpen={isUserLookup}
+        setIsDialogOpen={setIsUserLookup}
+        setAssignedUsers={setAssignedUsers}
+      />
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
             required
             min={3}
-            label="Supplier"
+            label={translate('Supplier')}
             name="supplier"
-            defaultValue={formValues?.supplier}
+            value={formValues.supplier}
+            onSearch={() => {
+              setSupplierName(formValues?.supplier);
+              setIsDialogOpen(true);
+            }}
+            onClose={() => setSupplierName('')}
             onChangeValue={handleInputChange}
           />
           <Select
             required
             onChangeValue={handleInputChange}
-            label="Certificate type"
+            label={translate('Certificate type')}
+            placeholder="Select your option"
             name="certificateType"
             value={formValues?.certificateType}
             options={certificateTypes}
           />
           <DateInput
             required
-            label="Valid from"
+            label={translate('Valid from')}
             name="validFrom"
-            placeholder="Click to select date"
+            placeholder={translate('Click to select date')}
             min={todayDate}
             defaultValue={formValues?.validFrom}
             onChangeValue={handleInputChange}
           />
           <DateInput
             required
-            label="Valid to"
+            label={translate('Valid to')}
             name="validTo"
-            placeholder="Click to select date"
+            placeholder={translate('Click to select date')}
             disabled={!formValues?.validFrom}
             defaultValue={formValues?.validTo}
             min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
             onChangeValue={handleInputChange}
           />
+          <div className="form-input">
+            <label htmlFor="">Assigned users</label>
+            <Button
+              type="button"
+              className="add-participant-button"
+              onClick={() => setIsUserLookup(true)}
+              icon={<img width={20} height={20} src={SearchIcon} />}
+              label={translate('Add Participant')}
+            />
+          </div>
+          <TableComponent
+            data={
+              assignedUsers.length > 0
+                ? assignedUsers
+                : formValues?.assignedUsers || []
+            }
+            columns={columns}
+            renderActions={(id) => renderActions(id)}
+            className="search-table"
+          />
         </div>
         <div className="certificate-file-container">
           <FileUpload
             name="pdfUrl"
-            label="Upload"
+            label={translate('Upload')}
             accept="application/pdf"
             onChangeValue={handleInputChange}
             previewUrl={formValues?.pdfUrl as string}
@@ -113,17 +229,19 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           <div className="action-buttons">
             <Button
               type="submit"
-              label={areInitialValuesEmpty ? 'Save' : 'Update'}
+              label={
+                areInitialValuesEmpty ? translate('Save') : translate('Update')
+              }
             />
             {areInitialValuesEmpty ? (
               <Button
-                label="Reset"
+                label={translate('Reset')}
                 type="reset"
                 onClick={() => setFormValues(initialValues)}
               />
             ) : (
               <Button
-                label="Delete"
+                label={translate('Delete')}
                 type="button"
                 className="delete-button"
                 onClick={() => handleDelete(formValues?.id)}
@@ -132,7 +250,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
           </div>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 

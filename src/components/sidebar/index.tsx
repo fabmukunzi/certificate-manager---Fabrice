@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SubMenu from './SubMenu';
 import SidebarItem from './SidebarItem';
-import { useSidebar } from '@/context/SidebarContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 
 const SideBar: FC = () => {
   const { setIsSideBarOpen } = useSidebar();

@@ -1,4 +1,5 @@
 import { ArrowDownIcon, ArrowUpIcon } from '@/assests/icons';
+import { useTranslate } from '@/contexts/AppContext';
 import { SIDEBAR_PROPS, SidebarItemProps } from '@/utils/types/sidebar';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ const SidebarItem: FC<SidebarItemProps> = ({
   isSubMenuCollapsed,
 }) => {
   const navigate = useNavigate();
+  const { translate } = useTranslate();
   const handleItemClick = (item: SIDEBAR_PROPS) => {
     setIsSideBarOpen(false);
     navigate(item.url ?? item.subItems?.[0]?.url ?? '#');
@@ -42,7 +44,7 @@ const SidebarItem: FC<SidebarItemProps> = ({
         }}
       ></div>
       <img src={item.icon as string} alt={item.name} />
-      <p>{item.name}</p>
+      <p>{translate(item.name)}</p>
       {(item?.subItems?.length || 0) > 0 && (
         <div className="sub-menu-item-dropdown">
           <img

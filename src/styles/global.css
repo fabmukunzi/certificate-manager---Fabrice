@@ -1,6 +1,6 @@
 :root {
   --primary-color: #3f9ac9;
-  --secondary-color: #dedede;
+  --secondary-color: #e7e9ea;
   --dark-grey-color: #666869;
   --grey-hover-color: #b6cfdc24;
   --white-color: #fff;
@@ -10,7 +10,7 @@
   --error-color: #ec0e24;
   --pink-color: #f5c6cb;
   --light-pink-color: #f8d7da;
-  --green-color: #adbc0b;
+  --dark-blur-color: #30427f;
 }
 body,
 html {
@@ -31,6 +31,9 @@ html {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px;
 }
 .button {
   width: fit-content;
@@ -61,8 +64,9 @@ html {
   color: var(--white-color);
   position: relative;
   min-width: 100vw;
-  height: 80px;
+  height: 70px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   top: 0;
   box-shadow: 0px 1px 6px 2px var(--secondary-color);
@@ -77,6 +81,29 @@ html {
   margin-left: 40px;
   font-weight: 400;
 }
+.header-side-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-right: 30px;
+  color: var(--black-color);
+  max-height: 100%;
+}
+.header-side-menu-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-side-menu select {
+  margin-top: 20px;
+  margin-left: 10px;
+  padding: 0px;
+  padding-left: 5px;
+  height: 30px;
+  width: 150px;
+  border: 1px solid var(--primary-color);
+}
 .start-page-content,
 .example-content {
   font-size: 40px;
@@ -84,9 +111,9 @@ html {
   color: var(--dark-grey-color);
 }
 .not-found-page {
+  min-width: 30vw;
   text-align: center;
   font-size: 30px;
-  margin-right: auto;
 }
 .not-found-page a {
   background: var(--primary-color);
@@ -118,6 +145,7 @@ button.try-again {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 80vh;
 }
 .hidden {
   display: none;
@@ -145,15 +173,15 @@ select {
 .certificate-form-container {
   width: 95%;
 }
-.certificate-form-container p {
-  font-size: 30px;
-  font-weight: 600;
-  margin-left: 20px;
-  color: var(--dark-grey-color);
-}
 .delete-button {
   margin-left: 10px;
   background: var(--error-color);
+}
+.certificate-form-container {
+  width: 95%;
+}
+.certificate-form-container {
+  width: 95%;
 }
 @media screen and (max-width: 480px) {
   .header {
@@ -177,6 +205,7 @@ select {
   }
   .outlet {
     width: 100%;
+    position: relative;
   }
   .not-found-page {
     font-size: 20px;
