@@ -32,9 +32,9 @@ html {
   padding: 0;
   overflow: hidden;
 }
-::-webkit-scrollbar {
-  width: 0px;
-}
+/* ::-webkit-scrollbar {
+  width: 20px;
+} */
 .button {
   width: fit-content;
   background-color: var(--primary-color);
@@ -56,8 +56,11 @@ html {
   flex-direction: column;
 }
 .outlet {
-  width: 70%;
+  width: 74%;
   position: relative;
+  height: 40rem !important;
+  overflow-y: scroll;
+  padding-bottom: 300px;
 }
 .header {
   background: var(--white-color);
@@ -84,17 +87,24 @@ html {
 .header-side-menu {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin-right: 30px;
   color: var(--black-color);
   max-height: 100%;
 }
+.header-side-menu-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .header-side-menu select {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-left: 10px;
   padding: 0px;
   padding-left: 5px;
   height: 30px;
-  width: 100px;
+  width: 150px;
   border: 1px solid var(--primary-color);
 }
 .start-page-content,
