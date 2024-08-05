@@ -14,7 +14,7 @@ interface TableProps<T> {
   data: T[];
   caption?: string;
   className?: string;
-  renderActions?: (id?: number) => React.ReactNode;
+  renderActions?: (id: number) => React.ReactNode;
 }
 
 function TableComponent<T extends { id?: number }>({
@@ -43,32 +43,24 @@ function TableComponent<T extends { id?: number }>({
             <th></th>
             {columns.map((column) => (
               <th key={String(column.accessor)} scope="col">
-                {column.header}
+                {translate(column.header)}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
-            <tr>
-              <td className="no-data" colSpan={columns.length + 1}>
-                No data available
-              </td>
+          {data.map((row) => (
+            <tr key={row.id}>
+              <td>{renderActions ? row?.id && renderActions(row.id) : null}</td>
+              {columns.map((column) => (
+                <td key={`${row.id}-${String(column.accessor)}`}>
+                  {column.render
+                    ? column.render(row[column.accessor])
+                    : String(row[column.accessor])}
+                </td>
+              ))}
             </tr>
-          ) : (
-            data.map((row) => (
-              <tr key={row.id}>
-                <td>{renderActions ? renderActions(row.id) : null}</td>
-                {columns.map((column) => (
-                  <td key={`${row.id}-${String(column.accessor)}`}>
-                    {column.render
-                      ? column.render(row[column.accessor])
-                      : String(row[column.accessor])}
-                  </td>
-                ))}
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>

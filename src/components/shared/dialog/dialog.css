@@ -1,7 +1,7 @@
 dialog {
   padding: 5px;
   border: solid var(--light-grey-color) 1px;
-  width: 45%;
+  width: 47%;
 }
 .dialog-header {
   display: flex;

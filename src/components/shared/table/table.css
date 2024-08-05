@@ -82,7 +82,7 @@ td {
   transform: scale(1.2);
   padding: 5px;
 }
-p{
+p {
   color: var(--black-color);
 }
 .no-data {

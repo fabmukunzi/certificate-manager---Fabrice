@@ -65,6 +65,10 @@ iframe {
   padding: 8px 10px 6px 8px;
   border-left: solid var(--light-grey-color) 1px;
 }
+.remove-user-button {
+  border: none;
+  cursor: pointer;
+}
 @media screen and (max-width: 760px) {
   .certificate-info {
     width: 90%;

@@ -21,12 +21,13 @@ import { useTranslate } from '@/contexts/AppContext';
 import { CloseIcon, SearchIcon } from '@/assests/icons';
 import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
+import { UserColumn } from '@/utils/types/user';
 
-interface UserTable {
-  name: string;
-  email: string;
-  department: string;
-}
+const columns: UserColumn[] = [
+  { header: 'Name', accessor: 'name' },
+  { header: 'Department', accessor: 'department' },
+  { header: 'Email', accessor: 'email' },
+];
 
 const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   initialValues,
@@ -49,25 +50,26 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-  const [assignedUsers, setAssignedUsers] = useState<IUser[]>(
-    formValues?.assignedUsers || [],
-  );
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
     (value) => value === '' || value === null,
   );
-  console.log(formValues?.assignedUsers);
   useEffect(() => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      supplier: supplierName || '',
-    }));
+    setFormValues((prevValues) => {
+      const newValues = {
+        ...prevValues,
+        supplier: supplierName || '',
+        assignedUsers: [],
+      };
+      if (
+        newValues.supplier !== prevValues.supplier ||
+        newValues.assignedUsers !== prevValues.assignedUsers
+      ) {
+        return newValues;
+      }
+
+      return prevValues;
+    });
   }, [supplierName]);
-  useEffect(() => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      assignedUsers: assignedUsers,
-    }));
-  }, [assignedUsers]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -108,36 +110,46 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const handleClose = () => {
     setIsDialogOpen(false);
   };
-  const closeUserLookup = () => {
+  const closeUserLookup = (isUpdated?: boolean, users?: IUser[]) => {
+    if (isUpdated) {
+      formValues.assignedUsers = users;
+    }
     setIsUserLookup(false);
   };
   const { translate } = useTranslate();
-  interface Column {
-    header: string;
-    accessor: keyof UserTable;
-  }
-  const columns: Column[] = [
-    { header: translate('Name'), accessor: 'name' },
-    { header: translate('Department'), accessor: 'department' },
-    { header: translate('Email'), accessor: 'email' },
-  ];
-  const handleRemoveUser = (id?: number) => {
-    if (id !== undefined) {
-      setAssignedUsers((prevUsers: IUser[]) =>
-        prevUsers.filter((user) => user.id !== id),
-      );
+
+  const handleRemoveUser = (id: number) => {
+    if (
+      window.confirm(translate('Are you sure you want to remove this user?'))
+    ) {
+      try {
+        const updatedUsers = formValues?.assignedUsers?.filter(
+          (user: IUser) => user.id !== id,
+        );
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          assignedUsers: updatedUsers,
+        }));
+      } catch (error) {
+        console.error('Error removing user:', error);
+      }
     }
   };
-  const renderActions = (id?: number) => (
-    <img
-      className="remove-user"
-      width={15}
-      height={15}
-      src={CloseIcon}
+
+  const renderActions = (id: number) => (
+    <button
+      className="remove-user-button"
       onClick={() => handleRemoveUser(id)}
-    />
+      aria-label={translate('Remove user')}
+    >
+      <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
+    </button>
   );
-  // console.log(formValues?.assignedUsers);
+  // const tableData = useMemo(() => {
+  //   return assignedUsers.length > 0
+  //     ? assignedUsers
+  //     : formValues?.assignedUsers || [];
+  // }, [assignedUsers, formValues?.assignedUsers]);
   return (
     <section>
       <SearchSupplier
@@ -147,13 +159,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
       />
-      <UserLookup
-        assignedUsers={assignedUsers}
-        handleClose={closeUserLookup}
-        isDialogOpen={isUserLookup}
-        setIsDialogOpen={setIsUserLookup}
-        setAssignedUsers={setAssignedUsers}
-      />
+      <UserLookup handleClose={closeUserLookup} isDialogOpen={isUserLookup} />
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
@@ -208,11 +214,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             />
           </div>
           <TableComponent
-            data={
-              assignedUsers.length > 0
-                ? assignedUsers
-                : formValues?.assignedUsers || []
-            }
+            data={formValues.assignedUsers ?? []}
             columns={columns}
             renderActions={(id) => renderActions(id)}
             className="search-table"

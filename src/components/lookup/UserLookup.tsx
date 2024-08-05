@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useReducer, useCallback } from 'react';
 import '@/components/example/certificate/certificate.css';
 import { CloseIcon, FilledArrowDown } from '@/assests/icons';
 import Button from '@/components/shared/button';
@@ -11,10 +11,7 @@ import { IUser } from '@/utils/types/certificate';
 
 interface SearchProps {
   isDialogOpen: boolean;
-  assignedUsers: IUser[];
-  handleClose: () => void;
-  setAssignedUsers: (users: IUser[]) => void;
-  setIsDialogOpen: (open: boolean) => void;
+  handleClose: (isUpdated?: boolean, users?: IUser[]) => void;
 }
 
 interface Column {
@@ -22,72 +19,121 @@ interface Column {
   accessor: keyof IUser;
 }
 
-const UserLookup: FC<SearchProps> = ({
-  isDialogOpen,
-  assignedUsers,
-  handleClose,
-  setAssignedUsers,
-  setIsDialogOpen,
-}) => {
-  const { translate } = useTranslate();
-  const [filteredUsers, setFilteredUsers] = useState<IUser[]>(initialUsers);
-  const [selectedUser, setSelectedUser] = useState<IUser | undefined>(
-    undefined,
-  );
-  const [formValues, setFormValues] = useState({
+interface State {
+  filteredUsers: IUser[];
+  selectedUser: IUser | undefined;
+  formValues: {
+    name: string;
+    firstname: string;
+    id: string;
+    department: string;
+    plant: string;
+  };
+}
+
+type Action =
+  | { type: 'SET_FORM_VALUES'; name: string; value: string }
+  | { type: 'SET_FILTERED_USERS'; users: IUser[] }
+  | { type: 'SET_SELECTED_USER'; user: IUser | undefined }
+  | { type: 'RESET_FORM' };
+
+const initialState: State = {
+  filteredUsers: initialUsers,
+  selectedUser: undefined,
+  formValues: {
     name: '',
     firstname: '',
     id: '',
     department: '',
     plant: '',
-  });
+  },
+};
 
-  const columns: Column[] = [
-    { header: translate('Name'), accessor: 'name' },
-    { header: translate('First Name'), accessor: 'firstname' },
-    { header: translate('User ID'), accessor: 'id' },
-    { header: translate('Department'), accessor: 'department' },
-    { header: translate('Plant'), accessor: 'plant' },
-  ];
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'SET_FORM_VALUES':
+      return {
+        ...state,
+        formValues: {
+          ...state.formValues,
+          [action.name]: action.value,
+        },
+      };
+    case 'SET_FILTERED_USERS':
+      return {
+        ...state,
+        filteredUsers: action.users,
+      };
+    case 'SET_SELECTED_USER':
+      return {
+        ...state,
+        selectedUser: action.user,
+      };
+    case 'RESET_FORM':
+      return {
+        ...state,
+        formValues: initialState.formValues,
+        filteredUsers: initialUsers,
+        selectedUser: undefined,
+      };
+    default:
+      return state;
+  }
+};
 
-  const handleInputChange = (name: string, value: string) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
+const UserLookup: FC<SearchProps> = ({ isDialogOpen, handleClose }) => {
+  const { translate } = useTranslate();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleSearch = () => {
+  const columns = useMemo<Column[]>(
+    () => [
+      { header: translate('Name'), accessor: 'name' },
+      { header: translate('First Name'), accessor: 'firstname' },
+      { header: translate('User ID'), accessor: 'id' },
+      { header: translate('Department'), accessor: 'department' },
+      { header: translate('Plant'), accessor: 'plant' },
+    ],
+    [translate],
+  );
+
+  const handleInputChange = useCallback((name: string, value: string) => {
+    dispatch({ type: 'SET_FORM_VALUES', name, value });
+  }, []);
+
+  const handleSearch = useCallback(() => {
     const filtered = initialUsers.filter((user) => {
       return (
-        user.name.toLowerCase().includes(formValues.name.toLowerCase()) &&
+        user.name.toLowerCase().includes(state.formValues.name.toLowerCase()) &&
         user.firstname
           .toLowerCase()
-          .includes(formValues.firstname.toLowerCase()) &&
-        user.id.toString().includes(formValues.id.toString()) &&
+          .includes(state.formValues.firstname.toLowerCase()) &&
+        user.id.toString().includes(state.formValues.id.toString()) &&
         user.department
           .toLowerCase()
-          .includes(formValues.department.toLowerCase()) &&
-        user.plant.toLowerCase().includes(formValues.plant.toLowerCase())
+          .includes(state.formValues.department.toLowerCase()) &&
+        user.plant.toLowerCase().includes(state.formValues.plant.toLowerCase())
       );
     });
-    setFilteredUsers(filtered);
-  };
+    dispatch({ type: 'SET_FILTERED_USERS', users: filtered });
+  }, [state.formValues]);
 
-  const renderActions = (id?: number) => (
-    <div className="radio-container">
-      <input
-        value={id}
-        name="selected-user"
-        onChange={() => {
-          const selected = initialUsers.find((user) => user.id === id);
-          setSelectedUser(selected);
-        }}
-        type="radio"
-        className="radio-button"
-        checked={selectedUser?.id === id}
-      />
-    </div>
+  const renderActions = useCallback(
+    (id?: number) => (
+      <div className="radio-container">
+        <input
+          value={id}
+          name="selected-user"
+          onChange={() => {
+            const selected = initialUsers.find((user) => user.id === id);
+            dispatch({ type: 'SET_SELECTED_USER', user: selected });
+          }}
+          type="radio"
+          className="radio-button"
+          checked={state.selectedUser?.id === id}
+        />
+      </div>
+    ),
+    [state.selectedUser],
   );
 
   return (
@@ -96,7 +142,7 @@ const UserLookup: FC<SearchProps> = ({
         <p>{translate('Search for Persons')}</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} />}
-          onClick={handleClose}
+          onClick={() => handleClose()}
         />
       </div>
       <div className="search-container">
@@ -108,31 +154,31 @@ const UserLookup: FC<SearchProps> = ({
           <TextInput
             label={translate('Name')}
             name="name"
-            value={formValues.name}
+            value={state.formValues.name}
             onChangeValue={handleInputChange}
           />
           <TextInput
             label={translate('First Name')}
             name="firstname"
-            value={formValues.firstname}
+            value={state.formValues.firstname}
             onChangeValue={handleInputChange}
           />
           <TextInput
             label={translate('User ID')}
             name="id"
-            value={formValues.id}
+            value={state.formValues.id}
             onChangeValue={handleInputChange}
           />
           <TextInput
             label={translate('Department')}
             name="department"
-            value={formValues.department}
+            value={state.formValues.department}
             onChangeValue={handleInputChange}
           />
           <TextInput
             label={translate('Plant')}
             name="plant"
-            value={formValues.plant}
+            value={state.formValues.plant}
             onChangeValue={handleInputChange}
           />
         </div>
@@ -143,17 +189,7 @@ const UserLookup: FC<SearchProps> = ({
             label={translate('Search')}
           />
           <Button
-            onClick={() => {
-              setFilteredUsers(initialUsers);
-              setFormValues({
-                name: '',
-                firstname: '',
-                id: '',
-                department: '',
-                plant: '',
-              });
-              setSelectedUser(undefined);
-            }}
+            onClick={() => dispatch({ type: 'RESET_FORM' })}
             type="reset"
             label={translate('Reset')}
           />
@@ -167,7 +203,7 @@ const UserLookup: FC<SearchProps> = ({
         <div className="search-inputs-container">
           <TableComponent
             renderActions={renderActions}
-            data={filteredUsers}
+            data={state.filteredUsers}
             columns={columns}
             className="search-table"
           />
@@ -175,13 +211,13 @@ const UserLookup: FC<SearchProps> = ({
         <div className="search-action-buttons">
           <Button
             onClick={() => {
-              if (selectedUser) {
-                setAssignedUsers([...assignedUsers, selectedUser]);
+              if (state.selectedUser) {
+                handleClose(true, [state.selectedUser]);
               }
-              setIsDialogOpen(false);
-              setSelectedUser(undefined);
+              handleClose();
+              dispatch({ type: 'RESET_FORM' });
             }}
-            disabled={!selectedUser}
+            disabled={!state.selectedUser}
             type="submit"
             label={translate('Select')}
           />
@@ -189,8 +225,8 @@ const UserLookup: FC<SearchProps> = ({
             type="reset"
             label={translate('Cancel')}
             onClick={() => {
-              setFilteredUsers(initialUsers);
-              setSelectedUser(undefined);
+              dispatch({ type: 'RESET_FORM' });
+              handleClose();
             }}
           />
         </div>
