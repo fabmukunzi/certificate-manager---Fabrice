@@ -58,7 +58,7 @@ const reducer = (state: State, action: IAction): State => {
   }
 };
 
-const SearchCertificate: FC<SearchProps> = ({
+const SearchSupplier: FC<SearchProps> = ({
   isDialogOpen,
   handleDialogClose,
   supplierName,
@@ -213,4 +213,4 @@ const SearchCertificate: FC<SearchProps> = ({
   );
 };
 
-export default SearchCertificate;
+export default SearchSupplier;
