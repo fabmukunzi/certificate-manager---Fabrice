@@ -5,7 +5,7 @@
   color: var(--dark-grey-color);
   font-weight: 500;
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 input.form-input {
   width: 100%;
@@ -65,6 +65,10 @@ iframe {
   padding: 8px 10px 6px 8px;
   border-left: solid var(--light-grey-color) 1px;
 }
+.remove-user-button {
+  border: none;
+  cursor: pointer;
+}
 @media screen and (max-width: 760px) {
   .certificate-info {
     width: 90%;
@@ -77,4 +81,20 @@ iframe {
     align-items: center;
     flex-direction: column;
   }
+}
+.add-participant-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px 5px 10px !important;
+  color: var(--dark-grey-color) !important;
+  background: var(--white-color) !important;
+  border: 1px solid var(--light-grey-color) !important;
+}
+.search-table {
+  color: black;
+}
+.remove-user {
+  cursor: pointer;
 }

@@ -1,5 +1,8 @@
 import { EmptyIcon } from '@/assests/icons';
 import './table.css';
+import React from 'react';
+import { useTranslate } from '@/contexts/AppContext';
+
 export interface Column<T> {
   header: string;
   accessor: keyof T;
@@ -11,7 +14,7 @@ interface TableProps<T> {
   data: T[];
   caption?: string;
   className?: string;
-  renderActions?: (id?: number) => React.ReactNode;
+  renderActions?: (id: number) => React.ReactNode;
 }
 
 function TableComponent<T extends { id?: number }>({
@@ -21,11 +24,12 @@ function TableComponent<T extends { id?: number }>({
   className,
   renderActions,
 }: TableProps<T>): JSX.Element {
+  const { translate } = useTranslate();
   if (data.length === 0) {
     return (
       <div className="no-data">
         <img src={EmptyIcon} />
-        <p>No data available</p>
+        <p>{translate('No data available')}</p>
       </div>
     );
   }
@@ -39,7 +43,7 @@ function TableComponent<T extends { id?: number }>({
             <th></th>
             {columns.map((column) => (
               <th key={String(column.accessor)} scope="col">
-                {column.header}
+                {translate(column.header)}
               </th>
             ))}
           </tr>
@@ -47,7 +51,7 @@ function TableComponent<T extends { id?: number }>({
         <tbody>
           {data.map((row) => (
             <tr key={row.id}>
-              <td>{renderActions ? renderActions(row.id) : null}</td>
+              <td>{renderActions ? row?.id && renderActions(row.id) : null}</td>
               {columns.map((column) => (
                 <td key={`${row.id}-${String(column.accessor)}`}>
                   {column.render
