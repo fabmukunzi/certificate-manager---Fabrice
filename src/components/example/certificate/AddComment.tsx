@@ -1,7 +1,7 @@
 import Button from '@/components/shared/button';
 import { useUserContext } from '@/contexts/UserContext';
 import { IComment } from '@/utils/types/certificate';
-import { FC, useState, ChangeEvent, useEffect } from 'react';
+import { FC, useState, ChangeEvent } from 'react';
 
 type CommentProps = {
   comments: IComment[] | undefined;
@@ -14,24 +14,17 @@ const AddComment: FC<CommentProps> = ({
   setIsCommentOpen,
 }) => {
   const { currentUser } = useUserContext();
-  const [savedComments, setSavedComments] = useState<IComment[]>(
-    comments || [],
-  );
   const [content, setContent] = useState<string>('');
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
-  useEffect(() => {
-    setSavedComments(comments || []);
-  }, [comments]);
   const handleSaveComment = () => {
     if (content.length < 1) return alert('Please enter comment');
     if (currentUser) {
       const newComment: IComment = {
-        user: currentUser.name,
+        user: currentUser.firstname,
         content: content,
       };
-      setSavedComments((prev) => [...prev, newComment]);
       setContent('');
       setIsCommentOpen(false);
       comments?.push(newComment);
@@ -48,7 +41,7 @@ const AddComment: FC<CommentProps> = ({
       </div>
 
       <div>
-        {savedComments.map((comment, index) => (
+        {comments?.map((comment, index) => (
           <div
             className="comments"
             key={index}

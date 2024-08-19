@@ -8,7 +8,7 @@ const Newcertificate = () => {
     validFrom: '',
     validTo: '',
     pdfUrl: null,
-    comments: undefined,
+    comments: [],
   };
   return (
     <div className="certificate-form-container">

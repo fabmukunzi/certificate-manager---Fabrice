@@ -53,7 +53,12 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
     setFormValues(initialValues);
   }, [initialValues]);
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
-    (value) => value === '' || value === null || value === undefined,
+    (value) => {
+      if (Array.isArray(value)) {
+        return true;
+      }
+      return value === '' || value === null;
+    },
   );
   useEffect(() => {
     setFormValues((prevValues) => {
@@ -121,9 +126,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const { translate } = useTranslate();
 
   const handleRemoveUser = (id: number) => {
-    if (
-      window.confirm(translate('Are you sure you want to remove this user?'))
-    ) {
+    if (confirm(translate('Are you sure you want to remove this user?'))) {
       try {
         const updatedUsers = formValues?.assignedUsers?.filter(
           (user: IUser) => user.id !== id,
