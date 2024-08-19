@@ -22,6 +22,7 @@ import { CloseIcon, SearchIcon } from '@/assests/icons';
 import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
 import { UserColumn } from '@/utils/types/user';
+import AddComment from './AddComment';
 
 const columns: UserColumn[] = [
   { header: 'Name', accessor: 'name' },
@@ -36,6 +37,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [supplierName, setSupplierName] = useState<string | undefined>(
     undefined,
   );
@@ -51,7 +53,12 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
     setFormValues(initialValues);
   }, [initialValues]);
   const areInitialValuesEmpty = Object.values(initialValues || {}).every(
-    (value) => value === '' || value === null,
+    (value) => {
+      if (Array.isArray(value)) {
+        return true;
+      }
+      return value === '' || value === null;
+    },
   );
   useEffect(() => {
     setFormValues((prevValues) => {
@@ -119,9 +126,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const { translate } = useTranslate();
 
   const handleRemoveUser = (id: number) => {
-    if (
-      window.confirm(translate('Are you sure you want to remove this user?'))
-    ) {
+    if (confirm(translate('Are you sure you want to remove this user?'))) {
       try {
         const updatedUsers = formValues?.assignedUsers?.filter(
           (user: IUser) => user.id !== id,
@@ -145,11 +150,6 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
     </button>
   );
-  // const tableData = useMemo(() => {
-  //   return assignedUsers.length > 0
-  //     ? assignedUsers
-  //     : formValues?.assignedUsers || [];
-  // }, [assignedUsers, formValues?.assignedUsers]);
   return (
     <section>
       <SearchSupplier
@@ -218,6 +218,11 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             columns={columns}
             renderActions={(id) => renderActions(id)}
             className="search-table"
+          />
+          <AddComment
+            setIsCommentOpen={setIsCommentOpen}
+            isCommentOpen={isCommentOpen}
+            comments={formValues?.comments}
           />
         </div>
         <div className="certificate-file-container">

@@ -17,6 +17,10 @@ export interface ISupplier {
   name: string;
   city: string;
 }
+export type IComment = {
+  user: string;
+  content: string;
+};
 export type ICertificate = {
   id?: number;
   supplier: string;
@@ -25,6 +29,7 @@ export type ICertificate = {
   validTo: string;
   pdfUrl: string | null;
   assignedUsers?: IUser[];
+  comments?: IComment[];
 };
 export interface Column {
   header: string;

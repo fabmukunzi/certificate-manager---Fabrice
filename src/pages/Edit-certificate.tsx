@@ -15,6 +15,7 @@ const EditCertificatePage = () => {
     validFrom: '',
     validTo: '',
     pdfUrl: null,
+    comments: [],
   });
   const { certificateId } = useParams();
   const navigate = useNavigate();
