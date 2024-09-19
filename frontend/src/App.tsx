@@ -18,7 +18,7 @@ const App: FC = () => {
   return (
     <StrictMode>
       <ErrorBoundary>
-        <BrowserRouter>
+        <BrowserRouter basename="/frontend">
           <AppProvider>
             <UserProvider>
               <AppRoutes />
