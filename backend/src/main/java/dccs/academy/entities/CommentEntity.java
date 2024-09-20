@@ -9,11 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments", schema = "certificates")
-public class CommentEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class CommentEntity extends BaseEntity{
 
     @Column(name = "content",nullable = false)
     private String content;
@@ -28,59 +24,27 @@ public class CommentEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "created_at",updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    private void onCreate(){
-        this.createdAt=LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void onUpdate(){
-        this.updatedAt=LocalDateTime.now();
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public String getContent() {
+        return content;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public CertificateEntity getCertificates() {
+        return certificates;
     }
 
-    public void setCertificate(CertificateEntity certificate) {
-        this.certificates = certificate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
+    public void setCertificates(CertificateEntity certificates) {
+        this.certificates = certificates;
     }
 
     public UserEntity getUser() {
         return user;
     }
 
-    public CertificateEntity getCertificates() {
-        return certificates;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }

@@ -22,6 +22,6 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
             response.put("message","Backend endpoint is not found");
             return Response.ok(response).build();
         }
-        return null;
+        return Response.ok(getClass().getResourceAsStream("/META-INF/resources/index.html")).build();
     }
 }

@@ -1,5 +1,6 @@
 package dccs.academy.entities;
 
+import dccs.academy.utils.enums.CertificateType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -10,15 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "certificates",schema = "certificates")
-public class CertificateEntity {
-    public enum CertificateType {
-        PERMISSION_OF_PRINTING,
-        OHSAS_18001,
-    }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class CertificateEntity extends BaseEntity{
 
     @Column(name = "valid_from")
     private LocalDateTime validFrom;
@@ -29,8 +22,8 @@ public class CertificateEntity {
     @Column(name = "certificate_type",nullable = false)
     private CertificateType certificateType;
 
-    @Column(name = "file_id",nullable = false)
-    private String pdf_url;
+    @Column(name = "pdf_url",nullable = false)
+    private String pdfUrl;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id",nullable = false)
@@ -44,32 +37,8 @@ public class CertificateEntity {
     )
     private List<UserEntity> users;
 
-    @Column(name = "created_at",updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "certificates")
     private List<CommentEntity> comments;
-
-    @PrePersist
-    private void onCreate(){
-        this.createdAt=LocalDateTime.now();
-    }
-
-    @PreUpdate
-    private void onUpdate(){
-        this.updatedAt=LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public LocalDateTime getValidFrom() {
         return validFrom;
@@ -95,20 +64,35 @@ public class CertificateEntity {
         this.certificateType = certificateType;
     }
 
-    public String getPdf_url() {
-        return pdf_url;
+    public String getPdfUrl() {
+        return pdfUrl;
     }
 
-    public void setPdf_url(String pdf_url) {
-        this.pdf_url = pdf_url;
+    public void setPdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public SupplierEntity getSupplier() {
+        return supplier;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public void setSupplier(SupplierEntity supplier) {
+        this.supplier = supplier;
     }
 
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
+
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentEntity> comments) {
+        this.comments = comments;
+    }
 }

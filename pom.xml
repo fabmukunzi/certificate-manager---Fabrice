@@ -7,8 +7,8 @@
     <version>1.0-SNAPSHOT</version>
     <name>certificate-manager</name>
     <modules>
-        <module>backend</module>
         <module>frontend</module>
+        <module>backend</module>
     </modules>
 
     <dependencies>
