@@ -8,6 +8,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @ApplicationScoped
 @Transactional
 public class SupplierService {
@@ -16,5 +20,20 @@ public class SupplierService {
     public void createSupplier(SupplierDto supplierDto){
         var supplierEntity= SupplierMapper.toEntity(supplierDto);
         supplierRepository.persist(supplierEntity);
+        supplierDto.setId(supplierEntity.getId());
+        SupplierMapper.toDto(supplierEntity);
+    }
+
+    public List<SupplierDto> supplierSearch(String names, String city, Long id){
+        String query = "lower(names) like ?1 and lower(city) like ?2";
+        List<Object> params = new ArrayList<>();
+        params.add("%" + names.toLowerCase() + "%");
+        params.add("%" + city.toLowerCase() + "%");
+        if (id != null) {
+            query += " and id = ?3";
+            params.add(id);
+        }
+        var suppliers= supplierRepository.find(query, params.toArray()).list();
+        return suppliers.stream().map(SupplierMapper::toDto).collect(Collectors.toList());
     }
 }
