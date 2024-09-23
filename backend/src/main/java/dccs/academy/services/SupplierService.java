@@ -20,8 +20,6 @@ public class SupplierService {
     public void createSupplier(SupplierDto supplierDto){
         var supplierEntity= SupplierMapper.toEntity(supplierDto);
         supplierRepository.persist(supplierEntity);
-        supplierDto.setId(supplierEntity.getId());
-        SupplierMapper.toDto(supplierEntity);
     }
 
     public List<SupplierDto> supplierSearch(String names, String city, Long id){

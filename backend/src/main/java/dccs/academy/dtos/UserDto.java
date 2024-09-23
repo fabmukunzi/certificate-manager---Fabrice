@@ -19,8 +19,8 @@ public class UserDto {
         return firstName;
     }
 
-    public void setFirstName(String fistName) {
-        this.firstName = fistName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {

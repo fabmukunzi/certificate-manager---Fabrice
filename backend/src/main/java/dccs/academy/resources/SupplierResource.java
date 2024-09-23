@@ -18,11 +18,15 @@ public class SupplierResource {
     SupplierService supplierService;
     @GET
     public Response supplierSearch(@QueryParam("index") String index, @QueryParam("names") String names, @QueryParam("city") String city) {
-        names = (names == null || names.isEmpty()) ? "" : names;
-        city = (city == null || city.isEmpty()) ? "" : city;
-        var indexValue = (index == null || index.isEmpty()) ? null : Long.parseLong(index);
-        var suppliers = supplierService.supplierSearch(names, city, indexValue);
-        return Response.ok(suppliers).build();
+        try {
+            names = (names == null || names.isEmpty()) ? "" : names.trim();
+            city = (city == null || city.isEmpty()) ? "" : city.trim();
+            var indexValue = (index == null || index.isEmpty()) ? null : Long.parseLong(index.trim());
+            var suppliers = supplierService.supplierSearch(names, city, indexValue);
+            return Response.ok(suppliers).build();
+        }catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
 }
