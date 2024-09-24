@@ -1,8 +1,9 @@
 package dccs.academy.resources;
 
-import dccs.academy.services.SupplierService;
+import dccs.academy.repositories.SupplierRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -15,14 +16,12 @@ import jakarta.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class SupplierResource {
     @Inject
-    SupplierService supplierService;
+    SupplierRepository supplierRepository;
     @GET
-    public Response supplierSearch(@QueryParam("index") String index, @QueryParam("names") String names, @QueryParam("city") String city) {
+    @Transactional
+    public Response supplierSearch(@QueryParam("index") String index, @QueryParam("name") String name, @QueryParam("city") String city) {
         try {
-            names = (names == null || names.isEmpty()) ? "" : names.trim();
-            city = (city == null || city.isEmpty()) ? "" : city.trim();
-            var indexValue = (index == null || index.isEmpty()) ? null : Long.parseLong(index.trim());
-            var suppliers = supplierService.supplierSearch(names, city, indexValue);
+            var suppliers = supplierRepository.supplierSearch(name, city, index);
             return Response.ok(suppliers).build();
         }catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

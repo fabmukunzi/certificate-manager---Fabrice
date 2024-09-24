@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +18,14 @@ public class UserEntity extends BaseEntity{
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Column(name = "user_id",nullable = false)
+    private String userId;
+
     @Column(name = "plant")
     private String plant;
+
+    @Column(name = "email")
+    private String email;
 
     @ManyToOne()
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -66,5 +73,36 @@ public class UserEntity extends BaseEntity{
 
     public void setCertificates(List<CertificateEntity> certificates) {
         this.certificates = certificates;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    @PrePersist
+    public void generateIndex() {
+        this.userId = generateRandomString(6);
+    }
+
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder result = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            result.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return result.toString();
     }
 }

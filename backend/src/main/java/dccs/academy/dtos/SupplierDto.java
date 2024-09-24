@@ -2,8 +2,9 @@ package dccs.academy.dtos;
 
 public class SupplierDto {
     private Long id;
-    private String names;
+    private String name;
     private String city;
+    private String index;
 
     public Long getId() {
         return id;
@@ -13,12 +14,12 @@ public class SupplierDto {
         this.id = id;
     }
 
-    public String getNames() {
-        return names;
+    public String getName() {
+        return name;
     }
 
-    public void setNames(String names) {
-        this.names = names;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCity() {
@@ -27,5 +28,13 @@ public class SupplierDto {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }
