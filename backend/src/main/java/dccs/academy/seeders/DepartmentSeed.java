@@ -33,7 +33,7 @@ public class DepartmentSeed {
         departments.add("Marketing");
         departments.add("Finance");
 
-        if (departmentRepository.listAll().isEmpty()) {
+        if (departmentRepository.count()==0) {
             for (String title : departments) {
                 DepartmentDto departmentDto = new DepartmentDto();
                 departmentDto.setTitle(title);

@@ -5,7 +5,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String plant;
-    private Long department;
+    private Long departmentId;
 
     public Long getId() {
         return id;
@@ -39,11 +39,11 @@ public class UserDto {
         this.plant = plant;
     }
 
-    public Long getDepartment() {
-        return department;
+    public Long getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(Long department) {
-        this.department = department;
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 }

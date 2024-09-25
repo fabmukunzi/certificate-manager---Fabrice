@@ -4,6 +4,7 @@ import dccs.academy.dtos.UserDto;
 import dccs.academy.entities.UserEntity;
 import dccs.academy.repositories.DepartmentRepository;
 import dccs.academy.repositories.UserRepository;
+import dccs.academy.utils.mappers.UserMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,20 +19,14 @@ public class UserService {
     @Inject
     DepartmentRepository departmentRepository;
 
-    public UserDto createUser(UserDto userDto){
-        var userEntity=new UserEntity();
-        userEntity.setFirstName(userDto.getFirstName());
-        userEntity.setLastName(userDto.getLastName());
-        userEntity.setPlant(userDto.getPlant());
-        var department=departmentRepository.findById(userDto.getDepartment());
+    public void createUser(UserDto userDto){
+        var userEntity= UserMapper.toEntity(userDto);
+        var department=departmentRepository.findById(userDto.getDepartmentId());
         if(department!=null) {
             userEntity.setDepartment(department);
         } else {
-            throw new EntityNotFoundException("Department with id "+userDto.getDepartment()+" doesn't exists");
+            throw new EntityNotFoundException("Department with id "+userDto.getDepartmentId()+" doesn't exists");
         }
         userRepository.persist(userEntity);
-        userDto.setId(userEntity.getId());
-
-        return userDto;
     }
 }

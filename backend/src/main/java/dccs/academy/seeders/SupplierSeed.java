@@ -57,7 +57,7 @@ public class SupplierSeed {
         supplier7.setCity("Lehigh");
         suppliers.add(supplier7);
 
-        if(supplierRepository.listAll().isEmpty()){
+        if(supplierRepository.count()==0){
             for (SupplierDto supplier : suppliers) {
                 supplierService.createSupplier(supplier);
             }

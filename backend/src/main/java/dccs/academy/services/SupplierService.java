@@ -3,6 +3,7 @@ package dccs.academy.services;
 import dccs.academy.dtos.SupplierDto;
 import dccs.academy.entities.SupplierEntity;
 import dccs.academy.repositories.SupplierRepository;
+import dccs.academy.utils.mappers.SupplierMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,12 +13,8 @@ import jakarta.transaction.Transactional;
 public class SupplierService {
     @Inject
     SupplierRepository supplierRepository;
-    public SupplierDto createSupplier(SupplierDto supplierDto){
-        var supplierEntity= new SupplierEntity();
-        supplierEntity.setNames(supplierDto.getNames());
-        supplierEntity.setCity(supplierDto.getCity());
+    public void createSupplier(SupplierDto supplierDto){
+        var supplierEntity= SupplierMapper.toEntity(supplierDto);
         supplierRepository.persist(supplierEntity);
-        supplierDto.setId(supplierEntity.getId());
-        return supplierDto;
     }
 }
