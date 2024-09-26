@@ -1,46 +1,28 @@
-package dccs.academy.entities;
+package dccs.academy.dtos;
 
+import dccs.academy.entities.SupplierEntity;
 import dccs.academy.utils.enums.CertificateType;
-import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-@Entity
-@Table(name = "certificates",schema = "certificates")
-public class CertificateEntity extends BaseEntity{
-
-    @Column(name = "valid_from")
+public class CertificateDto {
+    private Long id;
     private LocalDateTime validFrom;
-
-    @Column(name = "valid_to")
     private LocalDateTime validTo;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "certificate_type",nullable = false)
     private CertificateType certificateType;
-
-    @Column(name = "pdf_url",nullable = false)
     private String pdfUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "supplier_id",nullable = false)
     private SupplierEntity supplier;
+    private List<UserDto> certificateAssignedUsers;
+    private List<CommentDto> comments;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "certificate_assigned_users",
-            schema = "certificates",
-            joinColumns = @JoinColumn(name = "certificate_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<UserEntity> users;
+    public Long getId() {
+        return id;
+    }
 
-    @OneToMany(mappedBy = "certificates")
-    private List<CommentEntity> comments;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDateTime getValidFrom() {
         return validFrom;
@@ -82,19 +64,19 @@ public class CertificateEntity extends BaseEntity{
         this.supplier = supplier;
     }
 
-    public List<UserEntity> getUsers() {
-        return users;
+    public List<UserDto> getCertificateAssignedUsers() {
+        return certificateAssignedUsers;
     }
 
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
+    public void setCertificateAssignedUsers(List<UserDto> certificateAssignedUsers) {
+        this.certificateAssignedUsers = certificateAssignedUsers;
     }
 
-    public List<CommentEntity> getComments() {
+    public List<CommentDto> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentEntity> comments) {
+    public void setComments(List<CommentDto> comments) {
         this.comments = comments;
     }
 }
