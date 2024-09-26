@@ -31,7 +31,9 @@ public class CertificateEntity extends BaseEntity{
 
     @ManyToMany
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(name = "assigned_users",
+    @JoinTable(
+            name = "certificate_assigned_users",
+            schema = "certificates",
             joinColumns = @JoinColumn(name = "certificate_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )

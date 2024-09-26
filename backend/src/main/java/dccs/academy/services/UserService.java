@@ -1,7 +1,6 @@
 package dccs.academy.services;
 
 import dccs.academy.dtos.UserDto;
-import dccs.academy.entities.UserEntity;
 import dccs.academy.repositories.DepartmentRepository;
 import dccs.academy.repositories.UserRepository;
 import dccs.academy.utils.mappers.UserMapper;
@@ -25,7 +24,7 @@ public class UserService {
         if(department!=null) {
             userEntity.setDepartment(department);
         } else {
-            throw new EntityNotFoundException("Department with id "+userDto.getDepartmentId()+" doesn't exists");
+            throw new EntityNotFoundException("Department with Id "+ + userDto.getDepartmentId()+" doesn't exists");
         }
         userRepository.persist(userEntity);
     }

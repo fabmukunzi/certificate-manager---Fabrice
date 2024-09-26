@@ -1,4 +1,4 @@
-package dccs.academy;
+package dccs.academy.resources;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

@@ -11,7 +11,7 @@ public class SupplierMapper {
         }
 
         SupplierEntity supplierEntity = new SupplierEntity();
-        supplierEntity.setNames(supplierDto.getNames());
+        supplierEntity.setName(supplierDto.getName());
         supplierEntity.setCity(supplierDto.getCity());
         return supplierEntity;
     }
@@ -23,7 +23,8 @@ public class SupplierMapper {
 
         SupplierDto supplierDto = new SupplierDto();
         supplierDto.setId(supplierEntity.getId());
-        supplierDto.setNames(supplierEntity.getNames());
+        supplierDto.setName(supplierEntity.getName());
+        supplierDto.setIndex(supplierEntity.getIndex());
         supplierDto.setCity(supplierEntity.getCity());
         return supplierDto;
     }
