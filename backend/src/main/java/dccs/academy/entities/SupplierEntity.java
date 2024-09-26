@@ -1,5 +1,6 @@
 package dccs.academy.entities;
 
+import dccs.academy.utils.UtilityMethods;
 import jakarta.persistence.*;
 
 import java.security.SecureRandom;
@@ -43,16 +44,6 @@ public class SupplierEntity extends BaseEntity{
 
     @PrePersist
     public void generateIndex() {
-        this.index = generateRandomString(6);
-    }
-
-    private String generateRandomString(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        SecureRandom random = new SecureRandom();
-        StringBuilder result = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            result.append(characters.charAt(random.nextInt(characters.length())));
-        }
-        return result.toString();
+        this.index = UtilityMethods.generateRandomString(6);
     }
 }
