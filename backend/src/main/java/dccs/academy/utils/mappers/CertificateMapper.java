@@ -35,8 +35,7 @@ public class CertificateMapper {
         return certificateDto;
     }
 
-    public static CertificateEntity toEntity(CertificateDto certificateDto) {
-        CertificateEntity entity = new CertificateEntity();
+    public static CertificateEntity toEntity(CertificateDto certificateDto,CertificateEntity entity) {
         entity.setValidFrom(certificateDto.getValidFrom());
         entity.setValidTo(certificateDto.getValidTo());
         entity.setCertificateType(certificateDto.getCertificateType());

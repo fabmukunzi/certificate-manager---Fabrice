@@ -14,13 +14,11 @@ public class CommentEntity extends BaseEntity{
     @Column(name = "content",nullable = false)
     private String content;
 
-    @ManyToOne()
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "certificate_id",nullable = false)
     private  CertificateEntity certificates;
 
     @ManyToOne()
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

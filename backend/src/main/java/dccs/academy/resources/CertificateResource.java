@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.util.List;
 
 @Path("/backend/certificates")
@@ -36,12 +37,12 @@ public class CertificateResource {
 
     @POST
     public Response createCertificate(CertificateDto certificateDto) {
-       try{
-           CertificateDto createdCertificate = certificateService.createCertificate(certificateDto);
-           return Response.status(Response.Status.CREATED).entity(createdCertificate).build();
-       }catch (EntityNotFoundException e){
-           return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-       }
+        try {
+            CertificateDto createdCertificate = certificateService.createCertificate(certificateDto);
+            return Response.status(Response.Status.CREATED).entity(createdCertificate).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 
     @DELETE
@@ -49,9 +50,28 @@ public class CertificateResource {
     public Response deleteCertificate(@PathParam("id") Long id) {
         try {
             certificateService.deleteCertificateById(id);
-            return Response.ok("Certificate with ID "+id+" is deleted successfully").build();
+            return Response.ok("Certificate with ID " + id + " is deleted successfully").build();
         } catch (EntityNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCertificate(@PathParam("id") Long id, CertificateDto certificateDto) {
+        try {
+            CertificateDto updatedCertificate = certificateService.updateCertificate(id, certificateDto);
+            return Response.ok(updatedCertificate).build();
+        } catch (EntityNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Certificate with ID " + id + " not found.")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(e.getMessage())
+                    .build();
         }
     }
 

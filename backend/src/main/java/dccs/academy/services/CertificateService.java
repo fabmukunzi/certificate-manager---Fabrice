@@ -1,6 +1,7 @@
 package dccs.academy.services;
 
 import dccs.academy.dtos.CertificateDto;
+import dccs.academy.dtos.UserDto;
 import dccs.academy.entities.CertificateEntity;
 import dccs.academy.entities.CommentEntity;
 import dccs.academy.entities.SupplierEntity;
@@ -17,6 +18,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +37,8 @@ public class CertificateService {
     CommentRepository commentRepository;
 
     public CertificateDto createCertificate(CertificateDto certificateDto) {
-        CertificateEntity certificateEntity = CertificateMapper.toEntity(certificateDto);
+        var newCertificateEntity = new CertificateEntity();
+        var certificateEntity = CertificateMapper.toEntity(certificateDto, newCertificateEntity);
         if (certificateDto.getSupplier().getId() != null) {
             SupplierEntity supplier = supplierRepository.findById(certificateDto.getSupplier().getId());
             certificateEntity.setSupplier(supplier);
@@ -44,7 +47,7 @@ public class CertificateService {
         }
         if (certificateDto.getCertificateAssignedUsers() != null) {
             List<UserEntity> users = certificateDto.getCertificateAssignedUsers().stream()
-                    .map(userDto -> userRepository.findById(userDto.getId()))                                           // Remove duplicate users
+                    .map(userDto -> userRepository.findById(userDto.getId()))
                     .collect(Collectors.toList());
             certificateEntity.setUsers(users);
         }
@@ -84,11 +87,39 @@ public class CertificateService {
         }
         return certificateDto;
     }
+
     public void deleteCertificateById(Long id) {
         CertificateEntity certificateEntity = certificateRepository.findById(id);
         if (certificateEntity == null) {
             throw new EntityNotFoundException("Certificate with ID " + id + " is not found.");
         }
         certificateRepository.delete(certificateEntity);
+    }
+
+    public CertificateDto updateCertificate(Long id, CertificateDto certificateDto) {
+        CertificateEntity certificateEntity = certificateRepository.findById(id);
+        if (certificateEntity == null) {
+            throw new EntityNotFoundException("Certificate with ID " + id + " not found.");
+        }
+        if (certificateDto.getCertificateAssignedUsers() != null) {
+            List<UserEntity> users = new ArrayList<>();
+            for (UserDto userDto : certificateDto.getCertificateAssignedUsers()) {
+                UserEntity userEntity = userRepository.findById(userDto.getId());
+                if (userEntity == null) {
+                    throw new EntityNotFoundException("User with ID " + userDto.getId() + " not found.");
+                }
+                users.add(userEntity);
+            }
+            certificateEntity.setUsers(users);
+        }
+        CertificateMapper.toEntity(certificateDto, certificateEntity);
+        if (certificateDto.getSupplier() != null && certificateDto.getSupplier().getId() != null) {
+            SupplierEntity supplier = supplierRepository.findById(certificateDto.getSupplier().getId());
+            certificateEntity.setSupplier(supplier);
+        } else {
+            throw new EntityNotFoundException("Supplier with ID " + certificateDto.getSupplier().getId() + " is not found");
+        }
+        certificateRepository.persist(certificateEntity);
+        return CertificateMapper.toDto(certificateEntity);
     }
 }

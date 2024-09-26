@@ -2,8 +2,6 @@ package dccs.academy.entities;
 
 import dccs.academy.utils.enums.CertificateType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +28,7 @@ public class CertificateEntity extends BaseEntity{
     @JoinColumn(name = "supplier_id",nullable = false)
     private SupplierEntity supplier;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(
             name = "certificate_assigned_users",
             schema = "certificates",
