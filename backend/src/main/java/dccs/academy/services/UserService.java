@@ -20,11 +20,11 @@ public class UserService {
 
     public void createUser(UserDto userDto){
         var userEntity= UserMapper.toEntity(userDto);
-        var department=departmentRepository.findById(userDto.getDepartmentId());
+        var department=departmentRepository.findDepartmentByTitle(userDto.getDepartment());
         if(department!=null) {
             userEntity.setDepartment(department);
         } else {
-            throw new EntityNotFoundException("Department with Id "+ + userDto.getDepartmentId()+" doesn't exists");
+            throw new EntityNotFoundException("Department doesn't exists");
         }
         userRepository.persist(userEntity);
     }

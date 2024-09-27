@@ -35,9 +35,9 @@ public class UserRepository implements PanacheRepository<UserEntity> {
         conditions.put(UserEntity_.USER_ID,userId);
         if (department != null) {
             var departmentEntity = departmentRepository.findDepartmentByTitle(department);
-            if (departmentEntity == null) {
-                return new ArrayList<>();
-            }
+//            if (departmentEntity == null) {
+//                return new ArrayList<>();
+//            }
             conditions.put(UserEntity_.DEPARTMENT,departmentEntity);
         }
         var users= entityManager.createQuery(SearchQueryBuilder.searchQueryBuilder(UserEntity.class,cb,conditions)).getResultList();

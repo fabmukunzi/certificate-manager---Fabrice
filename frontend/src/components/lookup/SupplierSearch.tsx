@@ -5,8 +5,7 @@ import Dialog from '@/components/shared/dialog';
 import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
 import { IAction, State, SupplierColumn } from '@/utils/types/supplier';
-import { initialSuppliers } from '@/utils/data/supplier';
-import { useTranslate } from '@/contexts/AppContext';
+import axios from 'axios';
 
 interface SearchProps {
   isDialogOpen: boolean;
@@ -19,10 +18,10 @@ interface SearchProps {
 const initialState: State = {
   formValues: {
     name: '',
-    id: '',
+    index: '',
     city: '',
   },
-  filteredSuppliers: initialSuppliers,
+  filteredSuppliers: [],
   selectedSupplier: undefined,
 };
 
@@ -49,8 +48,8 @@ const reducer = (state: State, action: IAction): State => {
     case 'RESET_FORM':
       return {
         ...state,
-        formValues: { name: '', id: '', city: '' },
-        filteredSuppliers: initialSuppliers,
+        formValues: { name: '', index: '', city: '' },
+        filteredSuppliers: [],
         selectedSupplier: undefined,
       };
     default:
@@ -66,11 +65,10 @@ const SearchSupplier: FC<SearchProps> = ({
   setIsDialogOpen,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { translate } = useTranslate();
   const columns = useMemo<SupplierColumn[]>(
     () => [
       { header: 'Supplier Name', accessor: 'name' },
-      { header: 'Supplier Index', accessor: 'id' },
+      { header: 'Supplier Index', accessor: 'index' },
       { header: 'City', accessor: 'city' },
     ],
     [],
@@ -80,20 +78,24 @@ const SearchSupplier: FC<SearchProps> = ({
     dispatch({ type: 'SET_FORM_VALUE', name, value });
   }, []);
 
-  const handleSearch = useCallback(() => {
-    const filtered = initialSuppliers.filter((supplier) => {
-      return (
-        supplier.name
-          .toLowerCase()
-          .includes((state.formValues.name || supplierName).toLowerCase()) &&
-        supplier.id.toString().includes(state.formValues.id) &&
-        supplier.city
-          .toLowerCase()
-          .includes(state.formValues.city.toLowerCase())
-      );
+  const handleSearch = useCallback(async () => {
+    const { name, index, city } = state.formValues;
+
+    if (!name && !index && !city) {
+      return;
+    }
+    const response = await axios.get('/backend/suppliers', {
+      params: {
+        name: name,
+        index: index,
+        city: city,
+      },
     });
-    dispatch({ type: 'SET_FILTERED_SUPPLIERS', suppliers: filtered });
-  }, [state.formValues, supplierName]);
+    dispatch({
+      type: 'SET_FILTERED_SUPPLIERS',
+      suppliers: response.data.data,
+    });
+  }, [state.formValues]);
 
   useEffect(() => {
     handleSearch();
@@ -110,7 +112,7 @@ const SearchSupplier: FC<SearchProps> = ({
           value={id}
           name="selected-supplier"
           onChange={() => {
-            const selected = initialSuppliers.find(
+            const selected = state.filteredSuppliers.find(
               (supplier) => supplier.id === id,
             );
             dispatch({
@@ -122,18 +124,18 @@ const SearchSupplier: FC<SearchProps> = ({
           className="radio-button"
           checked={
             state.selectedSupplier ===
-            initialSuppliers.find((supplier) => supplier.id === id)?.name
+            state.filteredSuppliers.find((supplier) => supplier.id === id)?.name
           }
         />
       </div>
     ),
-    [state.selectedSupplier],
+    [state.selectedSupplier, state.filteredSuppliers],
   );
 
   return (
     <Dialog isOpen={isDialogOpen} onClose={handleDialogClose}>
       <div className="dialog-header">
-        <p>{translate('Search for suppliers')}</p>
+        <p>Search for suppliers</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} alt="Close" />}
           onClick={handleDialogClose}
@@ -146,21 +148,21 @@ const SearchSupplier: FC<SearchProps> = ({
         </div>
         <div className="search-inputs-container">
           <TextInput
-            label={translate('Supplier Name')}
+            label="Supplier Name"
             name="name"
             value={state.formValues.name}
             onChangeValue={handleInputChange}
             aria-label="Supplier Name"
           />
           <TextInput
-            label={translate('Supplier Index')}
-            name="id"
-            value={state.formValues.id}
+            label="Supplier Index"
+            name="index"
+            value={state.formValues.index}
             onChangeValue={handleInputChange}
             aria-label="Supplier Index"
           />
           <TextInput
-            label={translate('City')}
+            label="City"
             name="city"
             value={state.formValues.city}
             onChangeValue={handleInputChange}
@@ -193,17 +195,14 @@ const SearchSupplier: FC<SearchProps> = ({
             }}
             disabled={!state.selectedSupplier}
             type="submit"
-            label={translate('Select')}
+            label="Select"
           />
           <Button
             type="reset"
-            label={translate('Cancel')}
+            label="Cancel"
             onClick={() => {
               setSupplierName('');
-              dispatch({
-                type: 'SET_FILTERED_SUPPLIERS',
-                suppliers: initialSuppliers,
-              });
+              dispatch({ type: 'SET_FILTERED_SUPPLIERS', suppliers: [] });
               dispatch({ type: 'SET_SELECTED_SUPPLIER', supplier: undefined });
             }}
           />

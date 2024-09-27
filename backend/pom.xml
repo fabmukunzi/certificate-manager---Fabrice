@@ -133,6 +133,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>cz.habarta.typescript-generator</groupId>
+                <artifactId>typescript-generator-maven-plugin</artifactId>
+                <version>3.2.1263</version>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jsonLibrary>jackson2</jsonLibrary>
+                    <classes>
+                        <class>dccs.academy.dtos.UserDto</class>
+                        <class>dccs.academy.dtos.CertificateDto</class>
+                        <class>dccs.academy.dtos.SupplierDto</class>
+                        <class>dccs.academy.dtos.CommentDto</class>
+                        <class>dccs.academy.dtos.DepartmentDto</class>
+                    </classes>
+                    <outputKind>module</outputKind>
+                    <outputFileType>implementationFile</outputFileType>
+                    <outputFile>../frontend/src/utils/types/index.ts</outputFile>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>

@@ -3,13 +3,14 @@ package dccs.academy.dtos;
 import dccs.academy.entities.SupplierEntity;
 import dccs.academy.utils.enums.CertificateType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class CertificateDto {
     private Long id;
-    private LocalDateTime validFrom;
-    private LocalDateTime validTo;
+    private LocalDate validFrom;
+    private LocalDate validTo;
     private CertificateType certificateType;
     private String pdfUrl;
     private SupplierEntity supplier;
@@ -24,19 +25,19 @@ public class CertificateDto {
         this.id = id;
     }
 
-    public LocalDateTime getValidFrom() {
+    public LocalDate getValidFrom() {
         return validFrom;
     }
 
-    public void setValidFrom(LocalDateTime validFrom) {
+    public void setValidFrom(LocalDate validFrom) {
         this.validFrom = validFrom;
     }
 
-    public LocalDateTime getValidTo() {
+    public LocalDate getValidTo() {
         return validTo;
     }
 
-    public void setValidTo(LocalDateTime validTo) {
+    public void setValidTo(LocalDate validTo) {
         this.validTo = validTo;
     }
 
