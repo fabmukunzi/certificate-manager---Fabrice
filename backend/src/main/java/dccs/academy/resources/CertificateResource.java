@@ -2,6 +2,7 @@ package dccs.academy.resources;
 
 import dccs.academy.dtos.CertificateDto;
 import dccs.academy.services.CertificateService;
+import dccs.academy.utils.UtilityMethods;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.*;
@@ -39,9 +40,11 @@ public class CertificateResource {
     public Response createCertificate(CertificateDto certificateDto) {
         try {
             CertificateDto createdCertificate = certificateService.createCertificate(certificateDto);
-            return Response.status(Response.Status.CREATED).entity(createdCertificate).build();
+            return UtilityMethods.successResponse("Certificate created successfully", createdCertificate, Response.Status.CREATED);
         } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,9 +53,11 @@ public class CertificateResource {
     public Response deleteCertificate(@PathParam("id") Long id) {
         try {
             certificateService.deleteCertificateById(id);
-            return Response.ok("Certificate with ID " + id + " is deleted successfully").build();
+            return UtilityMethods.successResponse("Certificate with ID " + id + " is deleted successfully", null, Response.Status.OK);
         } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,15 +68,11 @@ public class CertificateResource {
     public Response updateCertificate(@PathParam("id") Long id, CertificateDto certificateDto) {
         try {
             CertificateDto updatedCertificate = certificateService.updateCertificate(id, certificateDto);
-            return Response.ok(updatedCertificate).build();
+            return UtilityMethods.successResponse("Certificate updated successfully", updatedCertificate, Response.Status.OK);
         } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Certificate with ID " + id + " not found.")
-                    .build();
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(e.getMessage())
-                    .build();
+            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
