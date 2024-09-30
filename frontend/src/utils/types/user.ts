@@ -1,3 +1,5 @@
+import { UserDto } from '.';
+
 export interface UserTable {
   name: string;
   email: string;
@@ -5,5 +7,5 @@ export interface UserTable {
 }
 export interface UserColumn {
   header: string;
-  accessor: keyof UserTable;
+  accessor: keyof UserDto;
 }

@@ -2,6 +2,7 @@ package dccs.academy.resources;
 
 import dccs.academy.dtos.UserDto;
 import dccs.academy.repositories.UserRepository;
+import dccs.academy.utils.ResponseUtility;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -30,9 +31,9 @@ public class UserResource {
             @QueryParam("department") String department) {
         try {
             List<UserDto> users = userRepository.userSearch(firstName, lastName, plant, userId, department);
-            return Response.ok(users).build();
+            return ResponseUtility.successResponse("Users retrieved successfully",users,Response.Status.OK);
         }catch (Exception e){
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+            return ResponseUtility.errorResponse(e.getMessage(),Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 }

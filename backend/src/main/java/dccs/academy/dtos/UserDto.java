@@ -5,17 +5,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String plant;
-    private Long departmentId;
+    private String department;
     private String email;
     private String userId;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public Long getId() {
         return id;
@@ -49,12 +41,20 @@ public class UserDto {
         this.plant = plant;
     }
 
-    public Long getDepartmentId() {
-        return departmentId;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(Long departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUserId() {

@@ -27,7 +27,7 @@ public class UserMapper {
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setLastName(userEntity.getLastName());
         userDto.setPlant(userEntity.getPlant());
-        userDto.setDepartmentId(userEntity.getDepartment().getId());
+        userDto.setDepartment(userEntity.getDepartment().getTitle());
         userDto.setEmail(userEntity.getEmail());
         userDto.setUserId(userEntity.getUserId());
 

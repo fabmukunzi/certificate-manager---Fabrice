@@ -1,3 +1,5 @@
+import { UserDto } from '.';
+
 export type ICertificateFormData = {
   supplier: FormDataEntryValue | null;
   certificateType: FormDataEntryValue | null;
@@ -28,7 +30,7 @@ export type ICertificate = {
   validFrom: string;
   validTo: string;
   pdfUrl: string | null;
-  assignedUsers?: IUser[];
+  assignedUsers?: UserDto[];
   comments?: IComment[];
 };
 export interface Column {

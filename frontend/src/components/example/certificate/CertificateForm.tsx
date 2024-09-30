@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { ICertificate, IUser } from '@/utils/types/certificate';
+import { ICertificate } from '@/utils/types/certificate';
 import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
@@ -23,9 +23,10 @@ import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
 import { UserColumn } from '@/utils/types/user';
 import AddComment from './AddComment';
+import { UserDto } from '@/utils/types';
 
 const columns: UserColumn[] = [
-  { header: 'Name', accessor: 'name' },
+  { header: 'Name', accessor: 'lastName' },
   { header: 'Department', accessor: 'department' },
   { header: 'Email', accessor: 'email' },
 ];
@@ -117,7 +118,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   const handleClose = () => {
     setIsDialogOpen(false);
   };
-  const closeUserLookup = (isUpdated?: boolean, users?: IUser[]) => {
+  const closeUserLookup = (isUpdated?: boolean, users?: UserDto[]) => {
     if (isUpdated) {
       formValues.assignedUsers = users;
     }
@@ -129,7 +130,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
     if (confirm(translate('Are you sure you want to remove this user?'))) {
       try {
         const updatedUsers = formValues?.assignedUsers?.filter(
-          (user: IUser) => user.id !== id,
+          (user: UserDto) => user.id !== id,
         );
         setFormValues((prevValues) => ({
           ...prevValues,

@@ -1,26 +1,22 @@
-export interface ISupplier {
-  id: number;
-  name: string;
-  city: string;
-}
+import { SupplierDto } from '.';
 
 export interface SupplierColumn {
   header: string;
-  accessor: keyof ISupplier;
+  accessor: keyof SupplierDto;
 }
 
 export type IAction =
   | { type: 'SET_FORM_VALUE'; name: string; value: string }
-  | { type: 'SET_FILTERED_SUPPLIERS'; suppliers: ISupplier[] }
+  | { type: 'SET_FILTERED_SUPPLIERS'; suppliers: SupplierDto[] }
   | { type: 'SET_SELECTED_SUPPLIER'; supplier: string | undefined }
   | { type: 'RESET_FORM' };
 
 export interface State {
   formValues: {
     name: string;
-    id: string;
+    index: string;
     city: string;
   };
-  filteredSuppliers: ISupplier[];
+  filteredSuppliers: SupplierDto[];
   selectedSupplier: string | undefined;
 }
