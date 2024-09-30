@@ -1,10 +1,9 @@
-import { initialUsers } from '@/utils/data/supplier';
-import { IUser } from '@/utils/types/certificate';
+import { UserDto } from '@/utils/types';
 import { createContext, useState, useContext, FC, ReactNode } from 'react';
 
 interface UserContextType {
-  currentUser: IUser | null;
-  setCurrentUser: (user: IUser | null) => void;
+  currentUser: UserDto | null;
+  setCurrentUser: (user: UserDto | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -14,7 +13,15 @@ interface UserProviderProps {
 }
 
 export const UserProvider: FC<UserProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<IUser | null>(initialUsers[0]);
+  const [currentUser, setCurrentUser] = useState<UserDto | null>({
+    id: 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    plant: 'Plant A',
+    department: 'Engineering',
+    email: 'johndoe@example.com',
+    userId: 'L2N8Z2',
+  });
 
   return (
     <UserContext.Provider value={{ currentUser, setCurrentUser }}>

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import TableComponent from '../shared/table/Table';
-import { Column, ICertificate } from '@/utils/types/certificate';
-import {
-  deleteCertificate,
-  getAllCertificates,
-} from '@/database/certificate.controller';
+import TableComponent, { Column } from '../shared/table/Table';
+// import { Column } from '@/utils/types/certificate';
+import { deleteCertificate } from '@/database/certificate.controller';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../shared/button';
 import routes from '@/utils/routes';
@@ -12,16 +9,22 @@ import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
 import { useTranslate } from '@/contexts/AppContext';
+import axios from 'axios';
+import { CertificateDto, SupplierEntity } from '@/utils/types';
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
   const { translate } = useTranslate(); // Use the translate function from the context
-  const [certificates, setCertificates] = useState<ICertificate[]>([]);
+  const [certificates, setCertificates] = useState<CertificateDto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const columns: Column[] = [
-    { header: translate('Supplier'), accessor: 'supplier' },
+  const columns: Column<CertificateDto>[] = [
+    {
+      header: translate('Supplier'),
+      accessor: 'supplier',
+      render: (supplier) => <p>{(supplier as SupplierEntity)?.name}</p>,
+    },
     { header: translate('Certificate Type'), accessor: 'certificateType' },
     { header: translate('Valid From'), accessor: 'validFrom' },
     { header: translate('Valid To'), accessor: 'validTo' },
@@ -31,8 +34,8 @@ const CertificatesTable: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllCertificates();
-      setCertificates(response);
+      const response = await axios.get('/backend/certificates');
+      setCertificates(response.data.data);
     } catch (err) {
       setError(
         translate('Failed to fetch certificates. Please try again later.'),

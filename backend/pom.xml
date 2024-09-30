@@ -152,6 +152,8 @@
                     <jsonLibrary>jackson2</jsonLibrary>
                     <classPatterns>dccs.academy.dtos.*</classPatterns>
                     <outputKind>module</outputKind>
+                    <mapEnum>asEnum</mapEnum>
+                    <nonConstEnums>true</nonConstEnums>
                     <outputFileType>implementationFile</outputFileType>
                     <outputFile>../frontend/src/utils/types/index.ts</outputFile>
                 </configuration>

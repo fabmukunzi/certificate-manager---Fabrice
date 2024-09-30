@@ -7,12 +7,13 @@ import TextInput from '@/components/shared/form/TextInput';
 import { IAction, State, SupplierColumn } from '@/utils/types/supplier';
 import axios from 'axios';
 import { useTranslate } from '@/contexts/AppContext';
+import { SupplierEntity } from '@/utils/types';
 
 interface SearchProps {
   isDialogOpen: boolean;
   handleDialogClose: () => void;
   supplierName: string;
-  setSupplierName: (name: string | undefined) => void;
+  setSupplierName: (name: SupplierEntity) => void;
   setIsDialogOpen: (open: boolean) => void;
 }
 
@@ -192,7 +193,7 @@ const SearchSupplier: FC<SearchProps> = ({
         <div className="search-action-buttons">
           <Button
             onClick={() => {
-              setSupplierName(state.selectedSupplier);
+              // setSupplierName(state.selectedSupplier);
               setIsDialogOpen(false);
             }}
             disabled={!state.selectedSupplier}
@@ -203,7 +204,14 @@ const SearchSupplier: FC<SearchProps> = ({
             type="reset"
             label="Cancel"
             onClick={() => {
-              setSupplierName('');
+              setSupplierName({
+                id: 2,
+                createdAt: new Date('2024-09-27T13:41:59.317239'),
+                updatedAt: new Date('2024-09-27T13:41:59.317239'),
+                name: 'Vicky Luanda',
+                city: 'Luanda',
+                index: 'MD25HM',
+              });
               dispatch({ type: 'SET_FILTERED_SUPPLIERS', suppliers: [] });
               dispatch({ type: 'SET_SELECTED_SUPPLIER', supplier: undefined });
             }}

@@ -21,8 +21,12 @@ public class CertificateResource {
 
     @GET
     public Response getAllCertificates() {
-        List<CertificateDto> certificates = certificateService.getAllCertificates();
-        return Response.ok(certificates).build();
+        try {
+            List<CertificateDto> certificates = certificateService.getAllCertificates();
+            return ResponseUtility.successResponse("Certificates retrieved successfully", certificates, Response.Status.OK);
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @GET
@@ -30,9 +34,11 @@ public class CertificateResource {
     public Response getCertificateById(@PathParam("id") Long id) {
         try {
             CertificateDto certificate = certificateService.getCertificateById(id);
-            return Response.ok(certificate).build();
+            return ResponseUtility.successResponse("Certificate retrieved successfully", certificate, Response.Status.OK);
         } catch (EntityNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            return ResponseUtility.errorResponse(e.getMessage(),Response.Status.NOT_FOUND);
+        } catch (Exception e) {
+            return ResponseUtility.errorResponse(e.getMessage(),Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 

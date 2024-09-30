@@ -1,10 +1,10 @@
 import Button from '@/components/shared/button';
 import { useUserContext } from '@/contexts/UserContext';
-import { IComment } from '@/utils/types/certificate';
+import { CommentDto } from '@/utils/types';
 import { FC, useState, ChangeEvent } from 'react';
 
 type CommentProps = {
-  comments: IComment[] | undefined;
+  comments: CommentDto[] | undefined;
   isCommentOpen: boolean;
   setIsCommentOpen: (value: boolean) => void;
 };
@@ -21,8 +21,9 @@ const AddComment: FC<CommentProps> = ({
   const handleSaveComment = () => {
     if (content.length < 1) return alert('Please enter comment');
     if (currentUser) {
-      const newComment: IComment = {
-        user: currentUser.firstname,
+      const newComment: CommentDto = {
+        id: currentUser.id,
+        user: currentUser,
         content: content,
       };
       setContent('');
@@ -48,7 +49,7 @@ const AddComment: FC<CommentProps> = ({
             style={{ marginBottom: '10px' }}
           >
             <p>
-              <strong>User:</strong> {comment.user}
+              <strong>User:</strong> {comment.user.lastName}
             </p>
             <p>
               <strong>Comment:</strong> {comment.content}
@@ -59,7 +60,7 @@ const AddComment: FC<CommentProps> = ({
       {isCommentOpen && (
         <div className="comment-inputs">
           <div>
-            <p>{currentUser?.firstname}*</p>
+            <p>{currentUser?.firstName}*</p>
           </div>
           <form>
             <textarea

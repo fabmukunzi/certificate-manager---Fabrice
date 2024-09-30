@@ -22,6 +22,6 @@ export const certificates = [
   },
 ];
 export const certificateTypes = [
-  { value: 'Permission of Printing', label: 'Permission of Printing' },
-  { value: 'OHSAS 18001', label: 'OHSAS 18001' },
+  { value: 'PERMISSION_OF_PRINTING', label: 'Permission of Printing' },
+  { value: 'OHSAS_18001', label: 'OHSAS 18001' },
 ];
