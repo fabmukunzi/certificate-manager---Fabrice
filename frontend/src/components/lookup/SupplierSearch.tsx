@@ -6,6 +6,7 @@ import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
 import { IAction, State, SupplierColumn } from '@/utils/types/supplier';
 import axios from 'axios';
+import { useTranslate } from '@/contexts/AppContext';
 
 interface SearchProps {
   isDialogOpen: boolean;
@@ -65,6 +66,7 @@ const SearchSupplier: FC<SearchProps> = ({
   setIsDialogOpen,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { translate } = useTranslate();
   const columns = useMemo<SupplierColumn[]>(
     () => [
       { header: 'Supplier Name', accessor: 'name' },
@@ -135,7 +137,7 @@ const SearchSupplier: FC<SearchProps> = ({
   return (
     <Dialog isOpen={isDialogOpen} onClose={handleDialogClose}>
       <div className="dialog-header">
-        <p>Search for suppliers</p>
+        <p>{translate('Search for suppliers')}</p>
         <Button
           icon={<img src={CloseIcon} width={20} height={20} alt="Close" />}
           onClick={handleDialogClose}

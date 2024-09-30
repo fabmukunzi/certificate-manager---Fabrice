@@ -1,7 +1,7 @@
 package dccs.academy.resources;
 
 import dccs.academy.repositories.SupplierRepository;
-import dccs.academy.utils.UtilityMethods;
+import dccs.academy.utils.ResponseUtility;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -23,9 +23,9 @@ public class SupplierResource {
     public Response supplierSearch(@QueryParam("index") String index, @QueryParam("name") String name, @QueryParam("city") String city) {
         try {
             var suppliers = supplierRepository.supplierSearch(name, city, index);
-            return UtilityMethods.successResponse("Suppliers retrieved successfully",suppliers,Response.Status.OK);
+            return ResponseUtility.successResponse("Suppliers retrieved successfully",suppliers,Response.Status.OK);
         }catch (Exception e) {
-            return UtilityMethods.errorResponse(e.getMessage(),Response.Status.INTERNAL_SERVER_ERROR);
+            return ResponseUtility.errorResponse(e.getMessage(),Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 

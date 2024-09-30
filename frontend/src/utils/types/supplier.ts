@@ -1,11 +1,5 @@
 import { SupplierDto } from '.';
 
-export interface ISupplier {
-  id: number;
-  name: string;
-  city: string;
-}
-
 export interface SupplierColumn {
   header: string;
   accessor: keyof SupplierDto;

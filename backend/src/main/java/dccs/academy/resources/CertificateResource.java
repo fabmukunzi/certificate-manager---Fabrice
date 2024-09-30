@@ -2,7 +2,7 @@ package dccs.academy.resources;
 
 import dccs.academy.dtos.CertificateDto;
 import dccs.academy.services.CertificateService;
-import dccs.academy.utils.UtilityMethods;
+import dccs.academy.utils.ResponseUtility;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.*;
@@ -40,11 +40,11 @@ public class CertificateResource {
     public Response createCertificate(CertificateDto certificateDto) {
         try {
             CertificateDto createdCertificate = certificateService.createCertificate(certificateDto);
-            return UtilityMethods.successResponse("Certificate created successfully", createdCertificate, Response.Status.CREATED);
+            return ResponseUtility.successResponse("Certificate created successfully", createdCertificate, Response.Status.CREATED);
         } catch (EntityNotFoundException e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,11 +53,11 @@ public class CertificateResource {
     public Response deleteCertificate(@PathParam("id") Long id) {
         try {
             certificateService.deleteCertificateById(id);
-            return UtilityMethods.successResponse("Certificate with ID " + id + " is deleted successfully", null, Response.Status.OK);
+            return ResponseUtility.successResponse("Certificate with ID " + id + " is deleted successfully", null, Response.Status.OK);
         } catch (EntityNotFoundException e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -68,11 +68,11 @@ public class CertificateResource {
     public Response updateCertificate(@PathParam("id") Long id, CertificateDto certificateDto) {
         try {
             CertificateDto updatedCertificate = certificateService.updateCertificate(id, certificateDto);
-            return UtilityMethods.successResponse("Certificate updated successfully", updatedCertificate, Response.Status.OK);
+            return ResponseUtility.successResponse("Certificate updated successfully", updatedCertificate, Response.Status.OK);
         } catch (EntityNotFoundException e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.NOT_FOUND);
         } catch (Exception e) {
-            return UtilityMethods.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+            return ResponseUtility.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 

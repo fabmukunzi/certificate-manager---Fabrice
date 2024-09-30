@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>dccs.academy</groupId>
@@ -120,7 +121,8 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/classes/META-INF/resources/dist</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/META-INF/resources/dist
+                            </outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../frontend/dist</directory>
@@ -148,13 +150,7 @@
                 </executions>
                 <configuration>
                     <jsonLibrary>jackson2</jsonLibrary>
-                    <classes>
-                        <class>dccs.academy.dtos.UserDto</class>
-                        <class>dccs.academy.dtos.CertificateDto</class>
-                        <class>dccs.academy.dtos.SupplierDto</class>
-                        <class>dccs.academy.dtos.CommentDto</class>
-                        <class>dccs.academy.dtos.DepartmentDto</class>
-                    </classes>
+                    <classPatterns>dccs.academy.dtos.*</classPatterns>
                     <outputKind>module</outputKind>
                     <outputFileType>implementationFile</outputFileType>
                     <outputFile>../frontend/src/utils/types/index.ts</outputFile>
