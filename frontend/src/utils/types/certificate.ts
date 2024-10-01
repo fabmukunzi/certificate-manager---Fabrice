@@ -1,4 +1,4 @@
-import { CertificateDto, UserDto } from '.';
+import { CertificateDto, UserDto } from '@/endpoints';
 
 export type ICertificateFormData = {
   supplier: FormDataEntryValue | null;

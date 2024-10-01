@@ -47,8 +47,8 @@ public class CertificateService {
         } else {
             throw new EntityNotFoundException("Supplier with ID " + certificateDto.getSupplier().getId() + " is not found");
         }
-        if (certificateDto.getCertificateAssignedUsers() != null) {
-            List<UserEntity> users = certificateDto.getCertificateAssignedUsers().stream()
+        if (certificateDto.getAssignedUsers() != null) {
+            List<UserEntity> users = certificateDto.getAssignedUsers().stream()
                     .map(userDto -> userRepository.findById(userDto.getId()))
                     .collect(Collectors.toList());
             certificateEntity.setUsers(users);
@@ -83,7 +83,7 @@ public class CertificateService {
             );
         }
         if (certificateEntity.getUsers() != null) {
-            certificateDto.setCertificateAssignedUsers(
+            certificateDto.setAssignedUsers(
                     certificateEntity.getUsers().stream()
                             .map(UserMapper::toDto)
                             .collect(Collectors.toList())
@@ -107,9 +107,9 @@ public class CertificateService {
         }
 
         certificateEntity.setPdfUrl(UtilityMethods.decode(certificateDto.getPdfUrl()));
-        if (certificateDto.getCertificateAssignedUsers() != null) {
+        if (certificateDto.getAssignedUsers() != null) {
             List<UserEntity> users = new ArrayList<>();
-            for (UserDto userDto : certificateDto.getCertificateAssignedUsers()) {
+            for (UserDto userDto : certificateDto.getAssignedUsers()) {
                 UserEntity userEntity = userRepository.findById(userDto.getId());
                 if (userEntity == null) {
                     throw new EntityNotFoundException("User with ID " + userDto.getId() + " not found.");
@@ -144,7 +144,7 @@ public class CertificateService {
                                     CommentMapper.toEntity(commentDto, certificateEntity, userRepository);
                                     return existingComment;
                                 })
-                                .orElseGet(() -> CommentMapper.toEntity(commentDto, certificateEntity, userRepository)); // If no match, create a new comment
+                                .orElseGet(() -> CommentMapper.toEntity(commentDto, certificateEntity, userRepository));
                     })
                     .collect(Collectors.toList());
             updatedComments.forEach(commentRepository::persist);

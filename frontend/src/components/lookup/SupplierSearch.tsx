@@ -1,19 +1,19 @@
-import { FC, useMemo, useEffect, useReducer, useCallback } from 'react';
+import { FC, useMemo, useReducer, useCallback } from 'react';
 import { CloseIcon, FilledArrowDown } from '@/assests/icons';
 import Button from '@/components/shared/button';
 import Dialog from '@/components/shared/dialog';
 import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
 import { IAction, State, SupplierColumn } from '@/utils/types/supplier';
-import axios from 'axios';
 import { useTranslate } from '@/contexts/AppContext';
-import { SupplierEntity } from '@/utils/types';
+import { SupplierDto } from '@/endpoints';
+import { AxiosInstance } from '@/utils/AxiosInstance';
 
 interface SearchProps {
   isDialogOpen: boolean;
   handleDialogClose: () => void;
-  supplierName: string;
-  setSupplierName: (name: SupplierEntity) => void;
+  supplier: SupplierDto;
+  setSupplier: (supplier: SupplierDto) => void;
   setIsDialogOpen: (open: boolean) => void;
 }
 
@@ -24,7 +24,12 @@ const initialState: State = {
     city: '',
   },
   filteredSuppliers: [],
-  selectedSupplier: undefined,
+  selectedSupplier: {
+    id: 0,
+    index: '',
+    name: '',
+    city: '',
+  },
 };
 
 const reducer = (state: State, action: IAction): State => {
@@ -52,7 +57,12 @@ const reducer = (state: State, action: IAction): State => {
         ...state,
         formValues: { name: '', index: '', city: '' },
         filteredSuppliers: [],
-        selectedSupplier: undefined,
+        selectedSupplier: {
+          id: 0,
+          index: '',
+          name: '',
+          city: '',
+        },
       };
     default:
       return state;
@@ -62,8 +72,7 @@ const reducer = (state: State, action: IAction): State => {
 const SearchSupplier: FC<SearchProps> = ({
   isDialogOpen,
   handleDialogClose,
-  supplierName,
-  setSupplierName,
+  setSupplier,
   setIsDialogOpen,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -87,22 +96,16 @@ const SearchSupplier: FC<SearchProps> = ({
     if (!name && !index && !city) {
       return;
     }
-    const response = await axios.get('/backend/suppliers', {
-      params: {
-        name: name,
-        index: index,
-        city: city,
-      },
+    const response = await AxiosInstance.supplierSearch({
+      name,
+      index,
+      city,
     });
     dispatch({
       type: 'SET_FILTERED_SUPPLIERS',
       suppliers: response.data.data,
     });
   }, [state.formValues]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [supplierName, handleSearch]);
 
   const resetSearch = useCallback(() => {
     dispatch({ type: 'RESET_FORM' });
@@ -120,14 +123,14 @@ const SearchSupplier: FC<SearchProps> = ({
             );
             dispatch({
               type: 'SET_SELECTED_SUPPLIER',
-              supplier: selected?.name,
+              supplier: selected || { id: 0, index: '', name: '', city: '' },
             });
           }}
           type="radio"
           className="radio-button"
           checked={
             state.selectedSupplier ===
-            state.filteredSuppliers.find((supplier) => supplier.id === id)?.name
+            state.filteredSuppliers.find((supplier) => supplier.id === id)
           }
         />
       </div>
@@ -193,10 +196,10 @@ const SearchSupplier: FC<SearchProps> = ({
         <div className="search-action-buttons">
           <Button
             onClick={() => {
-              // setSupplierName(state.selectedSupplier);
+              setSupplier(state.selectedSupplier);
               setIsDialogOpen(false);
             }}
-            disabled={!state.selectedSupplier}
+            disabled={!(state.selectedSupplier.id > 0)}
             type="submit"
             label="Select"
           />
@@ -204,16 +207,22 @@ const SearchSupplier: FC<SearchProps> = ({
             type="reset"
             label="Cancel"
             onClick={() => {
-              setSupplierName({
-                id: 2,
-                createdAt: new Date('2024-09-27T13:41:59.317239'),
-                updatedAt: new Date('2024-09-27T13:41:59.317239'),
-                name: 'Vicky Luanda',
-                city: 'Luanda',
-                index: 'MD25HM',
+              setSupplier({
+                id: 0,
+                name: '',
+                city: '',
+                index: '',
               });
               dispatch({ type: 'SET_FILTERED_SUPPLIERS', suppliers: [] });
-              dispatch({ type: 'SET_SELECTED_SUPPLIER', supplier: undefined });
+              dispatch({
+                type: 'SET_SELECTED_SUPPLIER',
+                supplier: {
+                  id: 0,
+                  name: '',
+                  city: '',
+                  index: '',
+                },
+              });
             }}
           />
         </div>

@@ -1,4 +1,4 @@
-import { FC, useMemo, useReducer, useCallback, useEffect } from 'react';
+import { FC, useMemo, useReducer, useCallback } from 'react';
 import '@/components/example/certificate/certificate.css';
 import { CloseIcon, FilledArrowDown } from '@/assests/icons';
 import Button from '@/components/shared/button';
@@ -6,8 +6,8 @@ import Dialog from '@/components/shared/dialog';
 import TableComponent from '@/components/shared/table/Table';
 import TextInput from '@/components/shared/form/TextInput';
 import { useTranslate } from '@/contexts/AppContext';
-import { UserDto } from '@/utils/types';
-import axios from 'axios';
+import { UserDto } from '@/endpoints';
+import { AxiosInstance } from '@/utils/AxiosInstance';
 
 interface SearchProps {
   isDialogOpen: boolean;
@@ -65,13 +65,20 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         filteredUsers: action.users,
       };
-    case 'SET_SELECTED_USERS':
-      return {
-        ...state,
-        selectedUsers: action.users,
-      };
+    case 'SET_SELECTED_USERS': {
+      const updatedUsers = action.users.reduce(
+        (acc, newUser) => {
+          const isAlreadySelected = state.selectedUsers.some(
+            (user) => user.id === newUser.id,
+          );
+          return isAlreadySelected ? acc : [...acc, newUser];
+        },
+        [...state.selectedUsers],
+      ); // Start with the existing selected users
+      return { ...state, selectedUsers: updatedUsers };
+    }
     case 'TOGGLE_SELECTED_USER': {
-      const isSelected = state.selectedUsers.find(
+      const isSelected = state.selectedUsers.some(
         (u) => u.id === action.user.id,
       );
       const selectedUsers = isSelected
@@ -115,21 +122,15 @@ const UserLookup: FC<SearchProps> = ({ isDialogOpen, handleClose }) => {
     if (!firstName && !name && !userId && !department && !plant) {
       return;
     }
-    const users = await axios.get('/backend/users', {
-      params: {
-        firstName,
-        lastName: name,
-        userId,
-        department,
-        plant,
-      },
+    const users = await AxiosInstance.searchUsers({
+      firstName,
+      lastName: name,
+      userId,
+      department,
+      plant,
     });
     dispatch({ type: 'SET_FILTERED_USERS', users: users.data.data });
   }, [state.formValues]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [handleSearch]);
 
   const renderActions = useCallback(
     (id?: number) => (

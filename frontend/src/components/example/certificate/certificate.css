@@ -101,9 +101,13 @@ iframe {
 .add-comment-button {
   display: flex;
   justify-content: end;
+  margin-bottom: 5px;
 }
 .comments {
   color: var(--dark-grey-color);
+}
+.comments p{
+  font-size: 15px;
 }
 .comment-inputs {
   min-width: 100%;
@@ -125,6 +129,7 @@ textarea {
 .comment-inputs p {
   line-height: 0px;
   font-style: italic;
+  font-size: 15px;
   color: var(--dark-grey-color);
   font-weight: 500;
 }

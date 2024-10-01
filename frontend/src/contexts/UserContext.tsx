@@ -1,4 +1,4 @@
-import { UserDto } from '@/utils/types';
+import { UserDto } from '@/endpoints';
 import { createContext, useState, useContext, FC, ReactNode } from 'react';
 
 interface UserContextType {
