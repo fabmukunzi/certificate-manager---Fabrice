@@ -72,7 +72,6 @@ const reducer = (state: State, action: IAction): State => {
 const SearchSupplier: FC<SearchProps> = ({
   isDialogOpen,
   handleDialogClose,
-  supplier,
   setSupplier,
   setIsDialogOpen,
 }) => {
@@ -107,7 +106,6 @@ const SearchSupplier: FC<SearchProps> = ({
       suppliers: response.data.data,
     });
   }, [state.formValues]);
-
 
   const resetSearch = useCallback(() => {
     dispatch({ type: 'RESET_FORM' });
