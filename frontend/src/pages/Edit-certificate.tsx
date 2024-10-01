@@ -1,11 +1,12 @@
 import CertificateForm from '@/components/example/certificate/CertificateForm';
 import ErrorComponent from '@/components/shared/error';
-// import { getCertificateById } from '@/database/certificate.controller';
 import routes from '@/utils/routes';
-import { CertificateDto, CertificateType } from '@/utils/types';
+import { CertificateDto, CertificateType } from '@/endpoints';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AxiosInstance } from '@/utils/AxiosInstance';
+import { FORM_MODE } from '@/utils/enums/formMode';
 
 // This component represents a page used to edit a certificate.
 const EditCertificatePage = () => {
@@ -13,12 +14,10 @@ const EditCertificatePage = () => {
   const [defaultValues, setDefaultValues] = useState<CertificateDto>({
     id: 0,
     supplier: {
-      id: 2,
-      createdAt: new Date('2024-09-27T13:41:59.317239'),
-      updatedAt: new Date('2024-09-27T13:41:59.317239'),
-      name: 'Vicky Luanda',
-      city: 'Luanda',
-      index: 'MD25HM',
+      id: 0,
+      name: '',
+      city: '',
+      index: '',
     },
     certificateType: CertificateType.PERMISSION_OF_PRINTING,
     validFrom: new Date(),
@@ -38,12 +37,13 @@ const EditCertificatePage = () => {
           navigate(routes.certificates.url);
           return;
         }
-        const res = await axios.get(`/backend/certificates/${certificateId}`);
+        const res = await AxiosInstance.getCertificateById(
+          parseInt(certificateId),
+        );
         setDefaultValues(res.data.data);
         setIsLoading(false);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          console.log(error.response.data);
           alert(error.response.data.error || 'Something went wrong');
         }
         navigate(routes.certificates.url);
@@ -61,13 +61,12 @@ const EditCertificatePage = () => {
         message={`Certificate with ID ${certificateId} is not found`}
       />
     );
-  console.log(defaultValues);
   return (
     <section
       className="edit-certificate-container"
       style={{ marginTop: '50px' }}
     >
-      <CertificateForm initialValues={defaultValues} />
+      <CertificateForm mode={FORM_MODE.EDIT} initialValues={defaultValues} />
     </section>
   );
 };

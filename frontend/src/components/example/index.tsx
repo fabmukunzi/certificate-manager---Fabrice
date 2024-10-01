@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import TableComponent, { Column } from '../shared/table/Table';
-// import { Column } from '@/utils/types/certificate';
-import { deleteCertificate } from '@/database/certificate.controller';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../shared/button';
 import routes from '@/utils/routes';
@@ -9,8 +7,9 @@ import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
 import { useTranslate } from '@/contexts/AppContext';
-import axios from 'axios';
-import { CertificateDto, SupplierEntity } from '@/utils/types';
+import { CertificateDto, SupplierDto } from '@/endpoints';
+import { formatDateToDot } from '@/utils/functions/formatDate';
+import { AxiosInstance } from '@/utils/AxiosInstance';
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
@@ -23,18 +22,31 @@ const CertificatesTable: React.FC = () => {
     {
       header: translate('Supplier'),
       accessor: 'supplier',
-      render: (supplier) => <p>{(supplier as SupplierEntity)?.name}</p>,
+      render: (supplier) => (
+        <>
+          {(supplier as SupplierDto)?.name}, {(supplier as SupplierDto)?.id},{' '}
+          {(supplier as SupplierDto)?.city}
+        </>
+      ),
     },
     { header: translate('Certificate Type'), accessor: 'certificateType' },
-    { header: translate('Valid From'), accessor: 'validFrom' },
-    { header: translate('Valid To'), accessor: 'validTo' },
+    {
+      header: translate('Valid From'),
+      accessor: 'validFrom',
+      render: (date) => <>{formatDateToDot(new Date(date as Date))}</>,
+    },
+    {
+      header: translate('Valid To'),
+      accessor: 'validTo',
+      render: (date) => <>{formatDateToDot(new Date(date as Date))}</>,
+    },
   ];
 
   const fetchCertificates = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('/backend/certificates');
+      const response = await AxiosInstance.getAllCertificates();
       setCertificates(response.data.data);
     } catch (err) {
       setError(
@@ -58,7 +70,7 @@ const CertificatesTable: React.FC = () => {
       confirm(translate('Are you sure you want to delete this certificate?'))
     ) {
       try {
-        await deleteCertificate(id);
+        await AxiosInstance.deleteCertificate(Number(id));
         await fetchCertificates();
       } catch (error) {
         alert('Failed to delete certificate.');

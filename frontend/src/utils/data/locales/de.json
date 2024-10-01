@@ -30,6 +30,7 @@
   "Failed to delete certificate:": "Fehler beim Löschen des Zertifikats:",
   "File size exceeds the 5MB limit. Please upload a smaller file.": "Dateigröße überschreitet das 5MB-Limit. Bitte laden Sie eine kleinere Datei hoch.",
   "Please upload a valid file.": "Bitte laden Sie eine gültige Datei hoch.",
+  "Please select a supplier":"Selecteer alstublieft een leverancier",
   "Remove": "Entfernen",
   "Select your option": "Wählen Sie Ihre Option",
   "Create new certificate": "Neues Zertifikat erstellen",

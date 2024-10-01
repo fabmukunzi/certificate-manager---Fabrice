@@ -1,6 +1,6 @@
 import Button from '@/components/shared/button';
 import { useUserContext } from '@/contexts/UserContext';
-import { CommentDto } from '@/utils/types';
+import { CommentDto } from '@/endpoints';
 import { FC, useState, ChangeEvent } from 'react';
 
 type CommentProps = {

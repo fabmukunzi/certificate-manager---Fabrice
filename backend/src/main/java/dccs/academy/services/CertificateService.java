@@ -144,7 +144,7 @@ public class CertificateService {
                                     CommentMapper.toEntity(commentDto, certificateEntity, userRepository);
                                     return existingComment;
                                 })
-                                .orElseGet(() -> CommentMapper.toEntity(commentDto, certificateEntity, userRepository)); // If no match, create a new comment
+                                .orElseGet(() -> CommentMapper.toEntity(commentDto, certificateEntity, userRepository));
                     })
                     .collect(Collectors.toList());
             updatedComments.forEach(commentRepository::persist);

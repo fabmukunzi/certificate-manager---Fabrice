@@ -1,10 +1,5 @@
 import Button from '@/components/shared/button';
-import {
-  // addCertificate,
-  deleteCertificate,
-  // updateCertificate,
-} from '@/database/certificate.controller';
-import { FC, useEffect, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import './certificate.css';
 import '../../shared/dialog/dialog.css';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +17,9 @@ import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
 import { UserColumn } from '@/utils/types/user';
 import AddComment from './AddComment';
-import { CertificateDto, SupplierEntity, UserDto } from '@/utils/types';
+import { CertificateDto, SupplierDto, UserDto } from '@/endpoints';
+import { AxiosInstance } from '@/utils/AxiosInstance';
+import { FORM_MODE } from '@/utils/enums/formMode';
 
 const columns: UserColumn[] = [
   { header: 'Name', accessor: 'lastName' },
@@ -30,15 +27,16 @@ const columns: UserColumn[] = [
   { header: 'Email', accessor: 'email' },
 ];
 
-const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
-  initialValues,
-}) => {
+const CertificateForm: FC<{
+  initialValues: CertificateDto;
+  mode: FORM_MODE;
+}> = ({ initialValues, mode }) => {
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [supplierName, setSupplierName] = useState<SupplierEntity>();
+  const [supplier, setSupplier] = useState<SupplierDto>(initialValues.supplier);
   const [formValues, setFormValues] = useState<CertificateDto>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
@@ -50,62 +48,50 @@ const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-  console.log(initialValues, '=====dhdhdh');
-  const areInitialValuesEmpty = Object.values(initialValues || {}).every(
-    (value) => {
-      if (Array.isArray(value)) {
-        return true;
-      }
-      return value === '' || value === null;
-    },
-  );
   useEffect(() => {
     setFormValues((prevValues) => {
-      // const newValues = {
-      //   ...prevValues,
-      //   supplier: supplierName || {},
-      //   certificateAssignedUsers: [],
-      // };
-      // if (
-      //   newValues.supplier !== prevValues.supplier.name ||
-      //   newValues.certificateAssignedUsers !==
-      //     prevValues.certificateAssignedUsers
-      // ) {
-      //   return newValues;
-      // }
-
+      if (supplier) prevValues.supplier = supplier;
       return prevValues;
     });
-  }, [supplierName]);
+  }, [supplier]);
 
-  // const handleSubmit = async (event: FormEvent) => {
-  //   event.preventDefault();
-  //   if (!formValues?.pdfUrl && !initialValues.pdfUrl)
-  //     return alert(translate('Please upload a PDF file'));
-  //   try {
-  //     if (initialValues.id) {
-  //       await updateCertificate(Number(formValues.id), formValues);
-  //       alert(translate('Certificate updated successfully'));
-  //     } else {
-  //       await addCertificate(formValues);
-  //       alert(translate('Certificate added successfully'));
-  //     }
-  //     navigate(routes.certificates.url);
-  //   } catch (error) {
-  //     alert(
-  //       translate(
-  //         `Failed to ${initialValues.id ? 'update' : 'add'} certificate.`,
-  //       ),
-  //     );
-  //   }
-  // };
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!formValues.supplier || formValues.supplier.id === 0) {
+      return alert(translate('Please select a supplier'));
+    }
+    if (
+      (!formValues?.pdfUrl && !initialValues.pdfUrl) ||
+      formValues.pdfUrl === ''
+    )
+      return alert(translate('Please upload a PDF file'));
+    try {
+      if (initialValues.id) {
+        await AxiosInstance.updateCertificate(
+          Number(formValues.id),
+          formValues,
+        );
+        alert(translate('Certificate updated successfully'));
+      } else {
+        await AxiosInstance.createCertificate(formValues);
+        alert(translate('Certificate added successfully'));
+      }
+      navigate(routes.certificates.url);
+    } catch (error) {
+      alert(
+        translate(
+          `Failed to ${initialValues.id ? 'update' : 'add'} certificate.`,
+        ),
+      );
+    }
+  };
 
   const handleDelete = async (id?: number) => {
     if (
       confirm(translate('Are you sure you want to delete this certificate?'))
     ) {
       try {
-        await deleteCertificate(id);
+        if (id) await AxiosInstance.deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
         console.error(translate('Failed to delete certificate:'), error);
@@ -118,8 +104,16 @@ const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
     setIsDialogOpen(false);
   };
   const closeUserLookup = (isUpdated?: boolean, users?: UserDto[]) => {
-    if (isUpdated) {
-      formValues.certificateAssignedUsers = users || [];
+    if (isUpdated && users) {
+      formValues.certificateAssignedUsers =
+        formValues.certificateAssignedUsers.concat(
+          users.filter(
+            (newUser) =>
+              !formValues.certificateAssignedUsers.some(
+                (existingUser) => existingUser.id === newUser.id,
+              ),
+          ),
+        );
     }
     setIsUserLookup(false);
   };
@@ -133,63 +127,46 @@ const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
         );
         setFormValues((prevValues) => ({
           ...prevValues,
-          assignedUsers: updatedUsers,
+          certificateAssignedUsers: updatedUsers,
         }));
       } catch (error) {
         console.error('Error removing user:', error);
       }
     }
   };
-
   const renderActions = (id: number) => (
     <button
       className="remove-user-button"
       onClick={() => handleRemoveUser(id)}
       aria-label={translate('Remove user')}
+      type="button"
     >
       <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
     </button>
   );
-  console.log(
-    formatDateToYYYYMMDD(new Date(formValues?.validTo)),
-    '=====valid to',
-  );
   return (
     <section>
       <SearchSupplier
-        supplierName={supplierName?.name || ''}
-        setSupplierName={setSupplierName}
+        supplier={supplier || { id: 0, index: '', name: null, city: '' }}
+        setSupplier={setSupplier}
         handleDialogClose={handleClose}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
       />
       <UserLookup handleClose={closeUserLookup} isDialogOpen={isUserLookup} />
-      <form
-        id="form"
-        className="certificate-form"
-        // onSubmit={handleSubmit}
-      >
+      <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
-            required
+            required={initialValues.supplier.id === 0}
             min={3}
             label={translate('Supplier')}
             name="supplier"
             readOnly
-            value={formValues.supplier.name}
+            value={supplier?.name || initialValues.supplier.name}
             onSearch={() => {
               setIsDialogOpen(true);
             }}
-            onClose={() =>
-              setSupplierName({
-                id: 2,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                name: 'Vicky Luanda',
-                city: 'Luanda',
-                index: 'MD25HM',
-              })
-            }
+            onClose={() => setSupplier(supplier)}
             onChangeValue={handleInputChange}
           />
           <Select
@@ -216,7 +193,7 @@ const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
             name="validTo"
             placeholder={translate('Click to select date')}
             disabled={!formValues?.validFrom}
-            value={formatDateToYYYYMMDD(new Date(formValues?.validTo))}
+            value={formatDateToYYYYMMDD(new Date(formValues.validTo))}
             min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
             onChangeValue={handleInputChange}
           />
@@ -254,10 +231,12 @@ const CertificateForm: FC<{ initialValues: CertificateDto }> = ({
             <Button
               type="submit"
               label={
-                areInitialValuesEmpty ? translate('Save') : translate('Update')
+                mode === FORM_MODE.CREATE
+                  ? translate('Save')
+                  : translate('Update')
               }
             />
-            {areInitialValuesEmpty ? (
+            {mode === FORM_MODE.CREATE ? (
               <Button
                 label={translate('Reset')}
                 type="reset"

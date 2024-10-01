@@ -1,4 +1,4 @@
-import { UserDto } from '.';
+import { UserDto } from '@/endpoints';
 
 export interface UserTable {
   name: string;
