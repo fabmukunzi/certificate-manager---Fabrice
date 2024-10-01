@@ -126,7 +126,7 @@ const CertificateForm: FC<{
         );
         setFormValues((prevValues) => ({
           ...prevValues,
-          assignedUsers: updatedUsers,
+          certificateAssignedUsers: updatedUsers,
         }));
       } catch (error) {
         console.error('Error removing user:', error);

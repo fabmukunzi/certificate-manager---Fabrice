@@ -19,8 +19,8 @@ public class CertificateEntity extends BaseEntity{
     private LocalDate validTo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "certificate_type",nullable = false)
-    private CertificateType certificateType;
+    @Column(name = "type",nullable = false)
+    private CertificateType type;
 
     @Lob
     @Column(name = "pdf_url",nullable = false,length = 200000)
@@ -58,12 +58,12 @@ public class CertificateEntity extends BaseEntity{
         this.validTo = validTo;
     }
 
-    public CertificateType getCertificateType() {
-        return certificateType;
+    public CertificateType getType() {
+        return type;
     }
 
-    public void setCertificateType(CertificateType certificateType) {
-        this.certificateType = certificateType;
+    public void setType(CertificateType type) {
+        this.type = type;
     }
 
     public byte[] getPdfUrl() {
