@@ -13,7 +13,7 @@ public class CertificateDto {
     private LocalDate validTo;
     private CertificateType certificateType;
     private String pdfUrl;
-    private SupplierEntity supplier;
+    private SupplierDto supplier;
     private List<UserDto> certificateAssignedUsers;
     private List<CommentDto> comments;
 
@@ -57,11 +57,11 @@ public class CertificateDto {
         this.pdfUrl = pdfUrl;
     }
 
-    public SupplierEntity getSupplier() {
+    public SupplierDto getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(SupplierEntity supplier) {
+    public void setSupplier(SupplierDto supplier) {
         this.supplier = supplier;
     }
 

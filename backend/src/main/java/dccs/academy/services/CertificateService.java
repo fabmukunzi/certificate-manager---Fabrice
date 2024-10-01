@@ -10,6 +10,7 @@ import dccs.academy.repositories.CertificateRepository;
 import dccs.academy.repositories.CommentRepository;
 import dccs.academy.repositories.SupplierRepository;
 import dccs.academy.repositories.UserRepository;
+import dccs.academy.utils.UtilityMethods;
 import dccs.academy.utils.mappers.CertificateMapper;
 import dccs.academy.utils.mappers.CommentMapper;
 import dccs.academy.utils.mappers.UserMapper;
@@ -38,6 +39,7 @@ public class CertificateService {
 
     public CertificateDto createCertificate(CertificateDto certificateDto) {
         var newCertificateEntity = new CertificateEntity();
+        newCertificateEntity.setPdfUrl(UtilityMethods.decode(certificateDto.getPdfUrl()));
         var certificateEntity = CertificateMapper.toEntity(certificateDto, newCertificateEntity);
         if (certificateDto.getSupplier().getId() != null) {
             SupplierEntity supplier = supplierRepository.findById(certificateDto.getSupplier().getId());
@@ -72,7 +74,9 @@ public class CertificateService {
         if (certificateEntity == null) {
             throw new EntityNotFoundException("Certificate with ID " + id + " is not found.");
         }
+
         var certificateDto = CertificateMapper.toDto(certificateEntity);
+        certificateDto.setPdfUrl(UtilityMethods.encode(certificateEntity.getPdfUrl()));
         if (certificateEntity.getComments() != null) {
             certificateDto.setComments(
                     certificateEntity.getComments().stream().map(CommentMapper::toDto).collect(Collectors.toList())
@@ -101,6 +105,8 @@ public class CertificateService {
         if (certificateEntity == null) {
             throw new EntityNotFoundException("Certificate with ID " + id + " not found.");
         }
+
+        certificateEntity.setPdfUrl(UtilityMethods.decode(certificateDto.getPdfUrl()));
         if (certificateDto.getCertificateAssignedUsers() != null) {
             List<UserEntity> users = new ArrayList<>();
             for (UserDto userDto : certificateDto.getCertificateAssignedUsers()) {
@@ -118,6 +124,31 @@ public class CertificateService {
             certificateEntity.setSupplier(supplier);
         } else {
             throw new EntityNotFoundException("Supplier with ID " + certificateDto.getSupplier().getId() + " is not found");
+        }
+        if (certificateDto.getSupplier() != null && certificateDto.getSupplier().getId() != null) {
+            SupplierEntity supplier = supplierRepository.findById(certificateDto.getSupplier().getId());
+            certificateEntity.setSupplier(supplier);
+        } else {
+            throw new EntityNotFoundException("Supplier with ID " + certificateDto.getSupplier().getId() + " is not found");
+        }
+        if (certificateDto.getComments() != null) {
+            List<CommentEntity> existingComments = certificateEntity.getComments();
+            List<CommentEntity> commentsToRemove = new ArrayList<>(existingComments);
+            existingComments.clear();
+            List<CommentEntity> updatedComments = certificateDto.getComments().stream()
+                    .map(commentDto -> {
+                        return commentsToRemove.stream()
+                                .filter(existingComment -> existingComment.getId().equals(commentDto.getId()))
+                                .findFirst()
+                                .map(existingComment -> {
+                                    CommentMapper.toEntity(commentDto, certificateEntity, userRepository);
+                                    return existingComment;
+                                })
+                                .orElseGet(() -> CommentMapper.toEntity(commentDto, certificateEntity, userRepository)); // If no match, create a new comment
+                    })
+                    .collect(Collectors.toList());
+            updatedComments.forEach(commentRepository::persist);
+            certificateEntity.setComments(updatedComments);
         }
         certificateRepository.persist(certificateEntity);
         return CertificateMapper.toDto(certificateEntity);
