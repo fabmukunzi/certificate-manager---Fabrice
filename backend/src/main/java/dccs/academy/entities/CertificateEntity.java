@@ -19,11 +19,12 @@ public class CertificateEntity extends BaseEntity{
     private LocalDate validTo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "certificate_type",nullable = false)
-    private CertificateType certificateType;
+    @Column(name = "type",nullable = false)
+    private CertificateType type;
 
-    @Column(name = "pdf_url",nullable = false)
-    private String pdfUrl;
+    @Lob
+    @Column(name = "pdf_url",nullable = false,length = 200000)
+    private byte[] pdfUrl;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id",nullable = false)
@@ -38,7 +39,7 @@ public class CertificateEntity extends BaseEntity{
     )
     private List<UserEntity> users;
 
-    @OneToMany(mappedBy = "certificates")
+    @OneToMany(mappedBy = "certificates",cascade = CascadeType.REMOVE)
     private List<CommentEntity> comments;
 
     public LocalDate getValidFrom() {
@@ -57,19 +58,19 @@ public class CertificateEntity extends BaseEntity{
         this.validTo = validTo;
     }
 
-    public CertificateType getCertificateType() {
-        return certificateType;
+    public CertificateType getType() {
+        return type;
     }
 
-    public void setCertificateType(CertificateType certificateType) {
-        this.certificateType = certificateType;
+    public void setType(CertificateType type) {
+        this.type = type;
     }
 
-    public String getPdfUrl() {
+    public byte[] getPdfUrl() {
         return pdfUrl;
     }
 
-    public void setPdfUrl(String pdfUrl) {
+    public void setPdfUrl(byte[] pdfUrl) {
         this.pdfUrl = pdfUrl;
     }
 

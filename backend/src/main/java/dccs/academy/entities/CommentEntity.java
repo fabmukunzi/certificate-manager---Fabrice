@@ -14,7 +14,7 @@ public class CommentEntity extends BaseEntity{
     @Column(name = "content",nullable = false)
     private String content;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "certificate_id",nullable = false)
     private  CertificateEntity certificates;
 

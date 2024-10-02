@@ -150,10 +150,17 @@
                 </executions>
                 <configuration>
                     <jsonLibrary>jackson2</jsonLibrary>
-                    <classPatterns>dccs.academy.dtos.*</classPatterns>
+                    <classPatterns>com.dccsacademy.dtos.*</classPatterns>
                     <outputKind>module</outputKind>
                     <outputFileType>implementationFile</outputFileType>
-                    <outputFile>../frontend/src/utils/types/index.ts</outputFile>
+                    <mapEnum>asEnum</mapEnum>
+                    <nonConstEnums>true</nonConstEnums>
+                    <outputFile>../frontend/src/endpoints/index.ts</outputFile>
+                    <classesFromAutomaticJaxrsApplication>true</classesFromAutomaticJaxrsApplication>
+                    <extensions>
+                        <extension>cz.habarta.typescript.generator.ext.AxiosClientExtension</extension>
+                    </extensions>
+                    <generateJaxrsApplicationClient>true</generateJaxrsApplicationClient>
                 </configuration>
             </plugin>
 

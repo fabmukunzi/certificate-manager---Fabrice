@@ -30,6 +30,7 @@
   "Failed to delete certificate:": "Failed to delete certificate:",
   "File size exceeds the 5MB limit. Please upload a smaller file.": "File size exceeds the 5MB limit. Please upload a smaller file.",
   "Please upload a valid file.": "Please upload a valid file.",
+  "Please select a supplier":"Please select a supplier",
   "Remove": "Remove",
   "Select your option": "Select your option",
   "Create new certificate": "Create new certificate",

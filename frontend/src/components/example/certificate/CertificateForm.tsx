@@ -1,9 +1,4 @@
 import Button from '@/components/shared/button';
-import {
-  addCertificate,
-  deleteCertificate,
-  updateCertificate,
-} from '@/database/certificate.controller';
 import { FC, FormEvent, useEffect, useState } from 'react';
 import './certificate.css';
 import '../../shared/dialog/dialog.css';
@@ -11,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { ICertificate } from '@/utils/types/certificate';
 import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
@@ -23,7 +17,9 @@ import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent from '@/components/shared/table/Table';
 import { UserColumn } from '@/utils/types/user';
 import AddComment from './AddComment';
-import { UserDto } from '@/utils/types';
+import { CertificateDto, SupplierDto, UserDto } from '@/endpoints';
+import { AxiosInstance } from '@/utils/AxiosInstance';
+import { FORM_MODE } from '@/utils/enums/formMode';
 
 const columns: UserColumn[] = [
   { header: 'Name', accessor: 'lastName' },
@@ -31,18 +27,17 @@ const columns: UserColumn[] = [
   { header: 'Email', accessor: 'email' },
 ];
 
-const CertificateForm: FC<{ initialValues: ICertificate }> = ({
-  initialValues,
-}) => {
+const CertificateForm: FC<{
+  initialValues: CertificateDto;
+  mode: FORM_MODE;
+}> = ({ initialValues, mode }) => {
   const navigate = useNavigate();
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [supplierName, setSupplierName] = useState<string | undefined>(
-    undefined,
-  );
-  const [formValues, setFormValues] = useState<ICertificate>(initialValues);
+  const [supplier, setSupplier] = useState<SupplierDto>(initialValues.supplier);
+  const [formValues, setFormValues] = useState<CertificateDto>(initialValues);
   const handleInputChange = (name: string, value: string | Date) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -53,42 +48,32 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
-  const areInitialValuesEmpty = Object.values(initialValues || {}).every(
-    (value) => {
-      if (Array.isArray(value)) {
-        return true;
-      }
-      return value === '' || value === null;
-    },
-  );
   useEffect(() => {
     setFormValues((prevValues) => {
-      const newValues = {
-        ...prevValues,
-        supplier: supplierName || '',
-        assignedUsers: [],
-      };
-      if (
-        newValues.supplier !== prevValues.supplier ||
-        newValues.assignedUsers !== prevValues.assignedUsers
-      ) {
-        return newValues;
-      }
-
+      if (supplier) prevValues.supplier = supplier;
       return prevValues;
     });
-  }, [supplierName]);
+  }, [supplier]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!formValues?.pdfUrl && !initialValues.pdfUrl)
+    if (!formValues.supplier || formValues.supplier.id === 0) {
+      return alert(translate('Please select a supplier'));
+    }
+    if (
+      (!formValues?.pdfUrl && !initialValues.pdfUrl) ||
+      formValues.pdfUrl === ''
+    )
       return alert(translate('Please upload a PDF file'));
     try {
       if (initialValues.id) {
-        await updateCertificate(Number(formValues.id), formValues);
+        await AxiosInstance.updateCertificate(
+          Number(formValues.id),
+          formValues,
+        );
         alert(translate('Certificate updated successfully'));
       } else {
-        await addCertificate(formValues);
+        await AxiosInstance.createCertificate(formValues);
         alert(translate('Certificate added successfully'));
       }
       navigate(routes.certificates.url);
@@ -106,7 +91,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       confirm(translate('Are you sure you want to delete this certificate?'))
     ) {
       try {
-        await deleteCertificate(id);
+        if (id) await AxiosInstance.deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
         console.error(translate('Failed to delete certificate:'), error);
@@ -119,8 +104,15 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
     setIsDialogOpen(false);
   };
   const closeUserLookup = (isUpdated?: boolean, users?: UserDto[]) => {
-    if (isUpdated) {
-      formValues.assignedUsers = users;
+    if (isUpdated && users) {
+      formValues.assignedUsers = formValues.assignedUsers.concat(
+        users.filter(
+          (newUser) =>
+            !formValues.assignedUsers.some(
+              (existingUser) => existingUser.id === newUser.id,
+            ),
+        ),
+      );
     }
     setIsUserLookup(false);
   };
@@ -134,19 +126,19 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
         );
         setFormValues((prevValues) => ({
           ...prevValues,
-          assignedUsers: updatedUsers,
+          certificateAssignedUsers: updatedUsers,
         }));
       } catch (error) {
         console.error('Error removing user:', error);
       }
     }
   };
-
   const renderActions = (id: number) => (
     <button
       className="remove-user-button"
       onClick={() => handleRemoveUser(id)}
       aria-label={translate('Remove user')}
+      type="button"
     >
       <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
     </button>
@@ -154,8 +146,8 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
   return (
     <section>
       <SearchSupplier
-        supplierName={supplierName || ''}
-        setSupplierName={setSupplierName}
+        supplier={supplier || { id: 0, index: '', name: null, city: '' }}
+        setSupplier={setSupplier}
         handleDialogClose={handleClose}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
@@ -164,16 +156,16 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
-            required
+            required={initialValues.supplier.id === 0}
             min={3}
             label={translate('Supplier')}
             name="supplier"
             readOnly
-            value={formValues.supplier}
+            value={supplier?.name || initialValues.supplier.name}
             onSearch={() => {
               setIsDialogOpen(true);
             }}
-            onClose={() => setSupplierName('')}
+            onClose={() => setSupplier(supplier)}
             onChangeValue={handleInputChange}
           />
           <Select
@@ -182,7 +174,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             label={translate('Certificate type')}
             placeholder="Select your option"
             name="certificateType"
-            value={formValues?.certificateType}
+            value={formValues?.type}
             options={certificateTypes}
           />
           <DateInput
@@ -191,7 +183,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             name="validFrom"
             placeholder={translate('Click to select date')}
             min={todayDate}
-            defaultValue={formValues?.validFrom}
+            defaultValue={formatDateToYYYYMMDD(new Date(formValues?.validFrom))}
             onChangeValue={handleInputChange}
           />
           <DateInput
@@ -200,7 +192,7 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             name="validTo"
             placeholder={translate('Click to select date')}
             disabled={!formValues?.validFrom}
-            defaultValue={formValues?.validTo}
+            value={formatDateToYYYYMMDD(new Date(formValues.validTo))}
             min={formatDateToYYYYMMDD(new Date(formValues?.validFrom) as Date)}
             onChangeValue={handleInputChange}
           />
@@ -238,10 +230,12 @@ const CertificateForm: FC<{ initialValues: ICertificate }> = ({
             <Button
               type="submit"
               label={
-                areInitialValuesEmpty ? translate('Save') : translate('Update')
+                mode === FORM_MODE.CREATE
+                  ? translate('Save')
+                  : translate('Update')
               }
             />
-            {areInitialValuesEmpty ? (
+            {mode === FORM_MODE.CREATE ? (
               <Button
                 label={translate('Reset')}
                 type="reset"

@@ -1,4 +1,4 @@
-import { UserDto } from '.';
+import { CertificateDto, UserDto } from '@/endpoints';
 
 export type ICertificateFormData = {
   supplier: FormDataEntryValue | null;
@@ -35,7 +35,8 @@ export type ICertificate = {
 };
 export interface Column {
   header: string;
-  accessor: keyof ICertificate;
+  accessor: keyof CertificateDto;
+  render?: (value: CertificateDto) => React.ReactNode;
 }
 export interface IUser {
   name: string;

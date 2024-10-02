@@ -1,20 +1,18 @@
 package dccs.academy.dtos;
 
-import dccs.academy.entities.SupplierEntity;
 import dccs.academy.utils.enums.CertificateType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class CertificateDto {
     private Long id;
     private LocalDate validFrom;
     private LocalDate validTo;
-    private CertificateType certificateType;
+    private CertificateType type;
     private String pdfUrl;
-    private SupplierEntity supplier;
-    private List<UserDto> certificateAssignedUsers;
+    private SupplierDto supplier;
+    private List<UserDto> assignedUsers;
     private List<CommentDto> comments;
 
     public Long getId() {
@@ -41,12 +39,12 @@ public class CertificateDto {
         this.validTo = validTo;
     }
 
-    public CertificateType getCertificateType() {
-        return certificateType;
+    public CertificateType getType() {
+        return type;
     }
 
-    public void setCertificateType(CertificateType certificateType) {
-        this.certificateType = certificateType;
+    public void setType(CertificateType type) {
+        this.type = type;
     }
 
     public String getPdfUrl() {
@@ -57,20 +55,20 @@ public class CertificateDto {
         this.pdfUrl = pdfUrl;
     }
 
-    public SupplierEntity getSupplier() {
+    public SupplierDto getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(SupplierEntity supplier) {
+    public void setSupplier(SupplierDto supplier) {
         this.supplier = supplier;
     }
 
-    public List<UserDto> getCertificateAssignedUsers() {
-        return certificateAssignedUsers;
+    public List<UserDto> getAssignedUsers() {
+        return assignedUsers;
     }
 
-    public void setCertificateAssignedUsers(List<UserDto> certificateAssignedUsers) {
-        this.certificateAssignedUsers = certificateAssignedUsers;
+    public void setAssignedUsers(List<UserDto> assignedUsers) {
+        this.assignedUsers = assignedUsers;
     }
 
     public List<CommentDto> getComments() {

@@ -12,11 +12,10 @@ interface SearchInputProps {
 
 const SearchInput: FC<
   InputHTMLAttributes<HTMLInputElement> & SearchInputProps
-> = ({ label, onSearch, onClose, onChangeValue, name, ...props }) => {
+> = ({ label, onSearch, onClose, onChangeValue, name, value, ...props }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChangeValue(name, e.target.value);
   };
-
   return (
     <div className="form-input">
       <label htmlFor={name}>{label}</label>
@@ -24,6 +23,7 @@ const SearchInput: FC<
         {...props}
         type="search"
         onChange={handleChange}
+        value={value}
         id={name}
         name={name}
       />
