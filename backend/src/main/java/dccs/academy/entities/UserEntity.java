@@ -91,9 +91,4 @@ public class UserEntity extends BaseEntity{
     public String getEmail() {
         return email;
     }
-
-    @PrePersist
-    public void generateIndex() {
-        this.userId = UtilityMethods.generateRandomString(6);
-    }
 }
