@@ -1,0 +1,45 @@
+.toast-container {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alert-box {
+  padding: 10px 10px 0px 10px;
+  border-radius: 10px;
+  background: rgb(29, 28, 28);
+  transform: translateY(-100%);
+  animation: slideDown 0.5s forwards;
+}
+
+.success .alert-box {
+  border-bottom: 4px solid var(--green-color);
+}
+
+.error .alert-box {
+  border-bottom: 4px solid var(--error-color);
+}
+
+.info .alert-box {
+  border-bottom: 4px solid var(--primary-color);
+}
+
+.alert-box p {
+  font-size: 16px;
+  margin: 0 0 10px;
+  color: white;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

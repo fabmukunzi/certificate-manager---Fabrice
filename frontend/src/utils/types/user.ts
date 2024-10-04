@@ -8,4 +8,5 @@ export interface UserTable {
 export interface UserColumn {
   header: string;
   accessor: keyof UserDto;
+  render?: (value: UserDto) => React.ReactNode;
 }

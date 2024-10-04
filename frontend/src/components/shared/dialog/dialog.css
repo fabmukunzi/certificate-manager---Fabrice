@@ -80,7 +80,7 @@ dialog {
   background: rgb(228, 186, 102);
 }
 .search-table {
-  height: 8rem !important;
+  min-height: 8rem !important;
 }
 
 ::backdrop {

@@ -5,8 +5,8 @@ import { useTranslate } from '@/contexts/AppContext';
 
 export interface Column<T> {
   header: string;
-  accessor: keyof T;
-  render?: (value: T[keyof T]) => React.ReactNode;
+  accessor?: keyof T;
+  render?: (value: T[keyof T], data?: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -53,10 +53,14 @@ function TableComponent<T extends { id?: number }>({
             <tr key={row.id}>
               <td>{renderActions ? row?.id && renderActions(row.id) : null}</td>
               {columns.map((column) => (
-                <td key={`${row.id}-${String(column.accessor)}`}>
+                <td key={`${row.id}-${String(column?.accessor)}`}>
                   {column.render
-                    ? column.render(row[column.accessor])
-                    : String(row[column.accessor])}
+                    ? column.accessor
+                      ? column.render(row[column.accessor], row)
+                      : column.render(row as T[keyof T], row)
+                    : column.accessor
+                      ? String(row[column.accessor])
+                      : null}
                 </td>
               ))}
             </tr>

@@ -10,9 +10,11 @@ import { useTranslate } from '@/contexts/AppContext';
 import { CertificateDto, SupplierDto } from '@/endpoints';
 import { formatDateToDot } from '@/utils/functions/formatDate';
 import { AxiosInstance } from '@/utils/AxiosInstance';
+import { useToast } from '@/contexts/ToastContext';
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { translate } = useTranslate(); // Use the translate function from the context
   const [certificates, setCertificates] = useState<CertificateDto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,7 +75,7 @@ const CertificatesTable: React.FC = () => {
         await AxiosInstance.deleteCertificate(Number(id));
         await fetchCertificates();
       } catch (error) {
-        alert('Failed to delete certificate.');
+        showToast('error', '❌ Failed to delete certificate.');
       }
     }
   };

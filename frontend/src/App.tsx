@@ -4,16 +4,19 @@ import AppRoutes from './routes/AppRoutes';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AppProvider } from './contexts/AppContext';
 import { UserProvider } from './contexts/UserContext';
+import { ToastProvider } from './contexts/ToastContext';
 const App: FC = () => {
   return (
     <StrictMode>
       <ErrorBoundary>
         <BrowserRouter>
-          <AppProvider>
-            <UserProvider>
-              <AppRoutes />
-            </UserProvider>
-          </AppProvider>
+          <ToastProvider>
+            <AppProvider>
+              <UserProvider>
+                <AppRoutes />
+              </UserProvider>
+            </AppProvider>
+          </ToastProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </StrictMode>

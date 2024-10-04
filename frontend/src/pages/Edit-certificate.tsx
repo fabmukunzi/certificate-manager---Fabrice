@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AxiosInstance } from '@/utils/AxiosInstance';
 import { FORM_MODE } from '@/utils/enums/formMode';
+import { useToast } from '@/contexts/ToastContext';
 
 // This component represents a page used to edit a certificate.
 const EditCertificatePage = () => {
@@ -28,12 +29,13 @@ const EditCertificatePage = () => {
   });
   const { certificateId } = useParams();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
         setIsLoading(true);
         if (!certificateId || isNaN(Number(certificateId))) {
-          alert('Invalid certificate ID');
+          showToast('error', '❌ Invalid certificate ID');
           navigate(routes.certificates.url);
           return;
         }
@@ -44,7 +46,7 @@ const EditCertificatePage = () => {
         setIsLoading(false);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          alert(error.response.data.error || 'Something went wrong');
+          showToast('error', '❌ Something went wrong');
         }
         navigate(routes.certificates.url);
         setIsLoading(false);
