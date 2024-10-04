@@ -42,8 +42,4 @@ public class SupplierEntity extends BaseEntity{
         return index;
     }
 
-    @PrePersist
-    public void generateIndex() {
-        this.index = UtilityMethods.generateRandomString(6);
-    }
 }
