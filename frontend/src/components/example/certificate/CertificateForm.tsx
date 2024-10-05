@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
@@ -16,7 +15,12 @@ import { CloseIcon, SearchIcon } from '@/assests/icons';
 import UserLookup from '@/components/lookup/UserLookup';
 import TableComponent, { Column } from '@/components/shared/table/Table';
 import AddComment from './AddComment';
-import { CertificateDto, SupplierDto, UserDto } from '@/endpoints';
+import {
+  CertificateDto,
+  CertificateType,
+  SupplierDto,
+  UserDto,
+} from '@/endpoints';
 import { AxiosInstance } from '@/utils/AxiosInstance';
 import { FORM_MODE } from '@/utils/enums/formMode';
 import { useToast } from '@/contexts/ToastContext';
@@ -146,6 +150,16 @@ const CertificateForm: FC<{
       <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
     </button>
   );
+  const certificateTypes = [
+    {
+      value: CertificateType.PERMISSION_OF_PRINTING,
+      label: translate('Permission of Printing'),
+    },
+    {
+      value: CertificateType.OHSAS_18001,
+      label: translate('OHSAS 18001'),
+    },
+  ];
   return (
     <section>
       <SearchSupplier
