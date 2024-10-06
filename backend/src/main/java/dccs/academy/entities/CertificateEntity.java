@@ -2,99 +2,95 @@ package dccs.academy.entities;
 
 import dccs.academy.utils.enums.CertificateType;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Entity
-@Table(name = "certificates",schema = "certificates")
-public class CertificateEntity extends BaseEntity{
+@Table(name = "certificates", schema = "certificates")
+public class CertificateEntity extends BaseEntity {
 
-    @Column(name = "valid_from")
-    private LocalDate validFrom;
+  @Column(name = "valid_from")
+  private LocalDate validFrom;
 
-    @Column(name = "valid_to")
-    private LocalDate validTo;
+  @Column(name = "valid_to")
+  private LocalDate validTo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type",nullable = false)
-    private CertificateType type;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "type", nullable = false)
+  private CertificateType type;
 
-    @Lob
-    @Column(name = "pdf_url",nullable = false,length = 200000)
-    private byte[] pdfUrl;
+  @Lob
+  @Column(name = "pdf_url", nullable = false, length = 200000)
+  private byte[] pdfUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "supplier_id",nullable = false)
-    private SupplierEntity supplier;
+  @ManyToOne
+  @JoinColumn(name = "supplier_id", nullable = false)
+  private SupplierEntity supplier;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "certificate_assigned_users",
-            schema = "certificates",
-            joinColumns = @JoinColumn(name = "certificate_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<UserEntity> users;
+  @ManyToMany()
+  @JoinTable(
+      name = "certificate_assigned_users",
+      schema = "certificates",
+      joinColumns = @JoinColumn(name = "certificate_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private List<UserEntity> users;
 
-    @OneToMany(mappedBy = "certificates",cascade = CascadeType.REMOVE)
-    private List<CommentEntity> comments;
+  @OneToMany(mappedBy = "certificates", cascade = CascadeType.REMOVE)
+  private List<CommentEntity> comments;
 
-    public LocalDate getValidFrom() {
-        return validFrom;
-    }
+  public LocalDate getValidFrom() {
+    return validFrom;
+  }
 
-    public void setValidFrom(LocalDate validFrom) {
-        this.validFrom = validFrom;
-    }
+  public void setValidFrom(LocalDate validFrom) {
+    this.validFrom = validFrom;
+  }
 
-    public LocalDate getValidTo() {
-        return validTo;
-    }
+  public LocalDate getValidTo() {
+    return validTo;
+  }
 
-    public void setValidTo(LocalDate validTo) {
-        this.validTo = validTo;
-    }
+  public void setValidTo(LocalDate validTo) {
+    this.validTo = validTo;
+  }
 
-    public CertificateType getType() {
-        return type;
-    }
+  public CertificateType getType() {
+    return type;
+  }
 
-    public void setType(CertificateType type) {
-        this.type = type;
-    }
+  public void setType(CertificateType type) {
+    this.type = type;
+  }
 
-    public byte[] getPdfUrl() {
-        return pdfUrl;
-    }
+  public byte[] getPdfUrl() {
+    return pdfUrl;
+  }
 
-    public void setPdfUrl(byte[] pdfUrl) {
-        this.pdfUrl = pdfUrl;
-    }
+  public void setPdfUrl(byte[] pdfUrl) {
+    this.pdfUrl = pdfUrl;
+  }
 
-    public SupplierEntity getSupplier() {
-        return supplier;
-    }
+  public SupplierEntity getSupplier() {
+    return supplier;
+  }
 
-    public void setSupplier(SupplierEntity supplier) {
-        this.supplier = supplier;
-    }
+  public void setSupplier(SupplierEntity supplier) {
+    this.supplier = supplier;
+  }
 
-    public List<UserEntity> getUsers() {
-        return users;
-    }
+  public List<UserEntity> getUsers() {
+    return users;
+  }
 
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
-    }
+  public void setUsers(List<UserEntity> users) {
+    this.users = users;
+  }
 
-    public List<CommentEntity> getComments() {
-        return comments;
-    }
+  public List<CommentEntity> getComments() {
+    return comments;
+  }
 
-    public void setComments(List<CommentEntity> comments) {
-        this.comments = comments;
-    }
+  public void setComments(List<CommentEntity> comments) {
+    this.comments = comments;
+  }
 }
