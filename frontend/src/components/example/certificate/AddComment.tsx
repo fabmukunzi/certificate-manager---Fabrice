@@ -1,4 +1,5 @@
 import Button from '@/components/shared/button';
+import { useToast } from '@/contexts/ToastContext';
 import { useUserContext } from '@/contexts/UserContext';
 import { CommentDto } from '@/endpoints';
 import { FC, useState, ChangeEvent } from 'react';
@@ -14,12 +15,14 @@ const AddComment: FC<CommentProps> = ({
   setIsCommentOpen,
 }) => {
   const { currentUser } = useUserContext();
+  const { showToast } = useToast();
   const [content, setContent] = useState<string>('');
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
   const handleSaveComment = () => {
-    if (content.length < 1) return alert('Please enter comment');
+    if (content.length < 1)
+      return showToast('error', '❌ Please enter comment');
     if (currentUser) {
       const newComment: CommentDto = {
         id: currentUser.id,
@@ -49,7 +52,8 @@ const AddComment: FC<CommentProps> = ({
             style={{ marginBottom: '10px' }}
           >
             <p>
-              <strong>User:</strong> {comment.user.lastName}
+              <strong>User:</strong>{' '}
+              {`${comment.user.firstName} ${comment.user.lastName}`}
             </p>
             <p>
               <strong>Comment:</strong> {comment.content}

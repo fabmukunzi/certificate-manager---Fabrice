@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/utils/routes';
 import Select from '@/components/shared/form/Select';
 import FileUpload from '@/components/shared/form/FileUpload';
-import { certificateTypes } from '@/utils/data/certificates';
 import { formatDateToYYYYMMDD } from '@/utils/functions/formatDate';
 import SearchInput from '@/components/shared/form/SearchInput';
 import DateInput from '@/components/shared/form/DateInput';
@@ -14,15 +13,27 @@ import SearchSupplier from '../../lookup/SupplierSearch';
 import { useTranslate } from '@/contexts/AppContext';
 import { CloseIcon, SearchIcon } from '@/assests/icons';
 import UserLookup from '@/components/lookup/UserLookup';
-import TableComponent from '@/components/shared/table/Table';
-import { UserColumn } from '@/utils/types/user';
+import TableComponent, { Column } from '@/components/shared/table/Table';
 import AddComment from './AddComment';
-import { CertificateDto, SupplierDto, UserDto } from '@/endpoints';
+import {
+  CertificateDto,
+  CertificateType,
+  SupplierDto,
+  UserDto,
+} from '@/endpoints';
 import { AxiosInstance } from '@/utils/AxiosInstance';
 import { FORM_MODE } from '@/utils/enums/formMode';
+import { useToast } from '@/contexts/ToastContext';
 
-const columns: UserColumn[] = [
-  { header: 'Name', accessor: 'lastName' },
+const columns: Column<UserDto>[] = [
+  {
+    header: 'Name',
+    render: (_, user1) => (
+      <>
+        {user1?.firstName}, {user1?.lastName} ({user1?.id})
+      </>
+    ),
+  },
   { header: 'Department', accessor: 'department' },
   { header: 'Email', accessor: 'email' },
 ];
@@ -32,6 +43,7 @@ const CertificateForm: FC<{
   mode: FORM_MODE;
 }> = ({ initialValues, mode }) => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
@@ -58,27 +70,28 @@ const CertificateForm: FC<{
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!formValues.supplier || formValues.supplier.id === 0) {
-      return alert(translate('Please select a supplier'));
+      return showToast('error', '❌ Please select a supplier');
     }
     if (
       (!formValues?.pdfUrl && !initialValues.pdfUrl) ||
       formValues.pdfUrl === ''
     )
-      return alert(translate('Please upload a PDF file'));
+      return showToast('error', '❌ Please upload a PDF file');
     try {
       if (initialValues.id) {
         await AxiosInstance.updateCertificate(
           Number(formValues.id),
           formValues,
         );
-        alert(translate('Certificate updated successfully'));
+        showToast('success', translate('✅ Certificate updated successfully'));
       } else {
         await AxiosInstance.createCertificate(formValues);
-        alert(translate('Certificate added successfully'));
+        showToast('success', translate('✅ Certificate added successfully'));
       }
       navigate(routes.certificates.url);
     } catch (error) {
-      alert(
+      showToast(
+        'error',
         translate(
           `Failed to ${initialValues.id ? 'update' : 'add'} certificate.`,
         ),
@@ -94,8 +107,7 @@ const CertificateForm: FC<{
         if (id) await AxiosInstance.deleteCertificate(id);
         navigate(routes.certificates.url);
       } catch (error) {
-        console.error(translate('Failed to delete certificate:'), error);
-        alert(translate('Failed to delete certificate.'));
+        showToast('error', '❌ Failed to delete certificate.');
       }
     }
   };
@@ -105,19 +117,14 @@ const CertificateForm: FC<{
   };
   const closeUserLookup = (isUpdated?: boolean, users?: UserDto[]) => {
     if (isUpdated && users) {
-      formValues.assignedUsers = formValues.assignedUsers.concat(
-        users.filter(
-          (newUser) =>
-            !formValues.assignedUsers.some(
-              (existingUser) => existingUser.id === newUser.id,
-            ),
-        ),
-      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        assignedUsers: users,
+      }));
     }
     setIsUserLookup(false);
   };
   const { translate } = useTranslate();
-
   const handleRemoveUser = (id: number) => {
     if (confirm(translate('Are you sure you want to remove this user?'))) {
       try {
@@ -126,10 +133,10 @@ const CertificateForm: FC<{
         );
         setFormValues((prevValues) => ({
           ...prevValues,
-          certificateAssignedUsers: updatedUsers,
+          assignedUsers: updatedUsers,
         }));
       } catch (error) {
-        console.error('Error removing user:', error);
+        showToast('error', '❌ Error removing user:');
       }
     }
   };
@@ -143,6 +150,16 @@ const CertificateForm: FC<{
       <img src={CloseIcon} alt={translate('Remove')} width={15} height={15} />
     </button>
   );
+  const certificateTypes = [
+    {
+      value: CertificateType.PERMISSION_OF_PRINTING,
+      label: translate('Permission of Printing'),
+    },
+    {
+      value: CertificateType.OHSAS_18001,
+      label: translate('OHSAS 18001'),
+    },
+  ];
   return (
     <section>
       <SearchSupplier
@@ -152,7 +169,11 @@ const CertificateForm: FC<{
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
       />
-      <UserLookup handleClose={closeUserLookup} isDialogOpen={isUserLookup} />
+      <UserLookup
+        initialUsers={formValues?.assignedUsers}
+        handleClose={closeUserLookup}
+        isDialogOpen={isUserLookup}
+      />
       <form id="form" className="certificate-form" onSubmit={handleSubmit}>
         <div className="certificate-info">
           <SearchInput
@@ -174,7 +195,7 @@ const CertificateForm: FC<{
             label={translate('Certificate type')}
             placeholder="Select your option"
             name="certificateType"
-            value={formValues?.type}
+            defaultValue={formValues?.type}
             options={certificateTypes}
           />
           <DateInput
@@ -207,7 +228,7 @@ const CertificateForm: FC<{
             />
           </div>
           <TableComponent
-            data={formValues.assignedUsers ?? []}
+            data={formValues?.assignedUsers}
             columns={columns}
             renderActions={(id) => renderActions(id)}
             className="search-table"

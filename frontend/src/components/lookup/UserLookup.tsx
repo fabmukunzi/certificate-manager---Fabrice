@@ -1,4 +1,4 @@
-import { FC, useMemo, useReducer, useCallback } from 'react';
+import { FC, useMemo, useReducer, useCallback, useEffect } from 'react';
 import '@/components/example/certificate/certificate.css';
 import { CloseIcon, FilledArrowDown } from '@/assests/icons';
 import Button from '@/components/shared/button';
@@ -12,6 +12,7 @@ import { AxiosInstance } from '@/utils/AxiosInstance';
 interface SearchProps {
   isDialogOpen: boolean;
   handleClose: (isUpdated?: boolean, users?: UserDto[]) => void;
+  initialUsers: UserDto[];
 }
 
 interface Column {
@@ -98,13 +99,17 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const UserLookup: FC<SearchProps> = ({ isDialogOpen, handleClose }) => {
+const UserLookup: FC<SearchProps> = ({
+  isDialogOpen,
+  handleClose,
+  initialUsers,
+}) => {
   const { translate } = useTranslate();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const columns = useMemo<Column[]>(
     () => [
-      { header: translate('Name'), accessor: 'lastName' },
+      { header: translate('Last Name'), accessor: 'lastName' },
       { header: translate('First Name'), accessor: 'firstName' },
       { header: translate('User ID'), accessor: 'userId' },
       { header: translate('Department'), accessor: 'department' },
@@ -131,7 +136,12 @@ const UserLookup: FC<SearchProps> = ({ isDialogOpen, handleClose }) => {
     });
     dispatch({ type: 'SET_FILTERED_USERS', users: users.data.data });
   }, [state.formValues]);
-
+  useEffect(() => {
+    if (initialUsers.length > 0) {
+      dispatch({ type: 'SET_FILTERED_USERS', users: initialUsers });
+      dispatch({ type: 'SET_SELECTED_USERS', users: initialUsers });
+    }
+  }, [initialUsers]);
   const renderActions = useCallback(
     (id?: number) => (
       <div className="radio-container">
@@ -168,7 +178,7 @@ const UserLookup: FC<SearchProps> = ({ isDialogOpen, handleClose }) => {
         </div>
         <div className="search-inputs-container">
           <TextInput
-            label={translate('Name')}
+            label={translate('Last Name')}
             name="name"
             value={state.formValues.name}
             onChangeValue={handleInputChange}

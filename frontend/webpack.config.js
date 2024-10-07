@@ -8,7 +8,6 @@ module.exports = {
   entry: CONFIG.ENTRY_POINT,
   output: {
     path: __dirname + CONFIG.OUTPUT_PATH,
-    publicPath: './',
   },
   module: {
     rules: [

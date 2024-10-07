@@ -7,12 +7,14 @@ import ErrorComponent from '../shared/error';
 import Loader from '../shared/loader';
 import ActionMenu from '../shared/table/ActionMenu';
 import { useTranslate } from '@/contexts/AppContext';
-import { CertificateDto, SupplierDto } from '@/endpoints';
+import { CertificateDto, CertificateType, SupplierDto } from '@/endpoints';
 import { formatDateToDot } from '@/utils/functions/formatDate';
 import { AxiosInstance } from '@/utils/AxiosInstance';
+import { useToast } from '@/contexts/ToastContext';
 
 const CertificatesTable: React.FC = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { translate } = useTranslate(); // Use the translate function from the context
   const [certificates, setCertificates] = useState<CertificateDto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +31,17 @@ const CertificatesTable: React.FC = () => {
         </>
       ),
     },
-    { header: translate('Certificate Type'), accessor: 'type' },
+    {
+      header: translate('Certificate Type'),
+      accessor: 'type',
+      render: (type) => (
+        <>
+          {type === CertificateType.PERMISSION_OF_PRINTING
+            ? translate('Permission of Printing')
+            : 'OHSAS 18001'}
+        </>
+      ),
+    },
     {
       header: translate('Valid From'),
       accessor: 'validFrom',
@@ -73,7 +85,7 @@ const CertificatesTable: React.FC = () => {
         await AxiosInstance.deleteCertificate(Number(id));
         await fetchCertificates();
       } catch (error) {
-        alert('Failed to delete certificate.');
+        showToast('error', '❌ Failed to delete certificate.');
       }
     }
   };

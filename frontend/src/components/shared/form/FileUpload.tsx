@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import './styles.css';
 import Button from '../button';
 import { useTranslate } from '@/contexts/AppContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface FileUploadProps {
   label: string;
@@ -19,12 +20,14 @@ const FileUpload: FC<FileUploadProps> = ({
   previewUrl,
 }) => {
   const { translate } = useTranslate();
+  const { showToast } = useToast();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
       const fileSizeLimit = 5 * 1024 * 1024;
       if (file.size > fileSizeLimit) {
-        alert(
+        showToast(
+          'error',
           translate(
             'File size exceeds the 5MB limit. Please upload a smaller file.',
           ),
@@ -41,7 +44,7 @@ const FileUpload: FC<FileUploadProps> = ({
       };
       reader.readAsDataURL(file);
     } else {
-      alert(translate('Please upload a valid file.'));
+      showToast('error', '❌ Please upload a valid file.');
     }
   };
   const handleRemoveFile = () => {
