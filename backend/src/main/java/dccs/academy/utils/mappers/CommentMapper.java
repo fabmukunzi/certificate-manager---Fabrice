@@ -8,25 +8,26 @@ import dccs.academy.entities.UserEntity;
 import dccs.academy.repositories.UserRepository;
 
 public class CommentMapper {
-    public static CommentDto toDto(CommentEntity commentEntity) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContent(commentEntity.getContent());
-        commentDto.setId(commentEntity.getId());
-        if (commentEntity.getUser() != null) {
-            UserDto userDto = UserMapper.toDto(commentEntity.getUser());
-            commentDto.setUser(userDto);
-        }
-        return commentDto;
+  public static CommentDto toDto(CommentEntity commentEntity) {
+    CommentDto commentDto = new CommentDto();
+    commentDto.setContent(commentEntity.getContent());
+    commentDto.setId(commentEntity.getId());
+    if (commentEntity.getUser() != null) {
+      UserDto userDto = UserMapper.toDto(commentEntity.getUser());
+      commentDto.setUser(userDto);
     }
+    return commentDto;
+  }
 
-    public static CommentEntity toEntity(CommentDto commentDto, CertificateEntity certificate, UserRepository userRepository) {
-        CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setContent(commentDto.getContent());
-        commentEntity.setCertificates(certificate);
+  public static CommentEntity toEntity(
+      CommentDto commentDto, CertificateEntity certificate, UserRepository userRepository) {
+    CommentEntity commentEntity = new CommentEntity();
+    commentEntity.setContent(commentDto.getContent());
+    commentEntity.setCertificates(certificate);
 
-        UserEntity user = userRepository.findById(commentDto.getUser().getId());
-        commentEntity.setUser(user);
+    UserEntity user = userRepository.findById(commentDto.getUser().getId());
+    commentEntity.setUser(user);
 
-        return commentEntity;
-    }
+    return commentEntity;
+  }
 }

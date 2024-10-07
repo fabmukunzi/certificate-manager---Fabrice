@@ -7,5 +7,4 @@ import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 @Transactional(Transactional.TxType.MANDATORY)
-public class CertificateRepository implements PanacheRepository<CertificateEntity> {
-}
+public class CertificateRepository implements PanacheRepository<CertificateEntity> {}

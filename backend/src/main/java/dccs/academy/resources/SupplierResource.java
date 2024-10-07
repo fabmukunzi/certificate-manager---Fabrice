@@ -16,17 +16,20 @@ import jakarta.ws.rs.core.Response;
 @Path("/backend/suppliers")
 @Produces(MediaType.APPLICATION_JSON)
 public class SupplierResource {
-    @Inject
-    SupplierRepository supplierRepository;
-    @GET
-    @Transactional
-    public Response supplierSearch(@QueryParam("index") String index, @QueryParam("name") String name, @QueryParam("city") String city) {
-        try {
-            var suppliers = supplierRepository.supplierSearch(name, city, index);
-            return ResponseUtility.successResponse("Suppliers retrieved successfully",suppliers,Response.Status.OK);
-        }catch (Exception e) {
-            return ResponseUtility.errorResponse(e.getMessage(),Response.Status.INTERNAL_SERVER_ERROR);
-        }
-    }
+  @Inject SupplierRepository supplierRepository;
 
+  @GET
+  @Transactional
+  public Response supplierSearch(
+      @QueryParam("index") String index,
+      @QueryParam("name") String name,
+      @QueryParam("city") String city) {
+    try {
+      var suppliers = supplierRepository.supplierSearch(name, city, index);
+      return ResponseUtility.successResponse(
+          "Suppliers retrieved successfully", suppliers, Response.Status.OK);
+    } catch (Exception e) {
+      return ResponseUtility.errorResponse(e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

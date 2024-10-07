@@ -7,5 +7,4 @@ import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 @Transactional(Transactional.TxType.MANDATORY)
-public class CommentRepository implements PanacheRepository<CommentEntity> {
-}
+public class CommentRepository implements PanacheRepository<CommentEntity> {}

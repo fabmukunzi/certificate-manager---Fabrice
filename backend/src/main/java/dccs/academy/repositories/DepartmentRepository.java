@@ -14,15 +14,17 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 @Transactional(Transactional.TxType.MANDATORY)
 public class DepartmentRepository implements PanacheRepository<DepartmentEntity> {
-    @Inject
-    EntityManager entityManager;
-    public DepartmentEntity findDepartmentByTitle(String title) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<DepartmentEntity> query = cb.createQuery(DepartmentEntity.class);
-        Root<DepartmentEntity> root = query.from(DepartmentEntity.class);
+  @Inject EntityManager entityManager;
 
-        query.select(root).where(cb.equal(cb.lower(root.get(DepartmentEntity_.TITLE)), title.trim().toLowerCase()));
+  public DepartmentEntity findDepartmentByTitle(String title) {
+    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    CriteriaQuery<DepartmentEntity> query = cb.createQuery(DepartmentEntity.class);
+    Root<DepartmentEntity> root = query.from(DepartmentEntity.class);
 
-        return entityManager.createQuery(query).getResultStream().findFirst().orElse(null);
-    }
+    query
+        .select(root)
+        .where(cb.equal(cb.lower(root.get(DepartmentEntity_.TITLE)), title.trim().toLowerCase()));
+
+    return entityManager.createQuery(query).getResultStream().findFirst().orElse(null);
+  }
 }

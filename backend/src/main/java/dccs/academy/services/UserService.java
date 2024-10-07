@@ -12,20 +12,18 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 @Transactional
 public class UserService {
-    @Inject
-    UserRepository userRepository;
+  @Inject UserRepository userRepository;
 
-    @Inject
-    DepartmentRepository departmentRepository;
+  @Inject DepartmentRepository departmentRepository;
 
-    public void createUser(UserDto userDto){
-        var userEntity= UserMapper.toEntity(userDto);
-        var department=departmentRepository.findDepartmentByTitle(userDto.getDepartment());
-        if(department!=null) {
-            userEntity.setDepartment(department);
-        } else {
-            throw new EntityNotFoundException("Department doesn't exists");
-        }
-        userRepository.persist(userEntity);
+  public void createUser(UserDto userDto) {
+    var userEntity = UserMapper.toEntity(userDto);
+    var department = departmentRepository.findDepartmentByTitle(userDto.getDepartment());
+    if (department != null) {
+      userEntity.setDepartment(department);
+    } else {
+      throw new EntityNotFoundException("Department doesn't exists");
     }
+    userRepository.persist(userEntity);
+  }
 }

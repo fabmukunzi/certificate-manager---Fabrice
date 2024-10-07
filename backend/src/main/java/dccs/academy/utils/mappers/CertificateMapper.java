@@ -7,23 +7,23 @@ import dccs.academy.utils.UtilityMethods;
 
 public class CertificateMapper {
 
-    public static CertificateDto toDto(CertificateEntity certificateEntity) {
-        CertificateDto certificateDto = new CertificateDto();
-        certificateDto.setId(certificateEntity.getId());
-        certificateDto.setValidFrom(certificateEntity.getValidFrom());
-        certificateDto.setValidTo(certificateEntity.getValidTo());
-        certificateDto.setType(certificateEntity.getType());
-        SupplierEntity supplier = certificateEntity.getSupplier();
-        certificateDto.setSupplier(SupplierMapper.toDto(supplier));
-        return certificateDto;
-    }
+  public static CertificateDto toDto(CertificateEntity certificateEntity) {
+    CertificateDto certificateDto = new CertificateDto();
+    certificateDto.setId(certificateEntity.getId());
+    certificateDto.setValidFrom(certificateEntity.getValidFrom());
+    certificateDto.setValidTo(certificateEntity.getValidTo());
+    certificateDto.setType(certificateEntity.getType());
+    SupplierEntity supplier = certificateEntity.getSupplier();
+    certificateDto.setSupplier(SupplierMapper.toDto(supplier));
+    return certificateDto;
+  }
 
-    public static CertificateEntity toEntity(CertificateDto certificateDto, CertificateEntity entity) {
-        entity.setValidFrom(certificateDto.getValidFrom());
-        entity.setValidTo(certificateDto.getValidTo());
-        entity.setType(certificateDto.getType());
-        entity.setPdfUrl(UtilityMethods.decode(certificateDto.getPdfUrl()));
-        return entity;
-    }
+  public static CertificateEntity toEntity(
+      CertificateDto certificateDto, CertificateEntity entity) {
+    entity.setValidFrom(certificateDto.getValidFrom());
+    entity.setValidTo(certificateDto.getValidTo());
+    entity.setType(certificateDto.getType());
+    entity.setPdfUrl(UtilityMethods.decode(certificateDto.getPdfUrl()));
+    return entity;
+  }
 }
-
