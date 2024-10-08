@@ -44,7 +44,6 @@ const CertificateForm: FC<{
 }> = ({ initialValues, mode }) => {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const todayDate = formatDateToYYYYMMDD(new Date());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUserLookup, setIsUserLookup] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
@@ -56,7 +55,6 @@ const CertificateForm: FC<{
       [name]: value,
     }));
   };
-
   useEffect(() => {
     setFormValues(initialValues);
   }, [initialValues]);
@@ -194,8 +192,8 @@ const CertificateForm: FC<{
             onChangeValue={handleInputChange}
             label={translate('Certificate type')}
             placeholder="Select your option"
-            name="certificateType"
-            defaultValue={formValues?.type}
+            name="type"
+            value={formValues?.type}
             options={certificateTypes}
           />
           <DateInput
@@ -203,7 +201,7 @@ const CertificateForm: FC<{
             label={translate('Valid from')}
             name="validFrom"
             placeholder={translate('Click to select date')}
-            min={todayDate}
+            max={formatDateToYYYYMMDD(new Date(formValues?.validTo) as Date)}
             defaultValue={formatDateToYYYYMMDD(new Date(formValues?.validFrom))}
             onChangeValue={handleInputChange}
           />
